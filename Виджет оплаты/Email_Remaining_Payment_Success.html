@@ -15,11 +15,7 @@
             -ms-text-size-adjust: 100%;
         }
 
-        table,
-        td {
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
-        }
+
 
         img {
             -ms-interpolation-mode: bicubic;
@@ -93,7 +89,7 @@
             font-size: 18px;
             border-radius: 50px;
             box-shadow: 0 4px 15px rgba(24, 183, 234, 0.4);
-            mso-padding-alt: 0;
+
         }
 
         .btn:hover {
@@ -110,7 +106,7 @@
             font-size: 16px;
             border-radius: 50px;
             border: 1px solid #d1d1d6;
-            mso-padding-alt: 0;
+
         }
 
         .btn-secondary:hover {
@@ -141,6 +137,20 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
     </style>
+    <!--[if mso]>
+    <style>
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        .btn, .btn-secondary {
+            mso-padding-alt: 0;
+        }
+        .text-raise-15 {
+            mso-text-raise: 15pt;
+        }
+    </style>
+    <![endif]-->
 </head>
 
 <body>
@@ -174,7 +184,7 @@
                                         <!-- Replace with actual Support Telegram Link -->
                                         <a href="https://t.me/koverfriend" target="_blank" class="btn">
                                             <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i><![endif]-->
-                                            <span style="mso-text-raise: 15pt;">Чат поддержки</span>
+                                            <span class="text-raise-15">Чат поддержки</span>
                                             <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i><![endif]-->
                                         </a>
                                     </td>
