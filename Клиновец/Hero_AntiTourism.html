@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anti-Tourism Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1C1C1C;
+            --text-main: #EAEAEA;
+            --text-muted: #888888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Space Mono', monospace;
+            /* Brutalist/Technical vibe */
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            /* Mobile fix */
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+        }
+
+        /* Image Side (Left) - "Raw" photography */
+        .image-side {
+            position: relative;
+            background: #2a2a2a;
+            overflow: hidden;
+        }
+
+        .image-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(80%) contrast(1.1);
+            /* Lo-fi look */
+            transition: filter 0.5s;
+        }
+
+        @media (hover: hover) {
+            .image-side:hover img {
+                filter: grayscale(0%);
+            }
+        }
+
+        .coords {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            font-size: 0.8rem;
+            background: black;
+            color: white;
+            padding: 5px 10px;
+        }
+
+        /* Content Side (Right) */
+        .content-side {
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-left: 1px solid #333;
+        }
+
+        .anti-tag {
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 3.5rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 400px;
+        }
+
+        .btn-minimal {
+            background: transparent;
+            border: 1px solid var(--text-main);
+            color: var(--text-main);
+            padding: 15px 30px;
+            font-family: 'Space Mono', monospace;
+            cursor: pointer;
+            text-decoration: none;
+            width: fit-content;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-minimal:active {
+            background: var(--text-main);
+            color: var(--bg);
+        }
+
+        @media (hover: hover) {
+            .btn-minimal:hover {
+                background: var(--text-main);
+                color: var(--bg);
+            }
+        }
+
+        /* MOBILE OPTIMIZATIONS */
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 45% 55%;
+                /* Fixed split for consistency */
+            }
+
+            .content-side {
+                padding: 2rem;
+                border-left: none;
+                border-top: 1px solid #333;
+                justify-content: flex-start;
+                /* Align top on mobile */
+                padding-top: 3rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            p {
+                margin-bottom: 2rem;
+                font-size: 0.9rem;
+            }
+
+            .btn-minimal {
+                width: 100%;
+                /* Full width tap */
+                text-align: center;
+                padding: 12px;
+            }
+
+            .coords {
+                bottom: 1rem;
+                left: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="image-side">
+            <!-- Raw, authentic landscape -->
+            <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2621&auto=format&fit=crop"
+                alt="Raw nature">
+            <div class="coords">43.2567° N, 42.5088° E</div>
+        </div>
+        <div class="content-side">
+            <div class="anti-tag">Проект 04 // Клиновец</div>
+            <h1>Не для туристов.<br>Для исследователей.</h1>
+            <p>Без гидов с флажками. Без сувенирных лавок. Только горы, тишина и маршрут, который знают единицы. Если вы
+                понимаете разницу — нам по пути.</p>
+
+            <a href="#" class="btn-minimal">СМОТРЕТЬ МАРШРУТ</a>
+        </div>
+    </div>
+</body>
+
+</html>

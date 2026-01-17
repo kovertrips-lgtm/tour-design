@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revolut Pay Integration Example</title>
+    <script>
+        !function (e, o, t) { e[t] = function (n, r) { var d = o.createElement("script"); d.id = "revolut-checkout", d.src = "https://merchant.revolut.com/embed.js", d.async = !0, o.head.appendChild(d); var s = { then: function (r, c) { d.onload = function () { r(e[t](n, r)) }, d.onerror = function () { c && c(new Error(t + " failed to load")) } } }; return "function" == typeof Promise ? Promise.resolve(s) : s } }(window, document, "RevolutCheckout");
+    </script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f7;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #1c1c1e;
+        }
+
+        #revolut-pay,
+        #payment-request {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #8e8e93;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Checkout</h2>
+        <!-- Revolut Pay Button -->
+        <div id="revolut-pay"></div>
+
+        <!-- Apple Pay / Google Pay -->
+        <div id="payment-request"></div>
+
+        <div class="status" id="status-message">Initializing...</div>
+    </div>
+
+    <script>
+        // Make.com Webhook to create order and get token
+        const WEBHOOK_URL = "https://hook.eu2.make.com/rvniksweatai96qiet96yys0sv8m2aek";
+
+        async function init() {
+            try {
+                const statusEl = document.getElementById('status-message');
+
+                // 1. Create Order via Backend (Webhook)
+                const res = await fetch(WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        amount: 1000, // 10.00 CZK
+                        currency: "CZK",
+                        email: "demo@example.com"
+                    })
+                });
+
+                if (!res.ok) throw new Error("Failed to create order");
+                const data = await res.json();
+                const token = data.token || data.public_id;
+
+                if (!token) throw new Error("No token returned");
+
+                statusEl.innerText = "Order created. Initializing SDK...";
+
+                // 2. Initialize Revolut SDK
+                RevolutCheckout(token, 'prod').then(function (instance) {
+
+                    // A. Mount Revolut Pay
+                    const revolutPay = instance.revolutPay;
+                    revolutPay.mount(document.getElementById('revolut-pay'), {
+                        locale: 'en',
+                        currency: 'CZK',
+                        name: 'Test Customer',
+                        email: 'demo@example.com',
+                        phone: '+420123456789',
+                        mobileRedirect: true
+                    });
+
+                    // B. Mount Payment Request (Apple/Google Pay)
+                    const paymentRequest = instance.paymentRequest;
+                    paymentRequest.mount(document.getElementById('payment-request'), {
+                        item: {
+                            amount: 1000,
+                            label: 'Total',
+                        },
+                        shippingOptions: [],
+                        requestPayerName: true,
+                        requestPayerEmail: true,
+                        requestPayerPhone: false,
+                        requestShipping: false,
+                        locale: 'en',
+                        currency: 'CZK'
+                    });
+
+                    statusEl.innerText = "SDK Ready";
+                });
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('status-message').innerText = "Error: " + error.message;
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

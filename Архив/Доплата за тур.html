@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kover Travel | Доплата</title>
+
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Font: Montserrat as in Klinovec -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- STYLES FROM KLINOVEC FOLDER --- */
+        :root {
+            --k-blue: #29B6F6;
+            --k-blue-hover: #0288D1;
+            --k-neon: #BDFF00;
+            --k-white: #FFFFFF;
+            --k-black: #111111;
+            --k-gray: #888888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            color: var(--k-black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            justify-content: center;
+        }
+
+        /* CONTAINER matches rest_payment layout but with Klinovec styles */
+        .page-wrap {
+            width: 100%;
+            max-width: 600px;
+            padding: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* LOGO */
+        .logo {
+            height: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* TIMER - Styled like "hero-date-badge" from Klinovec layout */
+        .timer-badge {
+            display: inline-block;
+            background-color: var(--k-neon);
+            color: #000;
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(189, 255, 0, 0.4);
+        }
+
+        .timer-val {
+            font-size: 20px;
+            display: block;
+            margin-top: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* HEADERS */
+        .main-title {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .sub-subtitle {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--k-gray);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        /* PRICE BOX */
+        .price-display {
+            background: #F8F9FA;
+            border: 2px dashed #E9ECEF;
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .price-txt {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #999;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .price-val {
+            font-size: 56px;
+            font-weight: 900;
+            color: var(--k-blue);
+            line-height: 1;
+        }
+
+        .price-val span {
+            font-size: 0.5em;
+            color: #bbb;
+            vertical-align: top;
+        }
+
+        /* BUTTON - Matches ".hero-btn" */
+        .pay-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background-color: var(--k-blue);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 22px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(41, 182, 246, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(41, 182, 246, 0.3);
+            background-color: var(--k-blue-hover);
+        }
+
+        .pay-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* TRUST FOOTER */
+        .trust-row {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            opacity: 0.6;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .trust-row svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            margin-right: 6px;
+            position: relative;
+            top: 2px;
+        }
+
+        /* STATES */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spin {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #eee;
+            border-top-color: var(--k-blue);
+            border-radius: 50%;
+            animation: s 0.8s linear infinite;
+        }
+
+        @keyframes s {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .screen-error {
+            display: none;
+            padding: 40px;
+        }
+
+        .screen-success {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s;
+        }
+
+        .screen-success.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* STRIPE OVERLAY */
+        .chk-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .chk-overlay.open {
+            display: flex;
+        }
+
+        .chk-box {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            padding: 24px;
+            border-radius: 24px;
+            position: relative;
+            animation: slideUp 0.3s;
+        }
+
+        @media(max-width: 600px) {
+            .chk-overlay {
+                align-items: flex-end;
+            }
+
+            .chk-box {
+                border-radius: 24px 24px 0 0;
+                margin-bottom: 0;
+            }
+        }
+
+        .close-x {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            background: #f1f1f1;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADING -->
+    <div id="loading" class="loader">
+        <div class="spin"></div>
+    </div>
+
+    <!-- MAIN -->
+    <div id="main" class="page-wrap" style="display:none;">
+        <img src="https://static.tildacdn.com/tild6435-6266-4634-b931-356535313531/Kover_travel_logo.svg" alt="Kover"
+            class="logo">
+
+        <div class="timer-badge">
+            <span id="label-dead">ОПЛАТИТЬ ДО...</span>
+            <span id="timer" class="timer-val">00 : 00 : 00</span>
+        </div>
+
+        <h1 class="main-title" id="tour-title">...</h1>
+
+        <div class="sub-subtitle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span id="tour-date">...</span>
+        </div>
+
+        <div class="price-display">
+            <div class="price-txt">ИТОГО К ОПЛАТЕ</div>
+            <div class="price-val" id="price-target">0 <span>KČ</span></div>
+        </div>
+
+        <button id="btn-pay" class="pay-btn">ОПЛАТИТЬ</button>
+
+        <div class="trust-row">
+            <div><svg viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
+                </svg> Stripe Secure</div>
+            <div><svg viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg> Instant Confirm</div>
+        </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="success" class="screen-success">
+        <div style="font-size:80px; margin-bottom: 20px;">🥐</div>
+        <h1 class="main-title">MERCI!</h1>
+        <p style="color:#666; max-width:300px; line-height:1.5;">Оплата прошла успешно! Скоро увидимся.</p>
+    </div>
+
+    <!-- ERROR -->
+    <div id="error" class="screen-error">
+        <h2>Упс...</h2>
+        <p>Не удалось загрузить данные заказа.</p>
+    </div>
+
+    <!-- CHECKOUT -->
+    <div id="chk-overlay" class="chk-overlay">
+        <div class="chk-box">
+            <div class="close-x" onclick="closeEmbed()">✕</div>
+            <div id="stripe-mount"></div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG from rest_payment.html
+        const CONF = {
+            key: "pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6",
+            endpoint: "https://hook.eu2.make.com/91jzirouvc1nnjjjec49l6fxplng6mbw"
+        };
+
+        let stripe = null;
+        let checkout = null;
+
+        async function init() {
+            try {
+                stripe = Stripe(CONF.key);
+                const p = new URLSearchParams(window.location.search);
+                const oid = p.get('order_id');
+                if (!oid) throw new Error("No ID");
+
+                // Assuming same logic for supplementary payment (rest_payment: true)
+                // If this is specifically "Extra" payment, maybe logic differs, but user said "take tech part from rest_payment"
+                const res = await fetch(CONF.endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'get_payment_data',
+                        order_id: oid,
+                        rest_payment: true,
+                        metadata: { order_id: oid }
+                    })
+                });
+
+                if (!res.ok) throw new Error("API Error");
+                const data = await res.json();
+                if (!data.clientSecret) throw new Error("No secret");
+
+                render(data);
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        function render(data) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('main').style.display = 'flex';
+
+            // Clean Name
+            const raw = data.tour_name || "Тур";
+            // Aggressive clean
+            const clean = raw.replace(/^[^a-zA-Zа-яА-Я0-9]+/, "").trim();
+            document.getElementById('tour-title').innerText = clean;
+
+            // Price
+            const curr = (data.currency || "CZK").toUpperCase();
+            const symbol = curr === 'CZK' ? 'KČ' : curr;
+            document.getElementById('price-target').innerHTML = `${data.amount.toLocaleString('ru-RU')} <span>${symbol}</span>`;
+
+            // Date & Timer
+            const match = clean.match(/(\d{1,2})\.(\d{2})\.(\d{4})/);
+            let tourD = new Date();
+            let dTxt = "";
+            if (match) {
+                const d = parseInt(match[1]);
+                const m = parseInt(match[2]) - 1;
+                const y = parseInt(match[3]);
+                tourD = new Date(y, m, d);
+                dTxt = `${d}.${m + 1}.${y}`;
+            } else {
+                tourD.setDate(tourD.getDate() + 30);
+                dTxt = "Скоро";
+            }
+            document.getElementById('tour-date').innerText = dTxt;
+
+            // Deadline = Tour - 10 days
+            const dLine = new Date(tourD);
+            dLine.setDate(dLine.getDate() - 10);
+            dLine.setHours(23, 59, 59);
+
+            const dlD = dLine.getDate().toString().padStart(2, '0');
+            const dlM = (dLine.getMonth() + 1).toString().padStart(2, '0');
+            document.getElementById('label-dead').innerText = `ОПЛАТИТЬ ДО ${dlD}.${dlM}`;
+
+            startTimer(dLine.getTime());
+
+            // Button
+            document.getElementById('btn-pay').onclick = () => openEmbed(data.clientSecret);
+        }
+
+        function startTimer(target) {
+            const el = document.getElementById('timer');
+            const tick = () => {
+                const now = Date.now();
+                const diff = target - now;
+                if (diff <= 0) { el.innerText = "00 : 00 : 00"; return; }
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff % 86400000) / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                el.innerText = `${d}д : ${h.toString().padStart(2, '0')}ч : ${m.toString().padStart(2, '0')}м : ${s.toString().padStart(2, '0')}с`;
+            };
+            tick(); setInterval(tick, 1000);
+        }
+
+        async function openEmbed(secret) {
+            const btn = document.getElementById('btn-pay');
+            btn.innerText = "ЗАГРУЗКА...";
+            btn.disabled = true;
+            document.getElementById('chk-overlay').classList.add('open');
+
+            if (!checkout) {
+                try {
+                    checkout = await stripe.initEmbeddedCheckout({
+                        clientSecret: secret,
+                        onComplete: () => {
+                            document.getElementById('chk-overlay').classList.remove('open');
+                            document.getElementById('main').style.display = 'none';
+                            document.getElementById('success').classList.add('visible');
+                        }
+                    });
+                    checkout.mount('#stripe-mount');
+                    btn.innerText = "ОПЛАТИТЬ";
+                    btn.disabled = false;
+                } catch (e) {
+                    alert(e.message);
+                    closeEmbed();
+                }
+            } else {
+                btn.innerText = "ОПЛАТИТЬ";
+                btn.disabled = false;
+            }
+        }
+
+        window.closeEmbed = function () {
+            document.getElementById('chk-overlay').classList.remove('open');
+            const btn = document.getElementById('btn-pay');
+            btn.innerText = "ОПЛАТИТЬ";
+            btn.disabled = false;
+        };
+
+        init();
+    </script>
+</body>
+
+</html>

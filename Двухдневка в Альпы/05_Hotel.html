@@ -1,0 +1,194 @@
+<meta charset="UTF-8">
+<style>
+    .hotel-section {
+        background-color: #FdfcF8;
+        /* Warm off-white */
+        padding: 80px 20px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .hotel-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .hotel-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .hotel-title {
+        font-size: 38px;
+        font-weight: 800;
+        margin-bottom: 15px;
+        color: #111;
+    }
+
+    .hotel-desc {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .hotel-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 300px);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .hotel-img-card {
+        background-size: cover;
+        background-position: center;
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hotel-img-card.large {
+        grid-row: span 2;
+    }
+
+    .hotel-img-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        padding: 30px 20px 20px;
+        color: white;
+    }
+
+    .overlay-title {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .overlay-desc {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    .hotel-features {
+        display: flex;
+        justify-content: space-between;
+        background: #fff;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .feat-item h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0 0 5px;
+    }
+
+    .feat-item p {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+        line-height: 1.4;
+        max-width: 250px;
+    }
+
+    .hotel-link {
+        display: block;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .hotel-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: #111;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 100px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .hotel-btn:hover {
+        background: #333;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .hotel-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+        }
+
+        .hotel-img-card {
+            height: 250px;
+        }
+
+        .hotel-features {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="hotel-section">
+    <div class="hotel-container">
+        <div class="hotel-header">
+            Уютный альпийский отель, где мы восстановим силы. Тёплые номера, домашняя атмосфера и, конечно же, SPA.
+        </div>
+
+        <div class="hotel-grid">
+            <div class="hotel-img-card large"
+                style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/332735359.jpg');">
+                <div class="hotel-img-overlay">
+                    <span class="overlay-title">Уютные номера</span>
+                    <span class="overlay-desc">Простые, теплые, с хорошими кроватями</span>
+                </div>
+            </div>
+            <div class="hotel-img-card"
+                style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg');">
+                <div class="hotel-img-overlay">
+                    <span class="overlay-title">SPA зона</span>
+                    <span class="overlay-desc">Тёплый бассейн и сауна после катания</span>
+                </div>
+            </div>
+            <div class="hotel-img-card"
+                style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/514073860.jpg');">
+                <div class="hotel-img-overlay">
+                    <span class="overlay-title">Фермерский завтрак</span>
+                    <span class="overlay-desc">Свежий хлеб, сыры и продукты местных фермеров</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hotel-features">
+            <div class="feat-item">
+                <h3>&#128166; Релакс</h3>
+                <p>Тёплый открытый бассейн, паровая баня и сауна. То, что нужно.</p>
+            </div>
+            <div class="feat-item">
+                <h3>&#129374; Вкусно</h3>
+                <p>Классные завтраки включены. В отеле есть свой ресторан и бар.</p>
+            </div>
+            <div class="feat-item">
+                <h3>&#127922; Досуг</h3>
+                <p>Настольный теннис, дартс и лаундж-зона для вечерних посиделок.</p>
+            </div>
+        </div>
+
+        <div class="hotel-link">
+            <button onclick="openWidget()" class="hotel-btn"
+                style="background:#29B6F6; color:#fff; border:none; padding:15px 30px; border-radius:100px; font-weight:700; cursor:pointer; font-size:16px;">ЗАБРОНИРОВАТЬ
+                МЕСТО</button>
+            <br><br>
+            <a href="https://www.booking.com/hotel/at/romerhof-fusch.ru.html" target="_blank"
+                style="font-size:14px; color:#555; text-decoration:underline;">Посмотреть отель на Booking.com</a>
+        </div>
+    </div>
+</div>

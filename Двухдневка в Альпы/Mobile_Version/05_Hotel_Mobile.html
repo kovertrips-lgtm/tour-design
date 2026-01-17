@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .m-hotel-section {
+            background: #fff;
+            padding: 40px 20px;
+            color: #111;
+        }
+
+        .m-hotel-header {
+            margin-bottom: 24px;
+        }
+
+        .m-hotel-title {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0 0 8px;
+        }
+
+        .m-hotel-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Grid for hotel images - 1 main + 2 small */
+        .m-hotel-gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 24px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .m-gal-item {
+            height: 140px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .m-gal-item.main {
+            grid-column: span 2;
+            height: 220px;
+        }
+
+        /* Features List */
+        .m-hotel-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .m-h-feat {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #F9F9F9;
+            padding: 16px;
+            border-radius: 16px;
+        }
+
+        .m-h-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+        }
+
+        .m-h-text h4 {
+            margin: 0 0 4px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .m-h-text p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .m-hotel-btn-wrap {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="m-hotel-section">
+        <div class="m-hotel-header">
+            <h2 class="m-hotel-title">Hotel Römerhof</h2>
+            <p class="m-hotel-desc">
+                После насыщенного дня мы заселимся в уютный альпийский отель. Здесь есть всё для идеального
+                восстановления.
+            </p>
+        </div>
+
+        <div class="m-hotel-gallery">
+            <div class="m-gal-item main"
+                style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/332735359.jpg');">
+            </div>
+            <div class="m-gal-item"
+                style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg');">
+            </div>
+            <div class="m-gal-item"
+                style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/514073860.jpg');">
+            </div>
+        </div>
+
+        <div class="m-hotel-features">
+            <div class="m-h-feat">
+                <div class="m-h-icon">&#128166;</div>
+                <div class="m-h-text">
+                    <h4>SPA зона</h4>
+                    <p>Бассейн, сауна и релакс-зона включены в стоимость.</p>
+                </div>
+            </div>
+            <div class="m-h-feat">
+                <div class="m-h-icon">&#129374;</div>
+                <div class="m-h-text">
+                    <h4>Завтрак</h4>
+                    <p>Шведский стол с фермерскими продуктами.</p>
+                </div>
+            </div>
+            <div class="m-h-feat">
+                <div class="m-h-icon">&#128716;</div>
+                <div class="m-h-text">
+                    <h4>Комфорт</h4>
+                    <p>Просторные номера с видом на горы и мягкими кроватями.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

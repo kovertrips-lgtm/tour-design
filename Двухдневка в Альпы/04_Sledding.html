@@ -1,0 +1,267 @@
+<meta charset="UTF-8">
+<style>
+    .sled-section {
+        background-color: #0F1012;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        padding: 80px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Background Image with Overlay */
+    .sled-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.4;
+        /* Darken it heavily so text is readable */
+        z-index: 1;
+        filter: blur(5px);
+        /* Artistic blur for background */
+    }
+
+    .sled-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    .sled-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .sled-label {
+        color: #BDFF00;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    .sled-title {
+        font-size: 42px;
+        font-weight: 900;
+        margin: 10px 0 20px 0;
+        text-transform: uppercase;
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .sled-subtitle {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.5;
+    }
+
+    /* Stats Grid */
+    .sled-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-bottom: 50px;
+    }
+
+    .stat-item {
+        text-align: center;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px 30px;
+        border-radius: 16px;
+        border: 1px solid rgba(189, 255, 0, 0.3);
+        /* Lime border */
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-val {
+        font-size: 36px;
+        font-weight: 800;
+        color: #BDFF00;
+        display: block;
+        line-height: 1;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    /* Content Layout */
+    .sled-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+    }
+
+    .sled-text p {
+        font-size: 16px;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 20px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Video Card - Fixed Height like Reviews */
+    .video-card-container {
+        width: 100%;
+        max-width: 300px;
+        height: 500px;
+        /* Fixed height to match 9:16 approx or review style */
+        border-radius: 20px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        margin: 0 auto;
+    }
+
+    .sled-media {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Video Embeds - VERTICAL FIX */
+    .video-wrapper {
+        position: relative;
+        padding-bottom: 177.77%;
+        /* 9:16 Aspect Ratio for Vertical Video */
+        height: 0;
+        border-radius: 20px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        max-width: 320px;
+        /* Limit width to keep it looking like a phone screen */
+        margin: 0 auto;
+        /* Center it */
+    }
+
+    .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    /* New Feature Image in Grid (Optional, instead of just BG) */
+    .sled-feature-img {
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+        border: 2px solid rgba(189, 255, 0, 0.5);
+        max-height: 400px;
+        object-fit: cover;
+    }
+
+    @media (max-width: 900px) {
+        .sled-grid {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .sled-title {
+            font-size: 32px;
+        }
+
+        .sled-bg {
+            opacity: 0.2;
+        }
+
+        .sled-text {
+            order: 1;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .video-card-container {
+            height: 400px;
+            /* Smaller height on mobile */
+            max-width: 240px;
+        }
+
+        .sled-media {
+            order: 2;
+            margin-top: 20px;
+        }
+    }
+</style>
+
+<div class="sled-section">
+    <div class="sled-bg"></div>
+    <div class="sled-container">
+
+        <div class="sled-header">
+            <span class="sled-label">Wildkogel Arena</span>
+            <h2 class="sled-title">14 Км Ночного Драйва</h2>
+            <p class="sled-subtitle">Поднимемся на 2200 метров, чтобы совершить самый длинный саночный спуск в мире.</p>
+        </div>
+
+        <div class="sled-stats">
+            <div class="stat-item">
+                <span class="stat-val">14 км</span>
+                <span class="stat-label">Длина трассы</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-val">1300 м</span>
+                <span class="stat-label">Перепад высот</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-val">40 мин</span>
+                <span class="stat-label">Время спуска</span>
+            </div>
+        </div>
+
+        <div class="sled-grid">
+            <div class="sled-text">
+                <div
+                    style="background: rgba(0,0,0,0.5); padding: 30px; border-radius: 20px; backdrop-filter: blur(5px);">
+                    <p>
+                        <strong>Закат в горах.</strong> Мы приезжаем на закатное время, поэтому успеем насладиться
+                        уходящим солнцем за горы и огнями, освещающими маршрут.
+                    </p>
+                    <p>
+                        Спуск занимает 30–50 минут и дарит чистый адреналин. Трасса извилистая, но безопасная: её
+                        регулярно чистят. Вы сами управляете скоростью — можно лететь с ветерком или спокойно катиться.
+                    </p>
+                    <p>
+                        Вокруг — только снежные склоны, деревья и тишина, нарушаемая лишь звуком скользящих саней и
+                        вашим смехом.
+                    </p>
+                    <button onclick="openWidget()"
+                        style="display:inline-block; margin-top:20px; padding: 18px 40px; background: #29B6F6; color:#fff; font-weight:700; border:none; border-radius: 100px; cursor:pointer; font-size:16px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(41, 182, 246, 0.3);">
+                        Хочу на сани!
+                    </button>
+                </div>
+            </div>
+
+            <div class="sled-media">
+                <div class="video-card-container">
+                    <iframe
+                        src="https://player.mediadelivery.net/embed/581522/028796b4-9dc9-4831-8d81-6ad81d91bded?autoplay=false&loop=true&muted=false&preload=true&responsive=true"
+                        style="border:0; width:100%; height:100%; object-fit: cover;"
+                        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+                        allowfullscreen="true"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

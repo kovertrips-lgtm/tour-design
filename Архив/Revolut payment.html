@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER Booking Widget (Revolut)</title>
+
+    <!-- FLATPICKR CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- REVOLUT SDK -->
+    <script>
+        !function (e, o, t) {
+            e[t] = function (n, r) {
+                var prodUrl = "https://merchant.revolut.com/embed.js";
+                var d = o.createElement("script");
+                d.id = "revolut-checkout";
+                d.src = prodUrl;
+                d.async = !0;
+                o.head.appendChild(d);
+                var s = { then: function (r, c) { d.onload = function () { r(e[t](n)) }, d.onerror = function () { o.head.removeChild(d), c && c(new Error(t + " failed to load")) } } };
+                return "function" == typeof Promise ? Promise.resolve(s) : s
+            }
+        }(window, document, "RevolutCheckout");
+    </script>
+
+    <style>
+        /* ==========================================================================
+           🎨 ЦЕНТР УПРАВЛЕНИЯ ЦВЕТАМИ
+           ========================================================================== */
+        :root {
+            /* --- ОСНОВНЫЕ ЦВЕТА --- */
+            --color-accent: #18B7EA;
+            --color-accent-hover: #159BC8;
+            --color-gradient-secondary: #D2FF3D;
+            --color-success: #34c759;
+            --color-error: #ff3b30;
+
+            /* --- ФОНЫ --- */
+            --bg-page: #F4F5F7;
+            --bg-card: #FFFFFF;
+            --bg-secondary: #fbfbfd;
+
+            /* --- ТЕКСТ --- */
+            --text-main: #1d1d1f;
+            --text-secondary: #86868b;
+            --text-white: #FFFFFF;
+
+            /* --- ГРАНИЦЫ --- */
+            --border-color: #d1d1d6;
+            --border-light: #f0f0f0;
+
+            /* --- СЛОИ И Z-INDEX --- */
+            --z-modal: 999999;
+            --z-modal-close: 1000000;
+        }
+
+        /* Basic Page Style for Demo */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background: #eee;
+            overscroll-behavior-y: none;
+            /* Prevent scroll chaining/bounce in some browsers */
+        }
+
+        /* === MODAL OVERLAY STYLES === */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: var(--z-modal);
+            /* BLOCK LAYOUT FOR NATIVE SCROLLING */
+            display: block;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* Padding to center content visually */
+            padding: 40px 0;
+            -webkit-overflow-scrolling: touch;
+            /* Smooth scrolling on iOS */
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-close-btn {
+            position: fixed;
+            /* STICKY BUTTON */
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: #555;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: var(--z-modal-close);
+            transition: transform 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* === WIDGET STYLES === */
+        #booking-widget-root {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            /* ALLOW FULL HEIGHT EXPANSION */
+            min-height: min-content;
+        }
+
+        #booking-widget-root * {
+            box-sizing: border-box;
+        }
+
+        .b-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 0 16px;
+            /* Added padding for mobile safety */
+        }
+
+        /* КАРТОЧКИ */
+        .b-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            background-clip: padding-box;
+        }
+
+        .b-card-header {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: #fff;
+            z-index: 2;
+            position: relative;
+        }
+
+        .b-card-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .b-card-status {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--color-accent);
+            opacity: 0;
+            transform: translateX(10px);
+            transition: 0.3s;
+        }
+
+        .b-card-body {
+            padding: 0 24px 24px 24px;
+            opacity: 1;
+            max-height: 5000px;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: top;
+        }
+
+        /* STATES */
+        .b-card.active {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .b-card.done .b-card-body {
+            max-height: 0;
+            padding-bottom: 0;
+            opacity: 0;
+        }
+
+        .b-card.done .b-card-status {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .b-card.done {
+            background: #fafafc;
+            border-color: var(--border-light);
+        }
+
+        .b-card.locked {
+            opacity: 0.6;
+            pointer-events: none;
+            filter: grayscale(1);
+        }
+
+        .b-card.locked .b-card-body {
+            max-height: 0;
+            padding-bottom: 0;
+        }
+
+        /* ПЛАНЫ ОПЛАТЫ */
+        .b-plans-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .b-plan-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-page);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .b-plan-card.selected {
+            background: #fff;
+            border-color: var(--color-accent);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+            position: relative;
+            z-index: 5;
+        }
+
+        .b-left-part {
+            display: flex;
+            align-items: center;
+            /* Allow container to shrink, preventing overflow */
+            min-width: 0;
+        }
+
+        .b-radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            margin-right: 14px;
+            position: relative;
+            flex-shrink: 0;
+            transition: 0.2s;
+            background: #fff;
+        }
+
+        .b-plan-card.selected .b-radio-circle {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+        }
+
+        .b-plan-card.selected .b-radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .b-plan-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+            /* Important for text truncation/wrap */
+        }
+
+        .b-plan-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            /* Prevent breaking single words generally, but allow wrap */
+            white-space: nowrap;
+        }
+
+        .b-plan-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .b-remainder-amount {
+            color: var(--color-accent);
+            font-weight: 800;
+            white-space: nowrap;
+            /* Keep amount + currency together */
+        }
+
+        .b-plan-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-left: 12px;
+            white-space: nowrap;
+            /* Price always on one line */
+            flex-shrink: 0;
+            /* Never shrink price */
+        }
+
+        /* --- MOBILE ADAPTIVE FIXES --- */
+        @media (max-width: 480px) {
+            .b-plan-card {
+                padding: 12px 14px;
+                align-items: flex-start;
+                /* Better alignment if title wraps */
+            }
+
+            .b-radio-circle {
+                margin-top: 2px;
+                /* Visual alignment with first text line */
+                margin-right: 10px;
+            }
+
+            .b-plan-info {
+                gap: 2px;
+            }
+
+            /* Allow title to wrap on very small screens if needed */
+            .b-plan-title {
+                font-size: 14px;
+                white-space: normal;
+            }
+
+            .b-plan-desc {
+                font-size: 11px;
+            }
+
+            .b-plan-price {
+                font-size: 15px;
+                margin-left: 8px;
+                /* Tighter spacing */
+            }
+        }
+
+        /* ПАССАЖИРЫ */
+        .b-passenger-group {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+            /* Increased separation */
+        }
+
+        .b-passenger-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+        }
+
+        /* Warning message for age validation */
+        .b-age-warning {
+            font-size: 12px;
+            color: #d88907;
+            /* Orange/Gold warning */
+            margin-top: 6px;
+            display: none;
+            line-height: 1.4;
+            padding: 8px 12px;
+            background: #fff8e6;
+            border-radius: 8px;
+            border: 1px solid #ffeeba;
+        }
+
+        .b-age-warning.visible {
+            display: block;
+        }
+
+        /* Warning message for unrealistic year */
+        .b-year-error {
+            font-size: 12px;
+            color: var(--color-error);
+            margin-top: 4px;
+            display: none;
+        }
+
+        .b-year-error.visible {
+            display: block;
+        }
+
+        /* Warning text for latin only */
+        .b-latin-error {
+            font-size: 11px;
+            color: var(--color-error);
+            margin-top: 4px;
+            display: none;
+            margin-left: 4px;
+        }
+
+        .b-latin-error.visible {
+            display: block;
+        }
+
+        /* ОБЩЕЕ */
+        .b-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .b-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .b-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .b-stepper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-page);
+            padding: 4px 12px;
+            border-radius: 12px;
+            height: 40px;
+        }
+
+        .b-step-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            user-select: none;
+            transition: 0.1s;
+            padding-bottom: 2px;
+        }
+
+        .b-step-val {
+            font-size: 17px;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* TOGGLE & MAP */
+        .b-switch-wrap {
+            cursor: pointer;
+        }
+
+        .b-switch {
+            position: relative;
+            width: 52px;
+            height: 32px;
+            background: #e9e9ea;
+            border-radius: 32px;
+            transition: 0.3s;
+        }
+
+        .b-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: 0.3s cubic-bezier(0.3, 1.5, 0.7, 1);
+        }
+
+        .b-switch-wrap.active .b-switch {
+            background: var(--color-success);
+        }
+
+        .b-switch-wrap.active .b-switch::after {
+            transform: translateX(20px);
+        }
+
+        .b-map-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease;
+            opacity: 0;
+            margin-top: 10px;
+        }
+
+        .b-map-container.open {
+            max-height: 800px;
+            opacity: 1;
+        }
+
+        .b-map-inner {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .b-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 44px);
+            gap: 10px;
+        }
+
+        .b-seat {
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 2px 0 #e5e5ea;
+            user-select: none;
+        }
+
+        .b-seat.selected {
+            background: var(--color-success);
+            color: #fff;
+            border-color: var(--color-success);
+            box-shadow: 0 3px 0 #248a3d;
+        }
+
+        .b-aisle {
+            width: 44px;
+            pointer-events: none;
+        }
+
+        .b-seat-hint {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--color-error);
+            font-weight: 500;
+            height: 16px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .b-seat-hint.show {
+            opacity: 1;
+        }
+
+        /* RECEIPT & INPUTS */
+        .b-receipt {
+            background: var(--bg-page);
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .b-receipt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .b-receipt-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .b-receipt-row span:last-child {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .b-receipt-divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 10px 0;
+        }
+
+        .b-receipt-total {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .b-input-group {
+            margin-bottom: 12px;
+            position: relative;
+            /* Ensure flatpickr attaches here */
+        }
+
+        /* Flex group for Name + Surname */
+        .b-input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .b-input-row .b-input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .b-input-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .b-input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+            background: #fff;
+            font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .b-input:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(24, 183, 234, 0.1);
+        }
+
+        .b-input.error {
+            border-color: var(--color-error);
+            background: #fff0f0;
+        }
+
+        .b-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            background: var(--color-accent);
+            color: var(--text-white);
+            margin-top: 10px;
+        }
+
+        .b-btn:active {
+            transform: scale(0.98);
+        }
+
+        .b-btn:disabled {
+            background: var(--border-color);
+            cursor: not-allowed;
+        }
+
+        /* MODAL */
+        .b-payment-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2147483647;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* CENTERED */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .b-payment-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .b-payment-modal {
+            width: 95%;
+            /* Responsive width */
+            max-width: 500px;
+            background: #fff;
+            border-radius: 24px;
+            padding: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .b-payment-overlay.show .b-payment-modal {
+            transform: scale(1);
+        }
+
+        .b-close-cross {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: #f2f2f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #555;
+            font-size: 20px;
+            z-index: 10;
+        }
+
+        /* ----- REVOLUT PAYMENT BOX STYLES ----- */
+        #payment-box {
+            min-height: 200px;
+            margin-top: 0px;
+        }
+
+        .rev-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        #revolut-pay-btn {
+            margin-bottom: 12px;
+            height: 50px;
+        }
+
+        #apple-google-pay {
+            margin-bottom: 20px;
+            min-height: 50px;
+        }
+
+        #card-field-target {
+            min-height: 250px;
+            margin-top: 10px;
+        }
+
+        .b-loading {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+
+        .error-message {
+            color: var(--color-error);
+            background: #fff0f0;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        /* FLATPICKR CUSTOMIZATION */
+        .flatpickr-calendar {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border: none;
+            font-family: inherit;
+            width: 100% !important;
+            max-width: none !important;
+            padding: 16px;
+            padding-bottom: 5px;
+            z-index: 2147483648 !important;
+            box-sizing: border-box;
+        }
+
+        .flatpickr-calendar.static {
+            position: absolute !important;
+            top: calc(100% + 5px) !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            transform: none !important;
+        }
+
+        .flatpickr-days {
+            width: 100% !important;
+        }
+
+        .dayContainer {
+            min-width: 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            justify-content: space-around;
+        }
+
+        .flatpickr-header {
+            margin-bottom: 10px;
+            padding: 0 10px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .flatpickr-months {
+            background: #fff;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+            width: 100%;
+        }
+
+        .flatpickr-current-month {
+            font-size: 18px;
+            padding: 0 60px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            left: 0;
+            position: static;
+        }
+
+        .flatpickr-wrapper {
+            width: 100% !important;
+            display: block !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-weight: 700;
+            color: #333;
+            font-size: 19px;
+            margin-right: 6px;
+            background: #f3f3f3;
+            padding: 4px 8px;
+            border-radius: 8px;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .flatpickr-current-month .numInputWrapper {
+            width: 75px;
+            flex-shrink: 0;
+        }
+
+        .flatpickr-current-month input.cur-year {
+            font-weight: 700;
+            color: #333;
+            font-size: 19px;
+            padding: 4px 8px;
+            background: #f3f3f3;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(24, 183, 234, 0.1);
+            color: var(--color-accent);
+            fill: var(--color-accent);
+            border: none !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month {
+            left: 5px;
+        }
+
+        .flatpickr-months .flatpickr-next-month {
+            right: 5px;
+        }
+
+        .flatpickr-day {
+            border-radius: 50% !important;
+            color: #333;
+            font-weight: 500;
+            height: 38px;
+            line-height: 38px;
+            margin: 2px 0;
+            font-size: 15px;
+            max-width: 38px;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.selected:hover {
+            background: var(--color-accent) !important;
+            border-color: var(--color-accent) !important;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(24, 183, 234, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- DEMO TRIGGER BUTTON -->
+    <div
+        style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; gap: 20px;">
+        <h2 style="color: #333;">Демонстрация виджета (Revolut)</h2>
+        <button onclick="openBookingModal()" class="b-btn" style="max-width: 250px;">
+            Забронировать тур
+        </button>
+        <p style="color: #666; font-size: 14px;">(Нажмите, чтобы открыть модальное окно)</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 💳 BOOKING WIDGET MODAL COMPONENT -->
+    <!-- ========================================== -->
+    <div id="booking-modal-overlay" class="modal-overlay" onclick="handleOverlayClick(event)">
+        <!-- Close Button for Main Modal -->
+        <div class="modal-close-btn" onclick="closeBookingModal()">✕</div>
+
+        <!-- FLATPICKR JS -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+
+        <div id="booking-widget-root">
+            <div class="b-loading">Загрузка виджета...</div>
+        </div>
+
+        <script>
+            (function () {
+                const TOUR_SETTINGS = {
+                    tourName: "Тур Клиновец (Revolut)",
+                    tourId: "klinovec_2025_02_15",
+                    tourDate: "15 февраля 2025",
+                    tourType: "Однодневный тур",
+                    telegramLink: "https://t.me/+AbCdEfGhIjKlMnOp",
+                    priceFull: 1190,
+                    priceDeposit: 500
+                };
+
+                // REVOLUT CONFIG
+                const SYSTEM_CONFIG = {
+                    webhook: "https://hook.eu2.make.com/rvniksweatai96qiet96yys0sv8m2aek", // Correct REVOLUT webhook
+                    priceSeat: 100
+                    // stripePublicKey is REMOVED
+                };
+
+                const ROWS_TEMPLATE = [1, 1, 0, 1, 1];
+                const START_ROW = 3;
+                const ROW_COUNT = 5;
+
+                let state = { count: 1, payType: 'full', isMapActive: false, selectedSeats: [], step: 1 };
+                let revolutInstance = null; // Store Revolut instance
+                let cardField = null;
+
+                function init() {
+                    render();
+                }
+
+                function render() {
+                    const root = document.getElementById('booking-widget-root');
+                    root.innerHTML = `
+                <div class="b-container" onclick="event.stopPropagation()">
+                    
+                    <!-- STEP 1 -->
+                    <div class="b-card active" id="card-step-1">
+                        <div class="b-card-header" id="header-1">
+                            <div class="b-card-title">1. Параметры поездки</div>
+                            <div class="b-card-status" id="status-1">Изменить</div>
+                        </div>
+                        <div class="b-card-body">
+                            
+                            <div class="b-plans-grid">
+                                <div class="b-plan-card selected" id="plan-full">
+                                    <div class="b-left-part">
+                                        <div class="b-radio-circle"></div>
+                                        <div class="b-plan-info">
+                                            <div class="b-plan-title">Оплатить полностью</div>
+                                            <div class="b-plan-desc">Без доплат в&nbsp;будущем</div>
+                                        </div>
+                                    </div>
+                                    <div class="b-plan-price">${TOUR_SETTINGS.priceFull} Kč</div>
+                                </div>
+
+                                <div class="b-plan-card" id="plan-depo">
+                                    <div class="b-left-part">
+                                        <div class="b-radio-circle"></div>
+                                        <div class="b-plan-info">
+                                            <div class="b-plan-title">Внести залог</div>
+                                            <div class="b-plan-desc">Остаток <span class="b-remainder-amount" id="lbl-remainder">${TOUR_SETTINGS.priceFull - TOUR_SETTINGS.priceDeposit} Kč</span> за&nbsp;10 дней до&nbsp;тура</div>
+                                        </div>
+                                    </div>
+                                    <div class="b-plan-price">${TOUR_SETTINGS.priceDeposit} Kč</div>
+                                </div>
+                            </div>
+
+                            <div class="b-row">
+                                <div class="b-label">Пассажиры</div>
+                                <div class="b-stepper">
+                                    <div class="b-step-btn" id="btn-minus">–</div>
+                                    <div class="b-step-val" id="val-cnt">1</div>
+                                    <div class="b-step-btn" id="btn-plus">+</div>
+                                </div>
+                            </div>
+                            <div class="b-row" id="seat-toggle-row" style="cursor:pointer">
+                                <div>
+                                    <div class="b-label">Выбрать места</div>
+                                    <div class="b-sub">Доплата +${SYSTEM_CONFIG.priceSeat} Kč</div>
+                                </div>
+                                <div class="b-switch-wrap" id="seat-switch-wrap"><div class="b-switch"></div></div>
+                            </div>
+                            <div class="b-map-container" id="map-container">
+                                <div class="b-map-inner">
+                                    <div class="b-grid" id="b-grid"></div>
+                                    <div class="b-seat-hint" id="seat-hint"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="b-receipt" id="receipt-1"></div>
+
+                            <button class="b-btn" id="btn-next">Далее</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="b-card locked" id="card-step-2">
+                        <div class="b-card-header">
+                            <div class="b-card-title">2. Данные пассажиров</div>
+                        </div>
+                        <div class="b-card-body">
+                            <div id="passengers-list"></div>
+
+                            <div style="margin-top: 30px; border-top: 1px solid var(--border-light); padding-top: 20px;">
+                                <h4 style="margin:0 0 15px 0; font-size:16px;">Покупатель</h4>
+                                <div class="b-input-group">
+                                    <input type="email" class="b-input" id="inp-email" placeholder="Email (для билетов)" 
+                                           name="email" autocomplete="email">
+                                </div>
+                                <div class="b-input-group">
+                                    <input type="tel" class="b-input" id="inp-phone" placeholder="Телефон" maxlength="16"
+                                           name="phone" autocomplete="tel">
+                                </div>
+                            </div>
+
+                            <div class="b-receipt" id="receipt-2"></div>
+
+                            <button class="b-btn" id="btn-pay">Оплатить</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- PAYMENT MODAL (REVOLUT) -->
+                <div class="b-payment-overlay" id="payment-overlay">
+                    <div class="b-payment-modal">
+                        <div class="b-close-cross" id="btn-close-pay">✕</div>
+                        
+                        <div id="payment-box">
+                            <div class="rev-header">Безопасная оплата Revolut</div>
+                            
+                            <div class="error-message" id="payment-error-msg"></div>
+
+                            <!-- 1. Revolut Pay Button (Pink) -->
+                            <div id="revolut-pay-btn"></div>
+
+                            <!-- 2. Apple Pay / Google Pay -->
+                            <div id="apple-google-pay"></div>
+
+                            <!-- 3. Card Field -->
+                            <div id="card-field-target"></div>
+
+                            <!-- 4. Submit Button (Hidden by default) -->
+                            <button id="btn-submit-card" class="b-btn" style="display:none; margin-top:16px;">Оплатить картой</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+
+                    bindEvents();
+                    updateUI();
+                }
+
+                function bindEvents() {
+                    document.getElementById('plan-full').addEventListener('click', function () { setPlan('full'); });
+                    document.getElementById('plan-depo').addEventListener('click', function () { setPlan('deposit'); });
+                    document.getElementById('header-1').onclick = () => goToStep(1);
+                    document.getElementById('seat-toggle-row').onclick = toggleMap;
+                    document.getElementById('btn-minus').onclick = () => changeCount(-1);
+                    document.getElementById('btn-plus').onclick = () => changeCount(1);
+                    document.getElementById('btn-next').onclick = toStep2;
+                    document.getElementById('btn-pay').onclick = pay;
+                    document.getElementById('btn-close-pay').onclick = closePay;
+                    document.getElementById('b-grid').addEventListener('click', function (e) {
+                        const seatEl = e.target.closest('.b-seat');
+                        if (seatEl) selectSeat(seatEl.innerText);
+                    });
+
+                    const ph = document.getElementById('inp-phone');
+                    ph.addEventListener('input', function (e) {
+                        this.value = this.value.replace(/[^0-9+\s-]/g, '');
+                        if (this.value.length > 16) this.value = this.value.slice(0, 16);
+                    });
+                }
+
+                function setPlan(type) {
+                    state.payType = type;
+                    document.getElementById('plan-full').classList.toggle('selected', type === 'full');
+                    document.getElementById('plan-depo').classList.toggle('selected', type === 'deposit');
+                    updateUI();
+                }
+
+                function goToStep(step) {
+                    if (step === 1) {
+                        const c1 = document.getElementById('card-step-1');
+                        const c2 = document.getElementById('card-step-2');
+                        c1.classList.remove('done', 'locked');
+                        c1.classList.add('active');
+                        c2.classList.remove('active');
+                        c2.classList.add('locked');
+                    }
+                }
+
+                function toStep2() {
+                    if (state.isMapActive && state.selectedSeats.length < state.count) {
+                        alert(`Выберите ${state.count} мест(а).`); return;
+                    }
+                    const container = document.getElementById('passengers-list');
+                    container.innerHTML = '';
+
+                    for (let i = 0; i < state.count; i++) {
+                        const group = document.createElement('div');
+                        group.className = 'b-passenger-group';
+                        group.innerHTML = `
+                        <div class="b-passenger-title">Пассажир ${i + 1}</div>
+                        <div class="b-input-row">
+                            <div class="b-input-group">
+                                <input type="text" class="b-input pass-firstname" data-id="${i}" 
+                                       placeholder="Имя" autocomplete="given-name">
+                                <div class="b-latin-error" id="err-first-${i}">Только латинские буквы</div>
+                            </div>
+                            <div class="b-input-group">
+                                <input type="text" class="b-input pass-lastname" data-id="${i}" 
+                                       placeholder="Фамилия" autocomplete="family-name">
+                                <div class="b-latin-error" id="err-last-${i}">Только латинские буквы</div>
+                            </div>
+                        </div>
+                        <div class="b-input-group" style="margin-bottom:0">
+                            <input type="text" class="b-input pass-dob flatpickr-input" data-id="${i}" 
+                                   placeholder="Дата рождения (ДД.ММ.ГГГГ)" autocomplete="off">
+                            <div class="b-age-warning" id="warn-young-${i}">Внимание: действуют возрастные ограничения...</div>
+                            <div class="b-age-warning" id="warn-old-${i}">Внимание: действуют возрастные ограничения...</div>
+                            <div class="b-year-error" id="err-year-${i}">Пожалуйста, проверьте правильность года.</div>
+                        </div>
+                    `;
+                        container.appendChild(group);
+                    }
+
+                    // Validation logic + Flatpickr init (simplified for brevity but functional)
+                    const nameRegex = /^[A-Za-z\s-]*$/;
+                    const validateLatin = (el, infoId) => {
+                        const val = el.value.replace(/[^a-zA-Z\s-]/g, '');
+                        if (el.value !== val) el.value = val;
+                        // Formatting
+                        if (el.value.length > 0) el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1).toLowerCase();
+                    };
+
+                    document.querySelectorAll('.pass-firstname, .pass-lastname').forEach((el, index) => {
+                        el.addEventListener('input', function () { validateLatin(this, ''); });
+                    });
+
+                    document.querySelectorAll('.pass-dob').forEach((el, index) => {
+                        flatpickr(el, {
+                            dateFormat: "d.m.Y",
+                            defaultDate: null,
+                            allowInput: true,
+                            locale: "ru",
+                            yearSelectorType: "dropdown",
+                            maxDate: "today",
+                            disableMobile: "true",
+                            appendTo: el.parentNode,
+                            static: true,
+                            onReady: function (dObj, dStr, fp) { if (!fp.selectedDates.length) fp.jumpToDate("01.01.2000"); }
+                        });
+                    });
+
+                    document.getElementById('card-step-1').classList.remove('active');
+                    document.getElementById('card-step-1').classList.add('done');
+                    document.getElementById('status-1').innerText = getSummaryText();
+
+                    const c2 = document.getElementById('card-step-2');
+                    c2.classList.remove('locked');
+                    c2.classList.add('active');
+
+                    // Scroll logic
+                    setTimeout(() => {
+                        const overlay = document.getElementById('booking-modal-overlay');
+                        overlay.scrollTop = 0;
+                    }, 50);
+                }
+
+                function getSummaryText() {
+                    const type = state.payType === 'full' ? 'Полная' : 'Залог';
+                    const seats = state.isMapActive ? `Места: ${state.selectedSeats.join(', ')}` : 'Без мест';
+                    return `${state.count} чел • ${type} • ${seats}`;
+                }
+
+                function closePay() {
+                    document.getElementById('payment-overlay').classList.remove('show');
+                    document.getElementById('payment-overlay').style.display = "none"; // Ensure it's hidden
+                    // Destroy Revolut instance if needed
+                    if (revolutInstance) {
+                        try {
+                            // Unmount all mounted components
+                            revolutInstance.revolutPay.unmount();
+                            revolutInstance.paymentRequest.unmount();
+                            if (cardField) cardField.unmount(); // cardField is part of the instance
+                        } catch (e) { console.error("Error unmounting Revolut components:", e); }
+                        revolutInstance = null;
+                        cardField = null; // Clear cardField reference too
+                    }
+                    document.getElementById('btn-pay').disabled = false;
+                    document.getElementById('btn-pay').innerText = "Оплатить";
+                    document.getElementById('btn-submit-card').style.display = "none"; // Hide card submit button
+                }
+
+                function changeCount(diff) {
+                    if (state.count + diff >= 1 && state.count + diff <= 10) {
+                        state.count += diff;
+                        if (state.selectedSeats.length > state.count) {
+                            state.selectedSeats = state.selectedSeats.slice(0, state.count);
+                            renderGrid();
+                        }
+                        updateUI();
+                    }
+                }
+
+                function toggleMap() {
+                    state.isMapActive = !state.isMapActive;
+                    const cont = document.getElementById('map-container');
+                    if (state.isMapActive) { cont.classList.add('open'); renderGrid(); } else { cont.classList.remove('open'); }
+                    updateUI();
+                }
+
+                function renderGrid() {
+                    const grid = document.getElementById('b-grid');
+                    grid.innerHTML = '';
+                    const letters = ['A', 'B', 'X', 'C', 'D'];
+                    for (let i = 0; i < ROW_COUNT; i++) {
+                        const r = START_ROW + i;
+                        ROWS_TEMPLATE.forEach((type, idx) => {
+                            if (type === 0) { grid.innerHTML += '<div class="b-aisle"></div>'; return; }
+                            const id = r + letters[idx];
+                            const isSel = state.selectedSeats.includes(id);
+                            grid.innerHTML += `<div class="b-seat ${isSel ? 'selected' : ''}">${id}</div>`;
+                        });
+                    }
+                }
+
+                function selectSeat(id) {
+                    const idx = state.selectedSeats.indexOf(id);
+                    const hint = document.getElementById('seat-hint');
+                    if (idx > -1) { state.selectedSeats.splice(idx, 1); hint.classList.remove('show'); } else {
+                        if (state.selectedSeats.length < state.count) { state.selectedSeats.push(id); hint.classList.remove('show'); }
+                        else {
+                            hint.innerText = `Максимум ${state.count} места`;
+                            hint.classList.add('show');
+                            setTimeout(() => hint.classList.remove('show'), 2000);
+                        }
+                    }
+                    renderGrid(); updateUI();
+                }
+
+                function updateUI() {
+                    const isFull = state.payType === 'full';
+                    const wrap = document.getElementById('seat-switch-wrap');
+                    if (state.isMapActive) wrap.classList.add('active'); else wrap.classList.remove('active');
+
+                    document.getElementById('val-cnt').innerText = state.count;
+
+                    const base = isFull ? TOUR_SETTINGS.priceFull : TOUR_SETTINGS.priceDeposit;
+                    const seat = (state.isMapActive) ? SYSTEM_CONFIG.priceSeat : 0;
+                    const total = (base + seat) * state.count;
+                    const remainder = (TOUR_SETTINGS.priceFull - TOUR_SETTINGS.priceDeposit);
+                    document.getElementById('lbl-remainder').innerText = remainder + " Kč";
+
+                    const receiptHtml = `
+                <div class="b-receipt-row">
+                    <span>${state.count} x ${isFull ? 'Билет' : 'Залог'}</span>
+                    <span>${state.count * base} Kč</span>
+                </div>
+                ${state.isMapActive ? `
+                <div class="b-receipt-row">
+                    <span>${state.count} x Место</span>
+                    <span>${state.count * SYSTEM_CONFIG.priceSeat} Kč</span>
+                </div>` : ''}
+                <div class="b-receipt-divider"></div>
+                <div class="b-receipt-total">
+                    <span>Итого</span>
+                    <span id="final-price-1">${total} Kč</span>
+                </div>
+            `;
+                    document.getElementById('receipt-1').innerHTML = receiptHtml;
+                    document.getElementById('receipt-2').innerHTML = receiptHtml;
+
+                    const btnNext = document.getElementById('btn-next');
+                    const btnPay = document.getElementById('btn-pay');
+                    if (state.isMapActive && state.selectedSeats.length < state.count) {
+                        btnNext.innerText = `Выберите места`; btnNext.disabled = true;
+                    } else {
+                        btnNext.innerText = `Далее`; btnNext.disabled = false;
+                    }
+                    btnPay.innerText = `Оплатить ${total} Kč`;
+                }
+
+                // ==========================================
+                // 🚀 PAYMENT LOGIC (EMBEDDED WIDGETS)
+                // ==========================================
+                // ==========================================
+                // 🚀 PAYMENT LOGIC (EMBEDDED WIDGETS)
+                // ==========================================
+                async function pay() {
+                    const btn = document.getElementById('btn-pay');
+                    const errorMsg = document.getElementById('payment-error-msg');
+                    errorMsg.innerText = "";
+                    errorMsg.style.display = "none";
+
+                    // 1. Validation
+                    let hasError = false;
+                    const passengers = [];
+                    document.querySelectorAll('.b-passenger-group').forEach((group, index) => {
+                        const n = group.querySelector('.pass-firstname');
+                        const s = group.querySelector('.pass-lastname');
+                        const d = group.querySelector('.pass-dob');
+                        if (!n.value) { n.classList.add('error'); hasError = true; } else { n.classList.remove('error'); }
+                        if (!s.value) { s.classList.add('error'); hasError = true; } else { s.classList.remove('error'); }
+                        if (!d.value) { d.classList.add('error'); hasError = true; } else { d.classList.remove('error'); }
+                        passengers.push({ firstname: n.value, lastname: s.value, dob: d.value });
+                    });
+
+                    const email = document.getElementById('inp-email').value.trim();
+                    const phone = document.getElementById('inp-phone').value.trim();
+                    if (!email.includes('@')) { document.getElementById('inp-email').classList.add('error'); hasError = true; } else { document.getElementById('inp-email').classList.remove('error'); }
+                    if (phone.length < 5) { document.getElementById('inp-phone').classList.add('error'); hasError = true; } else { document.getElementById('inp-phone').classList.remove('error'); }
+
+                    if (hasError) return;
+
+                    btn.disabled = true;
+                    btn.innerText = "Подготовка...";
+
+                    // 2. Prepare Payload
+                    const basePrice = state.payType === 'full' ? TOUR_SETTINGS.priceFull : TOUR_SETTINGS.priceDeposit;
+                    const seatPrice = state.isMapActive ? SYSTEM_CONFIG.priceSeat : 0;
+                    const finalTotal = (basePrice + seatPrice) * state.count;
+
+                    const payload = {
+                        test_mode: false,
+                        timestamp: new Date().toISOString(),
+                        product_name: TOUR_SETTINGS.tourName,
+                        amount: finalTotal * 100, // Cents
+                        currency: "CZK",
+                        email: email,
+                        customer_email: email,
+                        buyer_email: email,
+                        buyer_phone: phone,
+                        passenger_count: state.count,
+                        total_pay_now: finalTotal
+                    };
+
+                    passengers.forEach((p, i) => {
+                        payload[`passenger_${i + 1}_name`] = `${p.firstname} ${p.lastname}`;
+                    });
+
+                    try {
+                        // 3. Get Token
+                        const res = await fetch(SYSTEM_CONFIG.webhook, {
+                            method: "POST", headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload)
+                        });
+
+                        const textResponse = await res.text();
+                        if (!res.ok) throw new Error("Server Error: " + textResponse);
+                        let data;
+                        try { data = JSON.parse(textResponse); } catch (e) { throw new Error("Invalid JSON"); }
+                        const token = data.token || data.public_id;
+                        if (!token) throw new Error("No token received");
+
+                        // 4. Show Overlay
+                        document.getElementById('payment-overlay').classList.add('show');
+                        document.getElementById('payment-overlay').style.display = "flex";
+                        btn.innerText = "Оплатить";
+                        btn.disabled = false;
+
+                        // ============================================================
+                        // REFERENCE IMPLEMENTATION (Revolut Checkout)
+                        // Source: Standard Integration Pattern
+                        // ============================================================
+
+                        // Detect Environment
+                        const isSandbox = (typeof token === 'string') && (token.indexOf('sand') !== -1 || token.indexOf('test') !== -1);
+                        const mode = isSandbox ? 'sandbox' : 'prod';
+                        console.log(`[Revolut] Initializing in ${mode} mode...`);
+
+                        const instance = await RevolutCheckout(token, mode);
+                        revolutInstance = instance;
+
+                        // 1. REVOLUT PAY (Digital Wallet)
+                        const revPayTarget = document.getElementById('revolut-pay-btn');
+                        let revPayMounted = false;
+
+                        try {
+                            if (instance.revolutPay && typeof instance.revolutPay.mount === 'function') {
+                                instance.revolutPay.mount(revPayTarget, {
+                                    locale: 'ru',
+                                    name: `${passengers[0].firstname} ${passengers[0].lastname}`,
+                                    email: email,
+                                    phone: phone,
+                                    mobileRedirect: true
+                                });
+                                instance.revolutPay.on('payment', (event) => {
+                                    if (event.type === 'success') { alert("Оплата успешна!"); window.location.reload(); }
+                                    if (event.type === 'error') { console.error("RevPay Error:", event.error); }
+                                });
+                                revPayMounted = true;
+                            }
+                        } catch (e) {
+                            console.warn("Standard Revolut Pay mount failed:", e);
+                        }
+
+                        // Fallback logic: If mount failed or not available, show Manual Button
+                        if (!revPayMounted) {
+                            console.log("Switching to Manual Revolut Pay Button");
+                            revPayTarget.innerHTML = `
+                                <div id="manual-rev-btn" style="background:#FA2C79; color:#fff; height:48px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:700; cursor:pointer;" onclick="triggerRevolutPopup()">
+                                    Revolut Pay / Apple Pay / Card
+                                </div>
+                                <div style="text-align:center; font-size:11px; color:#999; margin:6px 0 12px 0;">Откроется всплывающее окно</div>
+                            `;
+                        }
+
+                        // 2. APPLE PAY / GOOGLE PAY (Payment Request)
+                        try {
+                            const walletTarget = document.getElementById('apple-google-pay');
+                            const paymentRequest = instance.paymentRequest(walletTarget, {
+                                amount: finalTotal * 100,
+                                currency: 'CZK',
+                                locale: 'ru',
+                                requestShipping: false,
+                                requestPayerName: true,
+                                requestPayerEmail: true,
+                                buttonTheme: 'dark',
+                                buttonHeight: 45
+                            });
+
+                            paymentRequest.canMakePayment().then((result) => {
+                                if (result) {
+                                    paymentRequest.render();
+                                    paymentRequest.on('payment', (event) => {
+                                        if (event.type === 'success') { alert("Оплата успешна!"); window.location.reload(); }
+                                        if (event.type === 'error') { console.error("Wallet Error:", event.error); }
+                                    });
+                                } else {
+                                    walletTarget.style.display = 'none';
+                                }
+                            });
+                        } catch (e) {
+                            console.warn("Payment Request (Wallet) failed:", e);
+                            document.getElementById('apple-google-pay').style.display = 'none';
+                        }
+
+                        // 3. CARD FIELD (Embedded)
+                        const cardTarget = document.getElementById('card-field-target');
+                        cardField = instance.createCardField({
+                            target: cardTarget,
+                            onSuccess() { alert("Оплата картой успешна!"); window.location.reload(); },
+                            onError(err) {
+                                errorMsg.innerText = "Ошибка карты: " + (err.message || JSON.stringify(err));
+                                errorMsg.style.display = "block";
+                            }
+                        });
+
+                        // Link Submit Button
+                        const submitBtn = document.getElementById('btn-submit-card');
+                        submitBtn.style.display = "block";
+                        submitBtn.innerText = `Оплатить ${finalTotal} Kč`;
+                        submitBtn.onclick = function () {
+                            submitBtn.disabled = true;
+                            submitBtn.innerText = "Обработка...";
+                            cardField.submit({
+                                name: `${passengers[0].firstname} ${passengers[0].lastname}`,
+                                email: email,
+                                phone: phone
+                            });
+                        };
+
+                    } catch (e) {
+                        console.error(e);
+                        alert("Ошибка инициализации: " + e.message);
+                        btn.disabled = false;
+                        btn.innerText = "Оплатить";
+                    }
+                }
+
+                function triggerRevolutPopup() {
+                    if (!revolutInstance) return alert("SDK не загружен");
+                    revolutInstance.payWithPopup({
+                        onSuccess() { alert("Оплата успешна!"); window.location.reload(); },
+                        onError(err) { alert("Ошибка: " + err); }
+                    });
+                }
+
+                setTimeout(init, 500);
+            })();
+
+            // Global helpers
+            function openBookingModal() {
+                const overlay = document.getElementById('booking-modal-overlay');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeBookingModal() {
+                const overlay = document.getElementById('booking-modal-overlay');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            function handleOverlayClick(e) {
+                if (e.target === document.getElementById('booking-modal-overlay')) closeBookingModal();
+            }
+        </script>
+    </div>
+</body>
+
+</html>

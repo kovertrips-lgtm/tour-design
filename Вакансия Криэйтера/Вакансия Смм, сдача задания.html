@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сдача Тестового Задания</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --card-bg: #151515;
+            /* Match new modal */
+            --text-color: #ffffff;
+            --lime: #D2FF3D;
+            --cyan: #18B7EA;
+            --gray: #333333;
+            --input-bg: #252525;
+            --font-main: 'Inter', sans-serif;
+            --font-display: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .submit-wrapper {
+            width: 100%;
+            max-width: 460px;
+            /* Slightly wider */
+            padding: 20px;
+        }
+
+        .submit-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* Subtle border */
+            border-radius: 28px;
+            /* Larger radius */
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            /* Deeper shadow */
+            position: relative;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+        }
+
+        p.subtitle {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #bbb;
+            font-weight: 500;
+            margin-left: 4px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            background: var(--input-bg);
+            border: 1px solid transparent;
+            /* No border by default */
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-family: var(--font-main);
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            background: #2F2F2F;
+            border-color: var(--lime);
+            box-shadow: 0 0 0 3px rgba(210, 255, 61, 0.1);
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        button.submit-btn {
+            width: 100%;
+            margin-top: 24px;
+            padding: 20px;
+            background: var(--lime);
+            color: black;
+            font-family: var(--font-display);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 20px rgba(210, 255, 61, 0.15);
+            letter-spacing: 0.03em;
+        }
+
+        button.submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(210, 255, 61, 0.3);
+        }
+
+        button.submit-btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Success Message styling */
+        .success-message {
+            display: none;
+            padding: 60px 20px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(210, 255, 61, 0.1);
+            color: var(--lime);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 24px;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 600px) {
+            body {
+                align-items: flex-start;
+                padding-top: 0;
+                /* Remove top padding to use full screen if needed */
+                background-color: var(--bg-color);
+            }
+
+            .submit-wrapper {
+                padding: 0;
+                max-width: 100%;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* HIDE SUCCESS MESSAGE INITIALLY ON MOBILE */
+            .submit-card.success-message {
+                display: none !important;
+            }
+
+            .submit-card {
+                flex-grow: 1;
+                border: none;
+                border-radius: 0;
+                background: var(--bg-color);
+                /* Seamless bg */
+                box-shadow: none;
+                padding: 30px 20px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-top: 20px;
+            }
+
+            /* Add padding bottom to form to prevent button overlap */
+            form {
+                padding-bottom: 100px;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            button.submit-btn {
+                margin-top: auto;
+                /* Sticky bottom behavior via flexbox */
+                margin-bottom: 20px;
+            }
+
+            input {
+                padding: 18px;
+                font-size: 16px;
+                background: #1A1A1A;
+                /* Slightly lighter on pure black bg */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="submit-wrapper">
+        <div class="submit-card" id="formCard">
+            <h1>Сдача Задания</h1>
+            <p class="subtitle">Заполни форму ниже и прикрепи ссылку на папку с выполненным тестовым заданием (Google
+                Drive / Облако).</p>
+
+            <form onsubmit="sendTestTask(event)">
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" id="firstName" placeholder="Твоё имя" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Фамилия</label>
+                    <input type="text" id="lastName" placeholder="Твоя фамилия" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Ссылка на готовое задание</label>
+                    <input type="url" id="taskLink" placeholder="https://drive.google.com/..." required>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">ОТПРАВИТЬ</button>
+            </form>
+        </div>
+
+        <!-- Success State -->
+        <div class="submit-card success-message" id="successCard">
+            <div class="success-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="#D2FF3D" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#D2FF3D" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h1>Получено!</h1>
+            <p class="subtitle">Мы получили твоё задание.<br>Вернёмся с фидбэком в течение пары дней.</p>
+        </div>
+    </div>
+
+    <script>
+        function sendTestTask(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerText;
+
+            // 1. Loading State
+            btn.innerText = 'ОТПРАВКА...';
+            btn.disabled = true;
+
+            // 2. Data Collection
+            const data = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                taskLink: document.getElementById('taskLink').value.trim(),
+                source: 'test_task_submission_page'
+            };
+
+            // 3. Send to Webhook
+            fetch('https://hook.eu2.make.com/hnpp1axgq118yzovpxbxh9ygdncanwxh', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Success UI
+                        document.getElementById('formCard').style.display = 'none';
+                        const successCard = document.getElementById('successCard');
+                        if (window.innerWidth <= 600) {
+                            successCard.style.setProperty('display', 'flex', 'important');
+                        } else {
+                            successCard.style.display = 'block';
+                        }
+                    } else {
+                        alert('Произошла ошибка при отправке. Пожалуйста, попробуй еще раз.');
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ошибка сети. Проверь интернет и попробуй снова.');
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                });
+        }
+    </script>
+
+</body>
+
+</html>

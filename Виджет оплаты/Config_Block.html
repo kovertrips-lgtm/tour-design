@@ -1,0 +1,23 @@
+<!-- 
+    BLOCK: ADMIN CONFIGURATION (T123)
+    ОПИСАНИЕ: Этот блок должен стоять ВЫШЕ (или ПЕРЕД) основным блоком виджета.
+    Здесь задаются настройки конкретного тура.
+-->
+<script>
+    window.KOVER_WIDGET_CONFIG = {
+        // --- ОСНОВНЫЕ НАСТРОЙКИ ---
+        id: 'klinovec_31_01_26',               // ID тура (внутренний, для базы данных)
+        name: 'Клиновец 31.01.2026',           // Название тура (видит клиент)
+        date: '31.01.2026',                    // Дата тура (ДД.ММ.ГГГГ)
+        tourType: 'Ski Tour',                  // Тип тура (Ski Tour, Surf Camp и т.д.)
+
+        // --- ЦЕНЫ ---
+        price: 1190,                           // Полная стоимость
+        deposit: 500,                          // Размер залога
+
+        // --- ССЫЛКИ И КЛЮЧИ ---
+        stripeKey: 'pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6',
+        webhook: 'https://hook.eu2.make.com/t118j4fcirfp3s6srdt97ahsr9hggo63',
+        telegram_link: 'https://t.me/kover_travel' // Ссылка на чат/канал
+    };
+</script>

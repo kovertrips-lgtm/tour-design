@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Новая заявка на вакансию</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+
+    <!-- Main Container -->
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f4f4f4; padding: 20px;">
+        <tr>
+            <td align="center">
+
+                <!-- Card -->
+                <table width="600" border="0" cellspacing="0" cellpadding="0"
+                    style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+
+                    <!-- Header -->
+                    <tr>
+                        <td
+                            style="background-color: #0d0d0d; padding: 30px; text-align: center; border-bottom: 4px solid #D2FF3D;">
+                            <h1
+                                style="color: #ffffff; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px;">
+                                🚀 Новая Заявка
+                            </h1>
+                            <p style="color: #D2FF3D; margin: 5px 0 0 0; font-weight: bold;">
+                                Вакансия: Travel-Криэйтор
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <p style="margin-top: 0; color: #555555; font-size: 16px; margin-bottom: 20px;">
+                                Привет! Новая анкета упала с лендинга. Вот данные кандидата:
+                            </p>
+
+                            <!-- Data Table -->
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10"
+                                style="background-color: #f9f9f9; border-radius: 8px; border: 1px solid #eeeeee;">
+                                <tr>
+                                    <td width="35%"
+                                        style="font-weight: bold; color: #333; border-bottom: 1px solid #eee;">Имя:</td>
+                                    <td style="color: #000; border-bottom: 1px solid #eee;">{{1.firstName}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; color: #333; border-bottom: 1px solid #eee;">Фамилия:
+                                    </td>
+                                    <td style="color: #000; border-bottom: 1px solid #eee;">{{1.lastName}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; color: #333; border-bottom: 1px solid #eee;">Телефон:
+                                    </td>
+                                    <td style="color: #000; border-bottom: 1px solid #eee;">
+                                        <a href="tel:{{1.phone}}"
+                                            style="color: #18B7EA; text-decoration: none;">{{1.phone}}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; color: #333; border-bottom: 1px solid #eee;">Email:
+                                    </td>
+                                    <td style="color: #000; border-bottom: 1px solid #eee;">
+                                        <a href="mailto:{{1.email}}"
+                                            style="color: #18B7EA; text-decoration: none;">{{1.email}}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; color: #333;">Instagram:</td>
+                                    <td style="color: #000;">
+                                        <a href="https://instagram.com/{{1.instagram}}"
+                                            style="color: #D2FF3D; background: #000; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 14px;"
+                                            target="_blank">
+                                            @{{1.instagram}}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <br>
+                            <p style="font-size: 14px; color: #999; margin-bottom: 0;">
+                                Источник: {{1.source}}<br>
+                                Кандидату было отправлено авто-письмо с тестовым заданием.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td
+                            style="background-color: #eeeeee; padding: 20px; text-align: center; font-size: 12px; color: #888;">
+                            &copy; 2026 KOVER Travel. Внутреннее уведомление.
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

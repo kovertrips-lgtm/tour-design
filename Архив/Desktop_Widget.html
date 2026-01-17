@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOVER Booking - Desktop</title>
+
+    <!-- FONTS & STYLES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+
+    <style>
+        :root {
+            --color-bg: #f5f5f7;
+            --color-card: #ffffff;
+            --color-text-main: #1d1d1f;
+            --color-text-second: #86868b;
+            --color-accent: #007aff;
+            --color-error: #ff3b30;
+            --color-success: #34c759;
+            --border-radius: 20px;
+            --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.2);
+            --border-color: #d2d2d7;
+            --border-light: #e5e5ea;
+        }
+
+        /* RESET */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--color-text-main);
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ACTIONS */
+        .hidden {
+            display: none !important;
+        }
+
+        /* HERO SECTION */
+        .hero-container {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: #1d1d1f;
+            letter-spacing: -2px;
+        }
+
+        .cta-button {
+            padding: 20px 48px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            background: #007aff;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 8px 20px rgba(0, 122, 255, 0.25);
+        }
+
+        .cta-button:hover {
+            transform: scale(1.03);
+        }
+
+        /* MODAL OVERLAY */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* MODAL WINDOW (FIXED HEIGHT) */
+        .modal-window {
+            width: 100%;
+            max-width: 540px;
+            height: 720px;
+            /* FIXED HEIGHT */
+            max-height: 90vh;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: var(--shadow-modal);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-window {
+            transform: scale(1);
+        }
+
+        /* HEADER */
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-light);
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 10;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            background: #f2f2f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            color: #8e8e93;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #1d1d1f;
+            background: #e5e5ea;
+        }
+
+        /* STEPPER */
+        .stepper {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border-light);
+            background: #fff;
+            color: var(--border-color);
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .step-dot.active {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .step-dot.completed {
+            border-color: var(--color-success);
+            background: var(--color-success);
+            color: #fff;
+            font-size: 0;
+        }
+
+        .step-dot.completed::after {
+            content: '✓';
+            font-size: 14px;
+        }
+
+        /* BODY (SCROLLABLE) */
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 24px;
+            position: relative;
+        }
+
+        /* FOOTER (FIXED) */
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-light);
+            background: #fff;
+            z-index: 10;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* SLIDES */
+        .slide {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* UI COMPONENTS */
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+        }
+
+        .plan-card {
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            transition: 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .plan-card:hover {
+            border-color: #b0c4de;
+        }
+
+        .plan-card.selected {
+            border-color: var(--color-accent);
+            background: rgba(0, 122, 255, 0.04);
+        }
+
+        .radio-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            margin-right: 14px;
+            flex-shrink: 0;
+            position: relative;
+            top: 2px;
+        }
+
+        .plan-card.selected .radio-circle {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+        }
+
+        .plan-card.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        /* COUNTER */
+        .b-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            padding: 16px;
+            background: #f9f9fa;
+            border-radius: 16px;
+        }
+
+        .b-btn-circle {
+            width: 36px;
+            height: 36px;
+            background: #fff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            user-select: none;
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .f-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .f-input {
+            width: 100%;
+            height: 50px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+            background: #fff;
+        }
+
+        .f-input:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .f-input.error {
+            border-color: var(--color-error);
+            background: #fff5f5;
+        }
+
+        .error-msg {
+            font-size: 12px;
+            color: var(--color-error);
+            margin-top: 4px;
+            display: none;
+        }
+
+        .f-input.error+.error-msg {
+            display: block;
+        }
+
+        .b-shake {
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            25% {
+                transform: translateX(-4px)
+            }
+
+            75% {
+                transform: translateX(4px)
+            }
+        }
+
+        /* BUTTONS */
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            background: var(--color-accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: #0071eb;
+        }
+
+        .btn-primary:disabled {
+            background: #e5e5ea;
+            color: #8e8e93;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            color: var(--color-text-second);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            color: var(--color-text-main);
+        }
+
+        /* STRIPE */
+        .StripeElement {
+            height: 48px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: white;
+        }
+
+        .StripeElement--focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        /* SUMMARY */
+        .summ-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .summ-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HERO -->
+    <div class="hero-container">
+        <div class="hero-title">Клиновец 31.01.2026</div>
+        <p style="font-size: 20px; color: #555; max-width: 600px; margin-bottom: 40px; line-height: 1.5;">
+            Легендарный тур. Горы, скорость, стиль.<br>Теперь в новом формате.
+        </p>
+        <button class="cta-button" onclick="openWidget()">Забронировать место</button>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="widget-overlay">
+        <div class="modal-window">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+                <div class="stepper">
+                    <div class="step-dot active" id="dot-1">1</div>
+                    <div style="width: 12px; height: 2px; background: #e5e5ea;"></div>
+                    <div class="step-dot" id="dot-2">2</div>
+                    <div style="width: 12px; height: 2px; background: #e5e5ea;"></div>
+                    <div class="step-dot" id="dot-3">3</div>
+                </div>
+                <div class="close-btn" onclick="closeWidget()">✕</div>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body" id="modal-body">
+
+                <!-- STEP 1: CONFIG -->
+                <div class="slide active" id="slide-1">
+                    <h2>Параметры поездки</h2>
+
+                    <div class="plan-card selected" id="opt-full" onclick="setPlan('full')">
+                        <div style="display:flex;">
+                            <div class="radio-circle"></div>
+                            <div>
+                                <div style="font-size:18px; font-weight:700; margin-bottom:4px;">Полная оплата</div>
+                                <div style="font-size:14px; color:#86868b;">Всё включено, без доплат</div>
+                            </div>
+                        </div>
+                        <div style="font-size:18px; font-weight:700;">1190 Kč</div>
+                    </div>
+
+                    <div class="plan-card" id="opt-depo" onclick="setPlan('depo')">
+                        <div style="display:flex;">
+                            <div class="radio-circle"></div>
+                            <div>
+                                <div style="font-size:18px; font-weight:700; margin-bottom:4px;">Внести залог</div>
+                                <div style="font-size:14px; color:#86868b;">Остаток <span id="remain-txt"
+                                        style="font-weight:700; color:#000;"></span></div>
+                            </div>
+                        </div>
+                        <div style="font-size:18px; font-weight:700;">500 Kč</div>
+                    </div>
+
+                    <div class="b-row">
+                        <div style="font-weight:600; font-size:16px;">Количество гостей</div>
+                        <div style="display:flex; gap: 12px; align-items:center;">
+                            <div class="b-btn-circle" onclick="modCount(-1)">–</div>
+                            <div style="font-weight:700; font-size:20px; width:24px; text-align:center;" id="count-val">
+                                1</div>
+                            <div class="b-btn-circle" onclick="modCount(1)">+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: DETAILS -->
+                <div class="slide" id="slide-2">
+                    <h2>Данные участников</h2>
+                    <div id="pax-container"></div>
+
+                    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e5ea;">
+                        <input type="checkbox" id="chk-consent"
+                            style="transform:scale(1.2); accent-color:var(--color-accent); cursor:pointer;">
+                        <label for="chk-consent" style="font-size:13px; color:#666; margin-left: 8px; cursor:pointer;">Я
+                            даю согласие на обработку персональных данных</label>
+                    </div>
+                </div>
+
+                <!-- STEP 3: PAYMENT -->
+                <div class="slide" id="slide-3">
+                    <h2>Оплата</h2>
+                    <div style="background:#f9f9fa; border-radius:16px; padding:16px; margin-bottom:24px;">
+                        <div class="summ-row">
+                            <span>Тип оплаты</span>
+                            <span id="summ-type">Полная</span>
+                        </div>
+                        <div class="summ-row">
+                            <span>Гостей</span>
+                            <span id="summ-count">1</span>
+                        </div>
+                        <div class="summ-total">
+                            <span>К оплате</span>
+                            <span id="summ-final">0 Kč</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:20px;">
+                        <div id="wallet-mount"></div>
+                        <div id="or-divider"
+                            style="text-align:center; font-size:12px; color:#ccc; margin:16px 0; display:none;">— ИЛИ —
+                        </div>
+                        <div class="f-label">Банковская карта</div>
+                        <div id="card-mount"></div>
+                        <div id="pay-error" style="color:red; font-size:13px; margin-top:8px; display:none;"></div>
+                    </div>
+
+                    <div style="text-align:center; font-size:12px; color:#bbb; margin-top:20px;">
+                        Безопасные платежи через Stripe
+                    </div>
+                </div>
+
+                <!-- SUCCESS -->
+                <div class="slide" id="slide-success" style="text-align:center; padding-top: 80px;">
+                    <div style="font-size:64px; color:var(--color-success); margin-bottom:24px;">✓</div>
+                    <h2>Успешно!</h2>
+                    <p style="color:#666; font-size:16px;">Билеты отправлены на почту.</p>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+                <button class="btn-primary" id="btn-next" onclick="nextStep()">Продолжить</button>
+                <button class="btn-secondary" id="btn-back" onclick="prevStep()">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
+
+    <script>
+        const CONFIG = {
+            priceFull: 1190,
+            priceDepo: 500,
+            webhook: "https://hook.eu2.make.com/t118j4fcirfp3s6srdt97ahsr9hggo63",
+            stripeKey: "pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6",
+            tourName: "Клиновец 31.01.2026",
+            date: "31.01.2026"
+        };
+
+        let state = { step: 1, count: 1, type: 'full', pax: [] };
+        let stripe, elements, card, iti;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('remain-txt').innerText = `${CONFIG.priceFull - CONFIG.priceDepo} Kč`;
+            stripe = Stripe(CONFIG.stripeKey);
+            updateUI();
+        });
+
+        // ACTIONS
+        function openWidget() {
+            document.getElementById('widget-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            if (state.step > 3) resetWidget();
+        }
+        function closeWidget() {
+            document.getElementById('widget-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+            if (state.step === 3) destroyStripe();
+        }
+        function resetWidget() {
+            state.step = 1; state.count = 1; state.type = 'full'; state.pax = [];
+            updateUI();
+            document.getElementById('opt-full').click();
+        }
+
+        function nextStep() {
+            if (state.step === 1) {
+                renderPax();
+                goTo(2);
+            } else if (state.step === 2) {
+                if (validateStep2()) {
+                    initPayment();
+                    goTo(3);
+                }
+            } else if (state.step === 3) {
+                pay();
+            } else if (state.step === 4) {
+                closeWidget();
+            }
+        }
+        function prevStep() {
+            if (state.step === 2) goTo(1);
+            if (state.step === 3) { destroyStripe(); goTo(2); }
+        }
+
+        function goTo(s) {
+            state.step = s;
+            document.querySelectorAll('.slide').forEach((el, i) => {
+                if (i + 1 === s) el.classList.add('active'); else el.classList.remove('active');
+            });
+            updateUI();
+            // Scroll top
+            document.getElementById('modal-body').scrollTop = 0;
+        }
+
+        function updateUI() {
+            // Header Dots
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (i === state.step) { dot.className = 'step-dot active'; dot.innerText = i; }
+                else if (i < state.step) { dot.className = 'step-dot completed'; dot.innerText = '✓'; }
+                else { dot.className = 'step-dot'; dot.innerText = i; }
+            }
+            if (state.step === 4) document.querySelector('.stepper').style.visibility = 'hidden';
+            else document.querySelector('.stepper').style.visibility = 'visible';
+
+            // Footer Buttons
+            const btnN = document.getElementById('btn-next');
+            const btnB = document.getElementById('btn-back');
+
+            if (state.step === 1) {
+                btnN.innerText = `Далее · ${(state.type === 'full' ? CONFIG.priceFull : CONFIG.priceDepo) * state.count} Kč`;
+                btnB.style.display = 'none';
+            } else if (state.step === 2) {
+                btnN.innerText = 'К оплате';
+                btnB.style.display = 'block';
+                btnB.innerText = 'Назад';
+            } else if (state.step === 3) {
+                const total = (state.type === 'full' ? CONFIG.priceFull : CONFIG.priceDepo) * state.count;
+                btnN.innerText = `Оплатить ${total} Kč`; // Will be customized by Apple Pay style
+                btnB.style.display = 'block';
+                btnB.innerText = 'Изменить данные';
+
+                // Apple Pay Button Styling Reuse
+                btnN.style.backgroundColor = '#000'; // Apple Pay style black
+                btnN.style.color = '#fff';
+            } else {
+                btnN.innerText = 'Закрыть';
+                btnB.style.display = 'none';
+                btnN.style.backgroundColor = '';
+            }
+        }
+
+        // STEP 1
+        function setPlan(t) {
+            state.type = t;
+            document.getElementById('opt-full').classList.toggle('selected', t === 'full');
+            document.getElementById('opt-depo').classList.toggle('selected', t === 'depo');
+            updateUI();
+        }
+        function modCount(d) {
+            const n = state.count + d;
+            if (n >= 1 && n <= 10) { state.count = n; document.getElementById('count-val').innerText = n; updateUI(); }
+        }
+
+        // STEP 2
+        function renderPax() {
+            const c = document.getElementById('pax-container');
+            c.innerHTML = '';
+
+            for (let i = 0; i < state.count; i++) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div style="font-weight:700; margin-bottom:12px; margin-top:24px;">Участник ${i + 1}</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div class="form-group">
+                            <input class="f-input p-name" placeholder="Имя (Latin)" autocomplete="given-name">
+                            <div class="error-msg">Только латинские буквы</div>
+                        </div>
+                        <div class="form-group">
+                            <input class="f-input p-surname" placeholder="Фамилия" autocomplete="family-name">
+                            <div class="error-msg">Только латинские буквы</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input class="f-input p-dob flatpickr-input" placeholder="Дата рождения" autocomplete="bday">
+                        <div class="error-msg">Введите дату</div>
+                    </div>
+                `;
+                c.appendChild(div);
+            }
+
+            // Contact
+            const contact = document.createElement('div');
+            contact.style.marginTop = '24px';
+            contact.innerHTML = `
+                <div style="font-weight:700; margin-bottom:12px;">Контакты</div>
+                <div class="form-group">
+                    <input class="f-input" id="inp-email" type="email" placeholder="Email" autocomplete="email">
+                    <div class="error-msg">Некорректный Email</div>
+                </div>
+                <div class="form-group">
+                    <input class="f-input" id="inp-phone" type="tel" placeholder="Телефон" autocomplete="tel">
+                    <div class="error-msg">Некорректный номер</div>
+                </div>
+            `;
+            c.appendChild(contact);
+
+            // Bind Validation
+            c.querySelectorAll('.p-name, .p-surname').forEach(el => {
+                el.addEventListener('input', function () {
+                    if (/[^a-zA-Z\s-]/.test(this.value)) {
+                        this.classList.add('error');
+                        this.closest('.form-group').classList.add('b-shake');
+                        setTimeout(() => this.closest('.form-group').classList.remove('b-shake'), 400);
+                    } else {
+                        this.classList.remove('error');
+                    }
+                });
+                el.addEventListener('blur', function () {
+                    // Check empty
+                    if (!this.value) this.classList.add('error');
+                    // Auto Capitalize
+                    if (this.value) this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+                });
+            });
+
+            // Plugins
+            flatpickr('.p-dob', { dateFormat: 'd.m.Y', maxDate: 'today', disableMobile: "true", locale: 'ru' });
+
+            const ph = document.getElementById('inp-phone');
+            if (iti) iti.destroy();
+            iti = window.intlTelInput(ph, {
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+                initialCountry: "cz",
+                preferredCountries: ["cz", "ua", "ru", "de", "pl"],
+                autoPlaceholder: "aggressive",
+                separateDialCode: true
+            });
+            ph.addEventListener('blur', () => {
+                if (!iti.isValidNumber()) ph.classList.add('error'); else ph.classList.remove('error');
+            });
+        }
+
+        function validateStep2() {
+            let ok = true;
+            const err = (el) => {
+                el.classList.add('error');
+                el.closest('.form-group').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                ok = false;
+            };
+
+            document.querySelectorAll('.p-name, .p-surname').forEach(e => {
+                if (e.value.length < 2 || /[^a-zA-Z\s-]/.test(e.value)) err(e);
+            });
+            document.querySelectorAll('.p-dob').forEach(e => { if (!e.value) err(e); });
+
+            const em = document.getElementById('inp-email');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)) err(em);
+
+            const ph = document.getElementById('inp-phone');
+            if (!iti.isValidNumber()) err(ph);
+
+            if (!document.getElementById('chk-consent').checked) {
+                document.getElementById('chk-consent').parentElement.style.color = 'red';
+                ok = false;
+            } else {
+                document.getElementById('chk-consent').parentElement.style.color = '';
+            }
+
+            return ok;
+        }
+
+        // STEP 3
+        async function initPayment() {
+            // Summary fill
+            const total = (state.type === 'full' ? CONFIG.priceFull : CONFIG.priceDepo) * state.count;
+            document.getElementById('summ-type').innerText = state.type === 'full' ? 'Полная' : 'Залог';
+            document.getElementById('summ-count').innerText = state.count;
+            document.getElementById('summ-final').innerText = total + " Kč";
+
+            document.getElementById('btn-next').disabled = true;
+            document.getElementById('btn-next').innerText = 'Загрузка...';
+
+            // Payload
+            let paxData = {};
+            document.querySelectorAll('.p-name').forEach((el, i) => {
+                paxData[`passenger_${i + 1}_firstname`] = el.value;
+            });
+            document.querySelectorAll('.p-surname').forEach((el, i) => {
+                paxData[`passenger_${i + 1}_lastname`] = el.value;
+            });
+            document.querySelectorAll('.p-dob').forEach((el, i) => {
+                paxData[`passenger_${i + 1}_dob`] = el.value;
+            });
+
+            const payload = {
+                tour_name: CONFIG.tourName,
+                total_pay_now: total,
+                total_order_value: CONFIG.priceFull * state.count,
+                remaining_balance: state.type === 'full' ? 0 : (CONFIG.priceFull - CONFIG.priceDepo) * state.count,
+                buyer_email: document.getElementById('inp-email').value,
+                buyer_phone: iti.getNumber(),
+                currency: "CZK",
+                passenger_count: state.count,
+                payment_type: state.type === 'full' ? 'Полная' : 'Залог',
+                ...paxData
+            };
+
+            try {
+                const r = await fetch(CONFIG.webhook, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' } });
+                const d = await r.json();
+
+                elements = stripe.elements({ clientSecret: d.clientSecret, appearance: { theme: 'stripe' } });
+
+                // Wallets
+                const pr = stripe.paymentRequest({ country: 'CZ', currency: 'czk', total: { label: CONFIG.tourName, amount: total * 100 }, requestPayerName: true, requestPayerEmail: true });
+                pr.canMakePayment().then(res => {
+                    if (res) {
+                        const prBtn = elements.create('paymentRequestButton', { paymentRequest: pr });
+                        prBtn.mount('#wallet-mount');
+                        document.getElementById('or-divider').style.display = 'block';
+                    }
+                });
+
+                card = elements.create('card', { hidePostalCode: true });
+                card.mount('#card-mount');
+
+                card.on('ready', () => {
+                    document.getElementById('btn-next').disabled = false;
+                    updateUI();
+                });
+
+            } catch (e) {
+                alert('Ошибка соединения. Попробуйте еще раз.');
+                prevStep();
+            }
+        }
+
+        async function pay() {
+            const btn = document.getElementById('btn-next');
+            btn.disabled = true;
+            btn.innerText = 'Обработка...';
+
+            const { error } = await stripe.confirmCardPayment(elements._commonOptions.clientSecret, {
+                payment_method: {
+                    card: card, billing_details: {
+                        email: document.getElementById('inp-email').value,
+                        phone: iti.getNumber()
+                    }
+                }
+            });
+
+            if (error) {
+                const errDiv = document.getElementById('pay-error');
+                errDiv.innerText = error.message;
+                errDiv.style.display = 'block';
+                btn.disabled = false;
+                updateUI();
+            } else {
+                goTo(4);
+            }
+        }
+
+        function destroyStripe() {
+            if (card) { card.destroy(); card = null; }
+            elements = null;
+            document.getElementById('card-mount').innerHTML = '';
+            document.getElementById('wallet-mount').innerHTML = '';
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER: Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F0F0F0;
+            --line: #000;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'Archivo', sans-serif;
+            margin: 0;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .grid-frame {
+            border: 2px solid var(--line);
+            margin: 10px;
+            height: calc(100% - 20px);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        .header {
+            border-bottom: 2px solid var(--line);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            line-height: 0.9;
+            margin: 0;
+        }
+
+        .info-grid {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 2px solid var(--line);
+            border-left: 2px solid var(--line);
+        }
+
+        .info-cell {
+            padding: 15px;
+            border-right: 2px solid var(--line);
+            border-bottom: 2px solid var(--line);
+        }
+
+        .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .data {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .footer-action {
+            background: var(--line);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+        }
+
+        .footer-action:hover {
+            background: #333;
+        }
+
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .info-grid {
+                border: 2px solid var(--line);
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-frame">
+        <div class="header">
+            <span>MOW → KLI</span>
+            <span id="sys-time">00:00</span>
+        </div>
+
+        <div class="main-content">
+            <div>
+                <h1>Система<br>Активного<br>Отдыха</h1>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-cell">
+                    <span class="label">Дата</span>
+                    <span class="data">12.01.26</span>
+                </div>
+                <div class="info-cell">
+                    <span class="label">Локация</span>
+                    <span class="data">Клиновец</span>
+                </div>
+                <div class="info-cell">
+                    <span class="label">Статус</span>
+                    <span class="data">Набор</span>
+                </div>
+                <div class="info-cell">
+                    <span class="label">Дедлайн</span>
+                    <span class="data" id="deadline-counter">14:22:11</span>
+                </div>
+            </div>
+        </div>
+
+        <a href="#" class="footer-action">Инициировать поездку</a>
+    </div>
+
+    <script>
+        setInterval(() => {
+            const d = new Date();
+            document.getElementById('sys-time').innerText = d.toLocaleTimeString();
+
+            // Countdown logic simulation
+            let s = 14 * 3600 + 22 * 60 + 11;
+            // Just static ticking for demo
+        }, 1000);
+    </script>
+</body>
+
+</html>

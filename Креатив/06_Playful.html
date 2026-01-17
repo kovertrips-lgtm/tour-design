@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER: Playful</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #7bdff2;
+            color: #1a1a1a;
+            font-family: 'Fredoka', sans-serif;
+            margin: 0;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white;
+            border: 4px solid #1a1a1a;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 10px 10px 0px #1a1a1a;
+            max-width: 90%;
+            width: 400px;
+            transform: rotate(-2deg);
+            transition: transform 0.2s;
+        }
+
+        .card:active {
+            transform: rotate(0deg) scale(0.98);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ef476f;
+        }
+
+        .counter-box {
+            background: #ffd166;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            border: 2px solid black;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .counter-box:active {
+            background: #ffe08a;
+        }
+
+        .btn-play {
+            background: #06d6a0;
+            color: black;
+            border: 2px solid black;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            box-shadow: 4px 4px 0 black;
+        }
+
+        .btn-play:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 black;
+        }
+
+        .floating {
+            position: absolute;
+            font-size: 3rem;
+            animation: float 3s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        .f1 {
+            top: 10%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .f2 {
+            bottom: 10%;
+            left: 10%;
+            animation-delay: 1.5s;
+            font-size: 4rem;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating f1">🏂</div>
+    <div class="floating f2">🏔</div>
+
+    <div class="card">
+        <h1>Опять в горы?</h1>
+        <p>Ну конечно да. Это не вопрос.</p>
+
+        <div class="counter-box" id="tap-zone">
+            🔥 Свободных мест: <span id="slots">5</span>
+            <br><small>(тапни, чтобы проверить)</small>
+        </div>
+
+        <a href="#" class="btn-play">Еду!</a>
+    </div>
+
+    <script>
+        const zone = document.getElementById('tap-zone');
+        const slots = document.getElementById('slots');
+
+        zone.addEventListener('click', () => {
+            // Fake "checking"
+            zone.style.transform = "scale(0.95)";
+            setTimeout(() => zone.style.transform = "scale(1)", 100);
+
+            slots.innerText = "Checking...";
+            setTimeout(() => {
+                slots.innerText = Math.floor(Math.random() * 3) + 2; // Returns 2-4
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

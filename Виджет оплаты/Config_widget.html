@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER Booking Widget (Experimental)</title>
+
+    <!-- FONTS & STYLES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Rolldate does not have CSS CDN, it injects styles or uses simple ones. Let's see. -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+    <!-- NATIVE INPUTS now used, no Rolldate/Flatpickr JS needed for DOB, but keeping flatpickr link just in case -->
+
+    <style>
+        :root {
+            --color-bg: #f2f2f7;
+            --color-card: #ffffff;
+            --color-text-main: #1d1d1f;
+            --color-text-second: #86868b;
+            --color-accent: #007aff;
+            --color-error: #ff3b30;
+            --color-success: #34c759;
+            --border-radius: 20px;
+            --border-color: #d1d1d6;
+            --border-light: #e5e5ea;
+        }
+
+        /* SCOPED RESET - Only affects widget elements */
+        #widget-overlay *,
+        #widget-overlay *::before,
+        #widget-overlay *::after {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* EXTERNAL RESETS for Plugins (Flatpickr, Rolldate) */
+        .flatpickr-calendar,
+        .flatpickr-calendar * {
+            box-sizing: border-box;
+        }
+
+        .rolldate-container,
+        .rolldate-container * {
+            box-sizing: border-box;
+        }
+
+        /* KEYFRAMES GLOBAL */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        /* --- BUTTON HIDDEN (Triggered via hash) --- */
+        .open-modal-btn {
+            display: none;
+        }
+
+        /* --- MODAL OVERLAY --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            /* Font reset for the widget context */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--color-text-main);
+            line-height: 1.5;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* --- WIDGET CONTAINER (FIXED HEIGHT POPUP) --- */
+        .widget-container {
+            width: 100%;
+            max-width: 480px;
+            height: 600px;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            text-align: left;
+        }
+
+        .modal-overlay.active .widget-container {
+            transform: scale(1);
+        }
+
+        /* --- HEADER --- */
+        .widget-header {
+            flex-shrink: 0;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            background: #f2f2f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8e8e93;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #1d1d1f;
+            background: #e5e5ea;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.4;
+            transition: 0.3s;
+        }
+
+        .step-item.active {
+            opacity: 1;
+        }
+
+        .step-item span {
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .step-item.active span {
+            display: block;
+            color: var(--color-text-main);
+        }
+
+        .step-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #c7c7cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #8e8e93;
+        }
+
+        .step-item.active .step-circle {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .step-item.completed .step-circle {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: #fff;
+            content: '✓';
+        }
+
+        /* --- MAIN SCROLLABLE AREA --- */
+        .widget-body {
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .step-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 24px;
+            padding-bottom: 20px;
+            background: #fff;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s;
+            opacity: 0;
+            transform: translateX(50px);
+            display: none;
+        }
+
+        .step-slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            display: block;
+        }
+
+        .step-slide>*:last-child {
+            margin-bottom: 20px;
+        }
+
+        .slide-enter-next {
+            animation: slideInRight 0.4s forwards;
+        }
+
+        .slide-exit-next {
+            animation: slideOutLeft 0.4s forwards;
+            z-index: 0;
+        }
+
+        .slide-enter-prev {
+            animation: slideInLeft 0.4s forwards;
+        }
+
+        .slide-exit-prev {
+            animation: slideOutRight 0.4s forwards;
+            z-index: 0;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(-30%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-30%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* --- STICKY FOOTER --- */
+        .widget-footer {
+            flex-shrink: 0;
+            padding: 16px 24px;
+            background: #fff;
+            border-top: 1px solid var(--border-light);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* --- UI ELEMENTS (Scoped) --- */
+        .widget-container h2 {
+            margin: 0 0 24px 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--color-text-main);
+        }
+
+        .plan-card {
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .plan-card:hover {
+            border-color: #b0b0b8;
+        }
+
+        .plan-card.selected {
+            border-color: var(--color-accent);
+            background: rgba(0, 122, 255, 0.03);
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #d1d1d6;
+            margin-top: 2px;
+            position: relative;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .plan-card.selected .radio-circle {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+        }
+
+        .plan-card.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .counter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0;
+        }
+
+        .counter-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .counter-ctrl {
+            background: #f2f2f7;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 4px;
+        }
+
+        .c-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            user-select: none;
+        }
+
+        .c-btn:active {
+            transform: scale(0.95);
+        }
+
+        .c-val {
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--color-accent);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            background: #e5e5ea;
+            color: #8e8e93;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--color-accent);
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #86868b;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .inp-field {
+            width: 100%;
+            height: 50px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+            -webkit-appearance: none;
+            background: #fff;
+        }
+
+        .inp-field:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        .inp-field.error {
+            border-color: var(--color-error);
+            background: #fff0f0;
+        }
+
+        .input-error-msg {
+            color: var(--color-error);
+            font-size: 11px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .inp-field.error+.input-error-msg {
+            display: block;
+        }
+
+        .stripe-box {
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .stripe-box:focus-within {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        /* PAYMENT LOADER */
+        #payment-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #payment-loader.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .vibey-loader {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e5e5ea;
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+            /* Ensure it renders */
+            display: block;
+            box-sizing: border-box;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+
+            .widget-container {
+                max-height: 85vh;
+                height: 85vh;
+                border-radius: 24px 24px 0 0;
+                transform: translateY(100%);
+                max-width: 100%;
+            }
+
+            .modal-overlay.active .widget-container {
+                transform: translateY(0);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            25% {
+                transform: translateX(-5px)
+            }
+
+            75% {
+                transform: translateX(5px)
+            }
+        }
+
+        /* PLUGIN Z-INDEX FIXES */
+        .flatpickr-calendar {
+            z-index: 20000 !important;
+        }
+
+        .iti__country-list {
+            z-index: 20000 !important;
+        }
+
+        .rolldate-container {
+            z-index: 20000 !important;
+        }
+
+        /* Rolldate z-index */
+
+        .iti {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Admin Config removed. Use external T123 block with window.KOVER_WIDGET_CONFIG -->
+
+    <!-- Hidden trigger, logic handled via #book-now hash -->
+    <button class="open-modal-btn" onclick="openWidget()">Забронировать место</button>
+
+    <div class="modal-overlay" id="widget-overlay">
+        <div class="widget-container" id="widget-card">
+
+            <!-- HEADER -->
+            <div class="widget-header">
+                <div class="stepper" id="stepper">
+                    <div class="step-item active" id="step-ind-1">
+                        <div class="step-circle">1</div>
+                        <span>Параметры</span>
+                    </div>
+                    <div class="step-item" id="step-ind-2">
+                        <div class="step-circle">2</div>
+                        <span>Участники</span>
+                    </div>
+                    <div class="step-item" id="step-ind-3">
+                        <div class="step-circle">3</div>
+                        <span>Оплата</span>
+                    </div>
+                </div>
+                <div class="close-btn" onclick="closeWidget()">✕</div>
+            </div>
+
+            <!-- BODY: SCROLLABLE CONTENT -->
+            <div class="widget-body" id="widget-body">
+
+                <!-- STEP 1: CONFIG -->
+                <div class="step-slide active" id="slide-1">
+                    <h2>Параметры поездки</h2>
+
+                    <div style="margin-bottom: 24px;">
+                        <div class="plan-card selected" id="opt-full" onclick="selectPlan('full')">
+                            <div style="display:flex; align-items:flex-start;">
+                                <div class="radio-circle"></div>
+                                <div>
+                                    <div style="font-weight:600; font-size:16px; margin-bottom: 2px;">Оплатить полностью
+                                    </div>
+                                    <div style="font-size:13px; color:#86868b;">Без доплат в будущем</div>
+                                </div>
+                            </div>
+                            <div style="font-weight:700; font-size:16px;" id="price-full-display">...</div>
+                        </div>
+
+                        <div class="plan-card" id="opt-deposit" onclick="selectPlan('deposit')">
+                            <div style="display:flex; align-items:flex-start;">
+                                <div class="radio-circle"></div>
+                                <div>
+                                    <div style="font-weight:600; font-size:16px; margin-bottom: 2px;">Внести залог</div>
+                                    <div style="font-size:13px; color:#86868b;">Остаток <span id="remain-val">...</span>
+                                        позже</div>
+                                </div>
+                            </div>
+                            <div style="font-weight:700; font-size:16px;" id="price-depo-display">...</div>
+                        </div>
+                    </div>
+
+                    <div class="counter-row">
+                        <span class="counter-label">Количество участников</span>
+                        <div class="counter-ctrl">
+                            <div class="c-btn" onclick="updateCount(-1)">–</div>
+                            <div class="c-val" id="count-val">1</div>
+                            <div class="c-btn" onclick="updateCount(1)">+</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:20px; font-size:14px; color:#86868b; text-align:center;">
+                        Общая стоимость: <span id="summ-total" style="font-weight:700; color:#1d1d1f;">...</span>
+                    </div>
+                </div>
+
+                <!-- STEP 2: PASSENGERS -->
+                <div class="step-slide" id="slide-2">
+                    <h2>Участники</h2>
+                    <div id="passengers-container"></div>
+
+                    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e5ea;">
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <input type="checkbox" id="consent-chk"
+                                style="margin-top:4px; transform:scale(1.2); accent-color:var(--color-accent);">
+                            <label for="consent-chk" style="font-size:13px; color:#666; line-height:1.4;">
+                                Я принимаю <a href="#"
+                                    onclick="event.preventDefault(); document.getElementById('terms-popup').classList.add('active');"
+                                    style="color:#007aff; text-decoration:none; border-bottom:1px solid rgba(0,122,255,0.3);">условия</a>
+                                и политику обработки персональных данных
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: PAYMENT -->
+                <div class="step-slide" id="slide-3" style="display:flex; flex-direction:column; height:100%;">
+                    <h2>Оплата</h2>
+
+                    <!-- LOADING OVERLAY -->
+                    <div id="payment-loader" class="visible">
+                        <div class="vibey-loader"></div>
+                        <div style="font-size:18px; font-weight:600; color:#1d1d1f; margin-bottom: 8px;">Загружаем
+                            магию...</div>
+                        <div style="font-size:14px; color:#86868b;">Секундочку, всё готовим для вас</div>
+                    </div>
+
+                    <div id="stripe-mount-point" style="flex:1; display:flex; flex-direction:column;">
+
+                        <!-- WALLET SECTION -->
+                        <div id="wallet-container" style="display:none; margin-bottom: 24px;">
+                            <div id="wallet-element" style="height: 48px;"></div>
+                            <div style="display:flex; align-items:center; margin: 20px 0;">
+                                <div style="flex:1; height:1px; background:#e5e5ea;"></div>
+                                <div style="padding:0 10px; font-size:13px; color:#86868b; font-weight:500;">ИЛИ КАРТОЙ
+                                </div>
+                                <div style="flex:1; height:1px; background:#e5e5ea;"></div>
+                            </div>
+                        </div>
+
+                        <!-- CARD SECTION -->
+                        <div class="form-group" style="margin-bottom:24px;">
+                            <div class="form-label" style="margin-left:4px;">БАНКОВСКАЯ КАРТА</div>
+                            <div id="card-element" class="stripe-box" style="padding: 12px 16px;">
+                                <!-- Stripe Element injects here -->
+                            </div>
+                            <div id="payment-message" style="
+                                margin-top: 12px; 
+                                padding: 12px; 
+                                background: #fff0f0; 
+                                color: var(--color-error); 
+                                font-size: 13px; 
+                                border-radius: 12px; 
+                                display: none;
+                                line-height: 1.4;
+                            "></div>
+                        </div>
+
+                        <!-- SUMMARY CARD -->
+                        <div style="background:#f2f2f7; border-radius:16px; padding:16px; margin-bottom:20px;">
+                            <div
+                                style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px; color:#666;">
+                                <span>К оплате сейчас</span>
+                                <span style="font-weight:600; color:#000;" id="pay-now-val">...</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:13px; color:#86868b;">
+                                <span>Тип оплаты</span>
+                                <span id="payment-type-label">...</span>
+                            </div>
+                        </div>
+
+                        <!-- SECURE BADGE (Bottom) -->
+                        <div style="margin-top:auto; text-align:center; padding-top:20px; padding-bottom:10px;">
+                            <div style="display:inline-flex; align-items:center; gap:6px; opacity:0.6;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#666"
+                                    stroke-width="2.5">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <span style="font-size:11px; color:#666; font-weight:500;">Платежи защищены
+                                    Stripe</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUCCESS STATE -->
+                <div class="step-slide" id="slide-success">
+                    <div style="text-align:center; padding: 20px 20px 40px 20px;">
+                        <div style="font-size:60px; color:#34c759; margin-bottom:20px;">✓</div>
+                        <h2>Оплата прошла успешно!</h2>
+                        <p style="color:#666; margin-bottom:24px; line-height:1.5;">
+                            Мы отправили подтверждение на <span id="success-email"
+                                style="font-weight:600; color:#000;"></span>.
+                        </p>
+                        <div id="success-message-dynamic"
+                            style="font-size:15px; color:#1d1d1f; line-height:1.6; margin-bottom: 24px;"></div>
+
+                        <a href="#" target="_blank" id="tg-join-btn" class="btn-primary"
+                            style="text-decoration:none; display:flex; align-items:center; justify-content:center; background-color:#2AABEE; margin-bottom:12px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-0.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.48-1.02-2.4-1.63-1.06-.7-0.37-1.09 0.23-1.72 0.16-.16 2.87-2.63 2.93-2.85 0.01-.03 0.01-.15-.06-.21-.07-.06-.18-.04-.26-.02-.11.02-1.92 1.22-5.43 3.59-.51.35-.98.52-1.39.51-.46-.01-1.33-.26-1.98-.47-.8-.26-1.43-.4-1.37-.84.03-.23.35-.46.96-.71 3.77-1.64 6.28-2.72 7.53-3.24 3.58-1.48 4.32-1.74 3.8-1.74z"
+                                    fill="white" />
+                            </svg>
+                            Вступить в чат поездки
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER: ACTIONS -->
+            <div class="widget-footer" id="widget-footer">
+                <button class="btn-primary" id="btn-next-action" onclick="handleNextClick()">Продолжить</button>
+                <button class="btn-secondary" id="btn-back-action" onclick="handleBackClick()"
+                    style="display:none;">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMS POPUP -->
+    <div class="modal-overlay" id="terms-popup" style="z-index: 10001;">
+        <div class="widget-container" style="height: 80%; max-height: 600px;">
+            <div class="widget-header">
+                <h3 style="margin:0; font-size:18px;">Условия</h3>
+                <div class="close-btn" onclick="document.getElementById('terms-popup').classList.remove('active')">✕
+                </div>
+            </div>
+            <div class="widget-body" style="padding: 24px; overflow-y: auto;">
+                <h4 style="margin-top:0; margin-bottom:12px;">Souhlas se zpracováním osobních údajů (GDPR)</h4>
+                <p style="font-size:13px; color:#333; line-height:1.6;">
+                    V souladu s Nařízením Evropského parlamentu a Rady (EU) 2016/679 o ochraně fyzických osob v
+                    souvislosti se zpracováním osobních údajů a o volném pohybu těchto údajů (dále jen "GDPR")
+                    potvrzuji, že jsem se seznámil(a) s podmínkami zpracování osobních údajů.
+                </p>
+                <p style="font-size:13px; color:#333; line-height:1.6;">
+                    <strong>1. Správce údajů:</strong> Kover Travel<br>
+                    <strong>2. Účel zpracování:</strong> Osobní údaje (jméno, příjmení, datum narození, e-mail, telefon)
+                    jsou shromažďovány a zpracovávány výhradně za účelem poskytování služeb cestovního ruchu, vyřízení
+                    rezervace, komunikace s klientem a plnění zákonných povinností.<br>
+                    <strong>3. Doba uchování:</strong> Údaje budou uchovávány po dobu nezbytně nutnou k plnění účelu
+                    smlouvy a dle zákonných lhůt.<br>
+                    <strong>4. Vaše práva:</strong> Máte právo na přístup k údajům, jejich opravu, výmaz ("právo být
+                    zapomenut"), omezení zpracování a právo vznést námitku.
+                </p>
+                <p style="font-size:13px; color:#666;">
+                    Vaše údaje nejsou bez vašeho souhlasu předávány třetím stranám, s výjimkou partnerů nezbytných pro
+                    realizaci služby (např. ubytovací zařízení, dopravci, pojišťovny).
+                </p>
+                <button class="btn-primary" onclick="document.getElementById('terms-popup').classList.remove('active')"
+                    style="margin-top:20px;">Rozumím / Zavřít</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
+
+    <script>
+        // --- CONFIG (DEFAULTS) ---
+        let CONFIG = {
+            id: 'default_tour',
+            name: 'Default Tour',
+            date: '01.01.2025',
+            price: 100, // Non-zero default for Apple Pay testing
+            deposit: 100,
+            stripeKey: 'pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6',
+            webhook: '',
+            tourType: 'Tour',
+            telegram_link: ''
+        };
+
+        // --- STATE ---
+        let state = {
+            step: 1,
+            count: 1,
+            plan: 'full', // 'full' | 'deposit'
+            passengers: [],
+            contact: { email: '', phone: '' },
+            clientSecret: null // Store secret securely here
+        };
+
+        let paymentIntentPromise = null;
+
+        function invalidatePaymentIntent() {
+            state.clientSecret = null;
+            paymentIntentPromise = null;
+        }
+
+        let stripe, elements, cardElement, prButton;
+        let iti;
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Try to load config from window (in case it was loaded later)
+            if (window.KOVER_WIDGET_CONFIG) {
+                CONFIG = { ...CONFIG, ...window.KOVER_WIDGET_CONFIG };
+            }
+
+            // Set prices
+            const pFull = document.getElementById('price-full-display');
+            if (pFull) pFull.innerText = CONFIG.price + " Kč";
+            const pDepo = document.getElementById('price-depo-display');
+            if (pDepo) pDepo.innerText = CONFIG.deposit + " Kč";
+            const pRem = document.getElementById('remain-val');
+            if (pRem) {
+                const parts = CONFIG.date.split('.');
+                const tDate = new Date(parts[2], parts[1] - 1, parts[0]);
+
+                // --- 12 DAYS CHECK ---
+                const now = new Date();
+                const diffTime = tDate - now;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays < 12) {
+                    // Less than 12 days: Hide Deposit Option entirely
+                    const depoOpt = document.getElementById('opt-deposit');
+                    if (depoOpt) {
+                        depoOpt.style.display = 'none';
+                    }
+                    // Force full plan if deposit was somehow default or selected
+                    state.plan = 'full';
+                    document.getElementById('opt-full').classList.add('selected');
+                    // Also maybe change label of full option?
+                }
+
+                // Balance due date logic (existing)
+                tDate.setDate(tDate.getDate() - 10);
+                const dStr = String(tDate.getDate()).padStart(2, '0') + '.' + String(tDate.getMonth() + 1).padStart(2, '0') + '.' + tDate.getFullYear();
+                pRem.parentElement.innerHTML = `Остаток <span style="color:#007aff; font-weight:700;">${(CONFIG.price - CONFIG.deposit)} Kč</span> до ${dStr}`;
+            }
+
+            updateSummary();
+            stripe = Stripe(CONFIG.stripeKey);
+
+            // Hash Trigger Check
+            checkHash();
+            window.addEventListener('hashchange', checkHash);
+
+            // Link Trigger Check
+            document.body.addEventListener('click', (e) => {
+                const link = e.target.closest('a');
+                if (link && link.getAttribute('href') === '#book-now') {
+                    e.preventDefault();
+                    openWidget();
+                }
+            });
+
+            // --- STRIPE RETURN HANDLING ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectStatus = urlParams.get('redirect_status');
+            const clientSecret = urlParams.get('payment_intent_client_secret');
+
+            if (redirectStatus && clientSecret) {
+                // Restore state to get email/passenger data back
+                loadStateFromStorage();
+
+                // Open widget immediately
+                document.getElementById('widget-overlay').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                if (redirectStatus === 'succeeded') {
+                    // Go to success
+                    goToStep(4, true);
+                    // Clear storage
+                    sessionStorage.removeItem('kover_widget_state');
+                } else {
+                    // Failed
+                    goToStep(3, true);
+                    const msg = document.getElementById('payment-message');
+                    if (msg) {
+                        msg.innerText = "Оплата не была завершена. Попробуйте снова.";
+                        msg.style.display = 'block';
+                    }
+                }
+            }
+        });
+
+        // --- STORAGE HELPERS ---
+        function saveStateToStorage() {
+            try {
+                sessionStorage.setItem('kover_widget_state', JSON.stringify(state));
+            } catch (e) { console.error('Save state error', e); }
+        }
+
+        function loadStateFromStorage() {
+            try {
+                const s = sessionStorage.getItem('kover_widget_state');
+                if (s) {
+                    const parsed = JSON.parse(s);
+                    // Merge safely
+                    state = { ...state, ...parsed };
+                    // Restore inputs if needed? 
+                    // Since we jump to Step 4 (Success) or Step 3 (Payment), we might not need to re-fill Step 1/2 inputs visually 
+                    // unless user goes "Back". 
+                    // Ideally we should re-populate if they go back. 
+                    // But 'state' object is the source of truth for rendering.
+                    // If we go to Step 3, initPayment uses state object.
+                    // If we go back to Step 2, renderPassengers uses state object. 
+                    // So we are good!
+                }
+            } catch (e) { console.error('Load state error', e); }
+        }
+
+        function checkHash() {
+            if (window.location.hash === '#book-now') {
+                openWidget();
+            }
+        }
+
+        // --- NAVIGATION CONTROLLER ---
+        async function goToStep(step, force = false) {
+            if (step === state.step && !force) return;
+            const direction = step > state.step ? 'next' : 'prev';
+
+            // Logic: Destroy Stripe if leaving step 3
+            if (state.step === 3 && step !== 3) {
+                destroyStripe();
+            }
+
+            // PRE-RENDER content before animation starts
+            if (step === 2) {
+                renderPassengers();
+                // preloadPaymentData(); removed to ensure we send full data later
+            }
+
+            // Update UI State (Slides)
+            const currentSlide = document.getElementById(state.step === 4 ? 'slide-success' : `slide-${state.step}`);
+            const nextSlide = document.getElementById(step === 4 ? 'slide-success' : `slide-${step}`);
+
+            document.querySelectorAll('.step-slide').forEach(s => {
+                s.classList.remove('active', 'slide-enter-next', 'slide-exit-next', 'slide-enter-prev', 'slide-exit-prev');
+                if (s !== currentSlide && s !== nextSlide) s.style.display = 'none';
+            });
+
+            if (force) {
+                nextSlide.classList.add('active');
+                nextSlide.style.display = 'block';
+            } else {
+                currentSlide.classList.add('active');
+                nextSlide.classList.add('active');
+                nextSlide.style.display = 'block';
+
+                if (direction === 'next') {
+                    currentSlide.classList.add('slide-exit-next');
+                    nextSlide.classList.add('slide-enter-next');
+                } else {
+                    currentSlide.classList.add('slide-exit-prev');
+                    nextSlide.classList.add('slide-enter-prev');
+                }
+
+                setTimeout(() => {
+                    currentSlide.classList.remove('active', 'slide-exit-next', 'slide-exit-prev');
+                    nextSlide.classList.remove('slide-enter-next', 'slide-enter-prev'); // cleanup
+                    currentSlide.style.display = 'none';
+                    nextSlide.classList.add('active');
+                    // Reset scroll
+                    const slide = nextSlide;
+                    if (slide) slide.scrollTop = 0;
+                }, 380);
+            }
+
+            state.step = step;
+
+            // Initialize Payment AFTER slide is visible (Crucial for Apple Pay)
+            if (step === 3) initPayment();
+
+            if (step === 4) {
+                // Update Telegram Link from CONFIG
+                const tgBtn = document.getElementById('tg-join-btn');
+                if (tgBtn && CONFIG.telegram_link) {
+                    tgBtn.href = CONFIG.telegram_link;
+                }
+
+                const msgEl = document.getElementById('success-message-dynamic');
+                if (msgEl) {
+                    if (state.plan === 'deposit') {
+                        msgEl.innerHTML = `В письме вы также найдете ссылку для <strong>доплаты остатка</strong>.`;
+                    } else {
+                        msgEl.innerHTML = `В письме вы найдете ссылку на вступление в Telegram-чат участников.`;
+                    }
+                }
+            }
+
+            updateFooterAndStepper();
+        }
+
+        function updateFooterAndStepper() {
+            // Stepper
+            if (state.step < 4) {
+                document.getElementById('stepper').style.visibility = 'visible';
+                for (let i = 1; i <= 3; i++) {
+                    const el = document.getElementById(`step-ind-${i}`);
+                    if (i === state.step) {
+                        el.classList.add('active');
+                        el.classList.remove('completed');
+                        el.querySelector('.step-circle').innerText = i;
+                    } else if (i < state.step) {
+                        el.classList.remove('active');
+                        el.classList.add('completed');
+                        el.querySelector('.step-circle').innerText = '✓';
+                    } else {
+                        el.classList.remove('active', 'completed');
+                        el.querySelector('.step-circle').innerText = i;
+                    }
+                }
+            } else {
+                document.getElementById('stepper').style.visibility = 'hidden';
+            }
+
+            // Footer Buttons
+            const btnNext = document.getElementById('btn-next-action');
+            const btnBack = document.getElementById('btn-back-action');
+
+            if (state.step === 1) {
+                btnNext.innerText = 'Продолжить';
+                btnBack.style.display = 'none';
+            } else if (state.step === 2) {
+                btnNext.innerText = 'Перейти к оплате';
+                btnBack.style.display = 'block';
+                btnBack.innerText = 'Назад к параметрам';
+            } else if (state.step === 3) {
+                const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+                const total = price * state.count;
+                // Button text dynamically set
+                btnNext.innerText = `Оплатить ${total} Kč`;
+                btnBack.style.display = 'block';
+                btnBack.innerText = 'Назад к вводу данных';
+            } else if (state.step === 4) {
+                btnNext.innerText = 'Закрыть';
+                btnBack.style.display = 'none';
+            }
+
+            btnNext.disabled = false;
+        }
+
+        function handleNextClick() {
+            if (state.step === 1) {
+                goToStep(2);
+            } else if (state.step === 2) {
+                if (validateStep2()) {
+                    invalidatePaymentIntent(); // Force fresh data send
+                    goToStep(3);
+                }
+            } else if (state.step === 3) {
+                confirmPayment();
+            } else if (state.step === 4) {
+                closeWidget(); // Close on success
+            }
+        }
+
+        function handleBackClick() {
+            if (state.step === 2) goToStep(1);
+            else if (state.step === 3) goToStep(2);
+        }
+
+        function openWidget() {
+            document.getElementById('widget-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            goToStep(1, true);
+        }
+
+        function closeWidget() {
+            if (state.step === 4) {
+                // Reset if closed after success
+                setTimeout(() => { goToStep(1, true); }, 500);
+            }
+            document.getElementById('widget-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+            // Remove hash if present so it can be re-triggered
+            setTimeout(() => {
+                if (window.location.hash === '#book-now') {
+                    history.pushState("", document.title, window.location.pathname + window.location.search);
+                }
+            }, 100);
+            setTimeout(destroyStripe, 300);
+        }
+
+        // --- STEP 1 LOGIC ---
+        function selectPlan(plan) {
+            state.plan = plan;
+            invalidatePaymentIntent();
+            document.getElementById('opt-full').classList.toggle('selected', plan === 'full');
+            document.getElementById('opt-deposit').classList.toggle('selected', plan === 'deposit');
+            updateSummary();
+        }
+
+        function updateCount(delta) {
+            const n = state.count + delta;
+            if (n >= 1 && n <= 10) {
+                state.count = n;
+                invalidatePaymentIntent();
+                document.getElementById('count-val').innerText = n;
+                updateSummary();
+            }
+        }
+
+        function updateSummary() {
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+            document.getElementById('summ-total').innerText = `${total} Kč`;
+        }
+
+        // --- STEP 2 LOGIC ---
+        function renderPassengers() {
+            const container = document.getElementById('passengers-container');
+            container.innerHTML = '';
+
+            for (let i = 0; i < state.count; i++) {
+                const p = state.passengers[i] || { name: '', surname: '', dob: '' };
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                div.innerHTML = `
+                    <div style="font-weight:700; margin-bottom:12px; margin-top:24px;">Участник ${i + 1}</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <input class="inp-field p-name" id="p-name-${i}" data-idx="${i}" placeholder="Имя (Latin)" value="${p.name}" autocomplete="given-name">
+                        <input class="inp-field p-surname" id="p-surname-${i}" data-idx="${i}" placeholder="Фамилия" value="${p.surname}" autocomplete="family-name">
+                    </div>
+                     <!-- Hidden error containers -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <input type="hidden" class="err-name-dummy"> 
+                        <div class="input-error-msg err-name" style="grid-column: 1;">Только латиница</div>
+                        <div class="input-error-msg err-surname" style="grid-column: 2;">Только латиница</div>
+                    </div>
+
+                    <!-- FLATPICKR INPUT -->
+                    <input class="inp-field p-dob" id="p-dob-${i}" data-idx="${i}" 
+                           placeholder="Дата рождения (ДД.ММ.ГГГГ)" value="${p.dob}" 
+                           style="margin-top:24px;" autocomplete="bday">
+                    
+                    <div class="input-error-msg err-dob-format">Введите дату</div>
+                    <div class="input-error-msg err-dob-age" style="color: #ff9500; display: none;">
+                        Действуют возрастные ограничения на детей до 7 лет, пожалуйста, свяжитесь с нами в инстаграм
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+
+            const contactDiv = document.createElement('div');
+            contactDiv.style.borderTop = '1px solid #e5e5ea';
+            contactDiv.style.paddingTop = '16px';
+            contactDiv.style.marginTop = '24px';
+            contactDiv.innerHTML = `
+                <div class="form-label" style="font-weight:600; color:#000;">Контактные данные</div>
+                <div class="form-group">
+                    <input type="email" id="inp-email" class="inp-field" placeholder="Email" value="${state.contact.email}" autocomplete="email">
+                    <div class="input-error-msg">Некорректный Email</div>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="inp-phone" class="inp-field" value="${state.contact.phone}" autocomplete="tel">
+                    <div class="input-error-msg">Некорректный номер</div>
+                </div>
+            `;
+            container.appendChild(contactDiv);
+
+            // --- LISTENERS ---
+
+            // Name/Surname Logic
+            const setupTextInputs = (selector, nextSelector) => {
+                container.querySelectorAll(selector).forEach((inp, idx) => {
+                    inp.addEventListener('input', (e) => {
+                        const isName = selector.includes('name');
+                        const errSel = isName ? '.err-name' : '.err-surname';
+                        // Validation
+                        const err = inp.parentElement.nextElementSibling.querySelector(errSel);
+                        if (/[^a-zA-Z\s-]/.test(inp.value)) {
+                            inp.classList.add('error');
+                            if (err) err.style.display = 'block';
+                        } else {
+                            inp.classList.remove('error');
+                            if (err) err.style.display = 'none';
+                        }
+                        saveState2();
+                    });
+
+                    inp.addEventListener('blur', (e) => {
+                        capitalize(e.target);
+                        saveState2();
+                    });
+
+                    // Auto-Jump on Enter
+                    inp.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const next = document.getElementById(nextSelector.replace('${i}', idx));
+                            if (next) next.focus();
+                        }
+                    });
+                });
+            };
+
+            setupTextInputs('.p-name', 'p-surname-${i}');
+            setupTextInputs('.p-surname', 'p-dob-${i}');
+
+            // FLATPICKR INIT
+            container.querySelectorAll('.p-dob').forEach((inp) => {
+                if (typeof flatpickr !== 'undefined') {
+                    const idx = inp.getAttribute('data-idx');
+                    const pVal = state.passengers[idx] ? state.passengers[idx].dob : '';
+
+                    flatpickr(inp, {
+                        locale: "ru",
+                        dateFormat: "d.m.Y",
+                        disableMobile: true,
+                        allowInput: true,
+                        defaultDate: pVal || undefined, // Keep empty if no value
+                        onOpen: function (selectedDates, dateStr, instance) {
+                            if (selectedDates.length === 0) {
+                                instance.jumpToDate("01.01.2000"); // Jump to 2000 view without setting value
+                            }
+                        },
+                        onClose: function (selectedDates, dateStr, instance) {
+                            checkAge(instance.element);
+                            saveState2();
+                        }
+                    });
+                }
+
+                inp.addEventListener('blur', (e) => { checkAge(e.target); saveState2(); });
+                inp.addEventListener('input', (e) => { saveState2(); });
+            });
+
+            // Phone
+            const phoneEl = document.getElementById('inp-phone');
+            if (iti) iti.destroy();
+            iti = window.intlTelInput(phoneEl, {
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+                initialCountry: "cz",
+                preferredCountries: ["cz", "ua", "ru"],
+                autoPlaceholder: "aggressive",
+                separateDialCode: true
+            });
+
+            // Logic to strip country code if autofilled (e.g. +420)
+            const cleanPhoneInput = () => {
+                const data = iti.getSelectedCountryData();
+                const dialCode = data.dialCode;
+                let val = phoneEl.value;
+                // Check for +Code prefix (e.g. +420)
+                if (val.startsWith('+' + dialCode)) {
+                    phoneEl.value = val.substring(dialCode.length + 1).trim();
+                }
+            };
+
+            phoneEl.addEventListener('input', () => {
+                cleanPhoneInput();
+                saveState2();
+            });
+
+            phoneEl.addEventListener('blur', () => {
+                cleanPhoneInput();
+                if (!iti.isValidNumber()) {
+                    phoneEl.classList.add('error');
+                } else {
+                    phoneEl.classList.remove('error');
+                    // Smooth scroll to consent
+                    const chk = document.getElementById('consent-chk');
+                    if (chk) {
+                        chk.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+
+                    // PRELOAD PAYMENT DATA NOW to avoid Apple Pay race conditions
+                    // Capture current inputs to state so payload is valid
+                    saveState2();
+                    if (state && state.contact) state.contact.phone = iti.getNumber(); // Ensure full number
+                    // preloadPaymentData(); removed
+                }
+                saveState2();
+            });
+
+            // Email
+            document.getElementById('inp-email').addEventListener('blur', (e) => {
+                const val = e.target.value;
+                if (val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) e.target.classList.add('error');
+                else e.target.classList.remove('error');
+                saveState2();
+            });
+        }
+
+        function checkAge(el) {
+            const val = el.value;
+            const ageMsg = el.nextElementSibling.nextElementSibling; // .err-dob-age
+            const fmtMsg = el.nextElementSibling; // .err-dob-format
+
+            // Basic parsing DD.MM.YYYY
+            if (!val || val.length < 10) {
+                // If typed partially, don't show error yet unless blurred?
+                return false;
+            }
+
+            const parts = val.split('.');
+            if (parts.length < 3) return false;
+
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10);
+            const year = parseInt(parts[2], 10);
+
+            const dob = new Date(year, month - 1, day);
+            const now = new Date();
+
+            if (dob.getFullYear() === year && dob.getMonth() === month - 1 && dob.getDate() === day) {
+                el.classList.remove('error');
+                fmtMsg.style.display = 'none';
+
+                // Age Logic
+                let age = now.getFullYear() - dob.getFullYear();
+                const m = now.getMonth() - dob.getMonth();
+                if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) {
+                    age--;
+                }
+
+                if (age < 7) {
+                    ageMsg.style.display = 'block';
+                    el.classList.add('error');
+                    return false; // Invalid age
+                } else {
+                    ageMsg.style.display = 'none';
+                    el.classList.remove('error');
+                    return true;
+                }
+            } else {
+                // Invalid date format
+                // Don't error aggressively while typing, but if full length exists:
+                if (val.length >= 10) {
+                    el.classList.add('error');
+                    fmtMsg.style.display = 'block';
+                }
+                return false;
+            }
+        }
+
+        function capitalize(el) {
+            if (el.value) el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1);
+        }
+
+        function saveState2() {
+            state.passengers = [];
+            document.querySelectorAll('.p-name').forEach((el, i) => {
+                const s = document.getElementById(`p-surname-${i}`);
+                const d = document.getElementById(`p-dob-${i}`);
+                state.passengers[i] = {
+                    name: el.value,
+                    surname: s ? s.value : '',
+                    dob: d ? d.value : ''
+                };
+            });
+            const em = document.getElementById('inp-email');
+            if (em) state.contact.email = em.value;
+            if (iti) state.contact.phone = iti.getNumber();
+        }
+
+        function validateStep2() {
+            saveState2();
+            let isValid = true;
+            const err = (el) => { el.classList.add('error'); el.classList.add('shake'); setTimeout(() => el.classList.remove('shake'), 400); isValid = false; };
+
+            // Check Passengers
+            document.querySelectorAll('.p-name').forEach(el => { if (el.value.length < 2 || /[^a-zA-Z\s-]/.test(el.value)) err(el); else el.classList.remove('error'); });
+            document.querySelectorAll('.p-surname').forEach(el => { if (el.value.length < 2 || /[^a-zA-Z\s-]/.test(el.value)) err(el); else el.classList.remove('error'); });
+
+            // DOB Check
+            document.querySelectorAll('.p-dob').forEach(el => {
+                // If empty or invalid age
+                if (!checkAge(el)) {
+                    // Check if empty
+                    if (!el.value) {
+                        el.classList.add('error');
+                        el.nextElementSibling.style.display = 'block';
+                    }
+                    err(el);
+                }
+            });
+
+            // Check Email
+            const emailEl = document.getElementById('inp-email');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) err(emailEl); else emailEl.classList.remove('error');
+
+            // Check Phone
+            const phoneEl = document.getElementById('inp-phone');
+            if (!iti.isValidNumber()) err(phoneEl); else phoneEl.classList.remove('error');
+
+            // Check content
+            const chk = document.getElementById('consent-chk');
+            if (!chk.checked) { chk.parentElement.style.color = 'red'; isValid = false; } else chk.parentElement.style.color = '';
+
+            return isValid;
+        }
+
+        // --- STEP 3 LOGIC (PAYMENT) ---
+
+        function buildPaymentPayload(price, total) {
+            let paxSummary = [];
+            state.passengers.forEach(p => paxSummary.push(`${p.name} ${p.surname}`));
+
+            const payload = {
+                order_id: `${CONFIG.id}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+                timestamp: new Date().toISOString(),
+                device_type: "Experimental Widget",
+                browser_userAgent: navigator.userAgent,
+                browser_language: navigator.language || navigator.userLanguage,
+                browser_platform: navigator.platform,
+                screen_resolution: `${window.screen.width}x${window.screen.height}`,
+                viewport_size: `${window.innerWidth}x${window.innerHeight}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                referrer: document.referrer || "Direct",
+                page_url: window.location.href,
+                connection_type: navigator.connection ? navigator.connection.effectiveType : 'unknown',
+                tour_name: CONFIG.name,
+                tour_date: CONFIG.date,
+                passengers: paxSummary.join(', '),
+                contact_name: state.contact.name,
+                contact_email: state.contact.email,
+                contact_phone: state.contact.phone,
+                count: state.count,
+                plan: state.plan,
+                tour_id: CONFIG.id,
+                tour_type: CONFIG.tourType,
+                passenger_count: state.count,
+                selected_seats: "Без выбора мест",
+                payment_type: state.plan === 'full' ? 'Полная оплата' : 'Залог',
+                currency: "CZK",
+                locale: "ru",
+                buyer_phone: state.contact.phone,
+                widget_open_method: window.location.hash === '#book-now' ? 'Hash Trigger' : 'Button Click',
+                passengers_json_dump: JSON.stringify(state.passengers),
+                total_pay_now: total,
+                total_order_value: CONFIG.price * state.count,
+                remaining_balance: state.plan === 'full' ? 0 : (CONFIG.price - CONFIG.deposit) * state.count,
+                seats_surcharge: 0,
+                buyer_email: state.contact.email,
+                productName: CONFIG.name,
+                all_passengers_summary: paxSummary.join(', '),
+                telegram_link: CONFIG.telegram_link
+            };
+
+            state.passengers.forEach((p, i) => {
+                payload[`passenger_${i + 1}_firstname`] = p.name;
+                payload[`passenger_${i + 1}_lastname`] = p.surname;
+                payload[`passenger_${i + 1}_name`] = `${p.name} ${p.surname}`;
+                payload[`passenger_${i + 1}_dob`] = p.dob;
+            });
+
+            return payload;
+        }
+
+        function preloadPaymentData() {
+            if (state.clientSecret || paymentIntentPromise) return;
+
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+            const payload = buildPaymentPayload(price, total);
+
+            console.log("Preloading payment data...");
+            paymentIntentPromise = fetch(CONFIG.webhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(r => r.json())
+                .catch(e => {
+                    console.warn("Preload failed", e);
+                    return null;
+                });
+        }
+
+        async function initPayment() {
+
+            // 1. Force Loader Visible IMMEDIATELY
+            const loader = document.getElementById('payment-loader');
+            loader.classList.add('visible');
+            loader.style.opacity = '1';
+
+            // 2. Prepare visual details behind loader
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+
+            const payNowEl = document.getElementById('pay-now-val');
+            if (payNowEl) payNowEl.innerText = total + " Kč";
+
+            const typeLabel = document.getElementById('payment-type-label');
+            if (typeLabel) typeLabel.innerText = state.plan === 'full' ? "Полная оплата" : "Залог";
+
+            // 3. Elements Initialization 
+            if (!elements) {
+                try {
+                    let data;
+                    if (state.clientSecret) {
+                        data = { clientSecret: state.clientSecret };
+                    } else {
+                        if (!paymentIntentPromise) {
+                            const payload = buildPaymentPayload(price, total);
+                            paymentIntentPromise = fetch(CONFIG.webhook, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(r => r.json());
+                        }
+                        data = await paymentIntentPromise;
+                    }
+
+                    if (data && data.clientSecret) {
+                        state.clientSecret = data.clientSecret;
+                        state.orderId = data.Order_id || data.order_id;
+
+                        elements = stripe.elements({
+                            clientSecret: data.clientSecret,
+                            appearance: {
+                                theme: 'stripe',
+                                variables: {
+                                    fontFamily: 'Inter, system-ui, sans-serif',
+                                    fontSizeBase: '16px',
+                                    colorPrimary: '#007aff',
+                                    colorText: '#1d1d1f',
+                                    borderRadius: '12px',
+                                    colorDanger: '#ff3b30'
+                                }
+                            }
+                        });
+
+                        cardElement = elements.create('card', {
+                            hidePostalCode: true,
+                            style: {
+                                base: {
+                                    fontSize: '16px',
+                                    color: '#1d1d1f',
+                                    '::placeholder': { color: '#86868b' },
+                                    iconColor: '#007aff'
+                                }
+                            }
+                        });
+                        cardElement.mount('#card-element');
+
+                        // Wait slightly for mount to settle and keep loader for vibes
+                        setTimeout(() => {
+                            loader.style.opacity = '0';
+                            setTimeout(() => { loader.classList.remove('visible'); }, 300);
+                        }, 1000);
+
+                        // Payment Request check...
+                        console.log("Initializing Payment Request with total:", total);
+                        const pr = stripe.paymentRequest({
+                            country: 'CZ', currency: 'czk',
+                            total: { label: CONFIG.name, amount: Math.round(total * 100) },
+                            requestPayerName: true, requestPayerEmail: true
+                        });
+
+                        // LISTENER FOR APPLE/GOOGLE PAY EVENTS
+                        pr.on('paymentmethod', async (ev) => {
+                            const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(
+                                state.clientSecret,
+                                { payment_method: ev.paymentMethod.id },
+                                { handleActions: false }
+                            );
+
+                            if (confirmError) {
+                                ev.complete('fail');
+                                const msg = document.getElementById('payment-message');
+                                msg.innerText = confirmError.message || "Ошибка оплаты";
+                                msg.style.display = 'block';
+                            } else {
+                                ev.complete('success');
+                                if (paymentIntent.status === "requires_action") {
+                                    saveStateToStorage();
+                                    const { error } = await stripe.confirmCardPayment(state.clientSecret, {
+                                        return_url: window.location.href
+                                    });
+                                    if (error) {
+                                        const msg = document.getElementById('payment-message');
+                                        msg.innerText = error.message;
+                                        msg.style.display = 'block';
+                                    } else {
+                                        document.getElementById('success-email').innerText = state.contact.email;
+                                        goToStep(4);
+                                    }
+                                } else {
+                                    document.getElementById('success-email').innerText = state.contact.email;
+                                    goToStep(4);
+                                }
+                            }
+                        });
+
+                        pr.canMakePayment().then(result => {
+                            console.log("Apple/Google Pay Availability:", result);
+                            if (result) {
+                                const wContainer = document.getElementById('wallet-container');
+                                if (wContainer) {
+                                    wContainer.style.display = 'block';
+                                    wContainer.style.visibility = 'visible'; // Force visibility
+                                    wContainer.style.opacity = '1';
+                                }
+
+                                prButton = elements.create('paymentRequestButton', {
+                                    paymentRequest: pr,
+                                    style: {
+                                        paymentRequestButton: {
+                                            theme: 'dark', // or 'dark-outline'
+                                            height: '48px',
+                                            type: 'buy'
+                                        }
+                                    }
+                                });
+                                prButton.mount('#wallet-element');
+                            } else {
+                                console.log("Apple/Google Pay not available");
+                                const wContainer = document.getElementById('wallet-container');
+                                if (wContainer) wContainer.style.display = 'none';
+                                const wEl = document.getElementById('wallet-element');
+                                if (wEl) wEl.style.display = 'none';
+                            }
+                        });
+
+                    } else {
+                        console.error('No clientSecret received from webhook');
+                        alert('Error: Could not initialize payment (No Secret).');
+                        loader.classList.remove('visible');
+                    }
+                } catch (e) {
+                    console.error("Init Payment Error:", e);
+                    // ALERT FOR MOBILE DEBUGGING
+                    alert("Pay Init Error: " + e.message);
+                    loader.classList.remove('visible');
+                }
+            } else {
+                // Already initialized (coming back from step 4 or similar, re-show loader briefly)
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => { loader.classList.remove('visible'); }, 300);
+                }, 1000);
+            }
+        }
+
+        function destroyStripe() {
+            if (cardElement) { try { cardElement.destroy(); } catch (e) { } cardElement = null; }
+            if (prButton) { try { prButton.destroy(); } catch (e) { } prButton = null; }
+            if (elements) { elements = null; }
+
+            const cardEl = document.getElementById('card-element');
+            if (cardEl) cardEl.innerHTML = '';
+
+            const walletEl = document.getElementById('wallet-element');
+            if (walletEl) walletEl.innerHTML = '';
+
+            const walletContainer = document.getElementById('wallet-container');
+            if (walletContainer) walletContainer.style.display = 'none';
+
+            state.clientSecret = null;
+            if (typeof paymentIntentPromise !== 'undefined') paymentIntentPromise = null;
+            console.log("Stripe destroyed & Cache cleared");
+        }
+
+        async function confirmPayment() {
+            if (!state.clientSecret) {
+                alert("Ошибка: Платёжная сессия не найдена. Попробуйте обновить страницу.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-next-action');
+            const msg = document.getElementById('payment-message');
+            msg.style.display = 'none';
+
+            btn.disabled = true;
+            btn.innerText = 'Обработка...';
+
+            saveStateToStorage();
+
+            const { error } = await stripe.confirmCardPayment(state.clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                    billing_details: {
+                        name: state.contact.email,
+                        email: state.contact.email,
+                        phone: state.contact.phone
+                    }
+                },
+                receipt_email: state.contact.email, // Explicitly set for Dashboard visibility
+                return_url: window.location.href
+            });
+
+            if (error) {
+                msg.innerText = error.message;
+                msg.style.display = 'block';
+                msg.classList.add('shake'); setTimeout(() => msg.classList.remove('shake'), 500);
+
+                btn.disabled = false;
+                const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+                const total = price * state.count;
+                btn.innerText = `Оплатить ${total} Kč`;
+            } else {
+                // Success
+                document.getElementById('success-email').innerText = state.contact.email;
+                goToStep(4);
+            }
+        }
+
+    </script>
+</body>
+
+</html>

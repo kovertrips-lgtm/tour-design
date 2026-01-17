@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER: Neo-Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: #e0e5ec;
+            font-family: 'Urbanist', sans-serif;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-frame {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+        }
+
+        /* Soft blobs */
+        .blob {
+            position: absolute;
+            background: #a0c4ff;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .b1 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            background: #bdb2ff;
+        }
+
+        .b2 {
+            width: 250px;
+            height: 250px;
+            bottom: 10%;
+            right: 10%;
+            background: #ffc6ff;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 30px;
+            width: 85%;
+            max-width: 400px;
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .digital-timer {
+            font-variant-numeric: tabular-nums;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        .btn-soft {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 20px;
+            background: #252525;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-soft:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phone-frame">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+
+        <div class="glass-card">
+            <h2>Klinovec Trip</h2>
+            <p>Smart booking system active</p>
+
+            <div class="digital-timer">04 : 22 : 11</div>
+
+            <a href="#" class="btn-soft">Connect Wallet / Book</a>
+        </div>
+    </div>
+</body>
+
+</html>

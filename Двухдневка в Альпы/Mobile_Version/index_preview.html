@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Kover Alps - Mobile Version</title>
+</head>
+
+<body style="margin:0; padding:0; background:#000;">
+
+    <!-- 01 HERO -->
+    <!-- CONTENT FROM 01_Hero_Mobile.html -->
+    <div id="hero-placeholder"></div>
+
+    <!-- 02 PROGRAM -->
+    <div id="program-placeholder"></div>
+
+    <!-- 04 SLEDDING -->
+    <!-- 04 SLEDDING -->
+    <div id="sledding-placeholder"></div>
+
+    <!-- 05 HOTEL -->
+    <div id="hotel-placeholder"></div>
+
+    <!-- 09 ORG DETAILS -->
+    <div id="org-placeholder"></div>
+
+    <script>
+        // Simple loader to simulate how they might be stacked. 
+        // In reality user extracts code from files above.
+
+        async function loadPart(id, url) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                // Extract body content roughly
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const bodyContent = doc.body.innerHTML;
+                const styleContent = doc.querySelector('style')?.outerHTML || '';
+
+                document.getElementById(id).innerHTML = styleContent + bodyContent;
+            } catch (e) {
+                console.error('Error loading ' + url, e);
+            }
+        }
+
+        loadPart('hero-placeholder', '01_Hero_Mobile.html');
+        loadPart('program-placeholder', '02_Program_Mobile.html');
+        loadPart('sledding-placeholder', '04_Sledding_Mobile.html');
+        loadPart('hotel-placeholder', '05_Hotel_Mobile.html');
+        loadPart('org-placeholder', '09_OrgDetails_Mobile.html');
+    </script>
+
+    <!-- Widget Script Placeholder -->
+    <script>
+        function openWidget() {
+            alert('Widget opening...');
+        }
+    </script>
+</body>
+
+</html>

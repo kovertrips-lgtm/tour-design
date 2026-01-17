@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kover Travel: План Автоматизации</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #F5F5F7;
+            --bg-card: #FFFFFF;
+            --text-primary: #1D1D1F;
+            --text-secondary: #86868B;
+            --accent-blue: #007AFF;
+            --accent-purple: #AF52DE;
+            --accent-green: #34C759;
+            --accent-orange: #FF9500;
+            --border-light: #E5E5EA;
+            --radius-l: 24px;
+            --radius-m: 16px;
+            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .main-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #1D1D1F 0%, #4a4a4f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 19px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* TIMELINE CONTAINER */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background: #D1D1D6;
+            border-radius: 2px;
+        }
+
+        /* CARD STYLES */
+        .phase-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-l);
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .phase-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-float);
+        }
+
+        /* PHASE MARKER DOT */
+        .phase-marker {
+            position: absolute;
+            left: -57px;
+            top: 32px;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--accent-blue);
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .phase-card:nth-child(2) .phase-marker {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        .phase-card:nth-child(3) .phase-marker {
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        .phase-card:nth-child(4) .phase-marker {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        /* CONTENT */
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .phase-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .phase-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-amo {
+            background: #E3F2FD;
+            color: #007AFF;
+        }
+
+        .tag-make {
+            background: #F3E5F5;
+            color: #AF52DE;
+        }
+
+        .tag-stripe {
+            background: #E8EAF6;
+            color: #5C6BC0;
+        }
+
+        .tag-front {
+            background: #FFF3E0;
+            color: #FF9500;
+        }
+
+        .tag-adesk {
+            background: #E0F2F1;
+            color: #009688;
+        }
+
+        /* DETAILED STEPS */
+        .steps-container {
+            background: #F9F9FB;
+            border-radius: var(--radius-m);
+            padding: 24px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-content h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .step-content p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .phase-card {
+            animation: fadeIn 0.6s ease-out backwards;
+        }
+
+        .phase-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .phase-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .phase-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .phase-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .phase-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Карта Автоматизации</h1>
+        <div class="subtitle">Детальный план работ по интеграции платежной системы Stripe, AmoCRM и финансового учета
+            Adesks</div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="timeline">
+
+            <!-- PHASE 1: CRM & DATA -->
+            <div class="phase-card">
+                <div class="phase-marker">1</div>
+                <div class="phase-header">
+                    <div>
+                        <h2 class="phase-title">Подготовка CRM и Данных</h2>
+                        <div class="phase-desc">Настройка структуры хранения данных для корректного трекинга оплат и
+                            долгов.</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag tag-amo">AmoCRM</span>
+                    </div>
+                </div>
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-icon">📦</div>
+                        <div class="step-content">
+                            <h4>Поля карточки сделки</h4>
+                            <p>Создать поля: <code>Сумма залога</code>, <code>Сумма тура</code>,
+                                <code>Остаток к оплате</code>, <code>Статус оплаты</code>. Это критично для того, чтобы
+                                сценарий "Доплата" мог автоматически рассчитать, сколько денег брать с клиента.</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">🔄</div>
+                        <div class="step-content">
+                            <h4>Воронка продаж</h4>
+                            <p>Настроить этапы:</p>
+                            <ul style="margin: 5px 0 0 0; padding-left: 20px; font-size: 13px; color: #666;">
+                                <li><b>Новая заявка</b> (входит сюда при первой инициализации)</li>
+                                <li><b>Залог внесен</b> (после частичной оплаты)</li>
+                                <li><b>Полная оплата</b> (билеты отправлены)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE 2: INITIALIZATION (BACKEND) -->
+            <div class="phase-card">
+                <div class="phase-marker">2</div>
+                <div class="phase-header">
+                    <div>
+                        <h2 class="phase-title">Сценарий Инициализации</h2>
+                        <div class="phase-desc">Обработка момента, когда клиент нажимает "Забронировать" в виджете.
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag tag-make">Make</span>
+                        <span class="tag tag-stripe">Stripe</span>
+                    </div>
+                </div>
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-icon">⚡️</div>
+                        <div class="step-content">
+                            <h4>Webhook: Получение данных</h4>
+                            <p>Сценарий принимает JSON от виджета: имя, email, телефон, тип тура, выбранная опция
+                                (залог/полная).</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">🔎</div>
+                        <div class="step-content">
+                            <h4>Логика поиска дублей AmoCRM</h4>
+                            <p>Поиск контакта по Email/Телефону. Если есть активная сделка в этой воронке — используем
+                                её ID. Если нет — создаем новую.</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">💳</div>
+                        <div class="step-content">
+                            <h4>Создание PaymentIntent</h4>
+                            <p>Генерация сессии оплаты в Stripe. <b>ВАЖНО:</b> В metadata записывается
+                                <code>deal_id</code> и <code>payment_type</code> (full/deposit). Это связующее звено для
+                                будущего распознавания платежа.</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">↩️</div>
+                        <div class="step-content">
+                            <h4>Ответ Виджету</h4>
+                            <p>Возвращаем <code>client_secret</code>, чтобы фронтенд мог отрисовать форму карты.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE 3: FRONTEND WIDGET -->
+            <div class="phase-card">
+                <div class="phase-marker">3</div>
+                <div class="phase-header">
+                    <div>
+                        <h2 class="phase-title">Виджет и Страница Доплаты</h2>
+                        <div class="phase-desc">Интерфейс пользователя, включая новую функцию доплаты остатка.</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag tag-front">JS / Frontend</span>
+                    </div>
+                </div>
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-icon">🛠</div>
+                        <div class="step-content">
+                            <h4>Фикс 3D Secure</h4>
+                            <p>Добавлен параметр <code>return_url</code>. Теперь после подтверждения банка клиент
+                                возвращается на страницу, виджет восстанавливает состояние и показывает экран успеха.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">🔗</div>
+                        <div class="step-content">
+                            <h4>Режим "Доплата" (Pay Balance)</h4>
+                            <p>Логика виджета должна уметь читать URL: <code>site.com/pay?deal_id=123</code>. <br>
+                                Если найден ID сделки:
+                                1. Скрыть выбор "Залог/Полная".
+                                2. Запросить у Make сумму остатка по этой сделке.
+                                3. Показать кнопку "Доплатить ХХ крон".
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE 4: SUCCESS & FINANCE -->
+            <div class="phase-card">
+                <div class="phase-marker">4</div>
+                <div class="phase-header">
+                    <div>
+                        <h2 class="phase-title">Обработка Платежей и Финансы</h2>
+                        <div class="phase-desc">Самая важная часть: что происходит ПОСЛЕ списания денег.</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag tag-stripe">Stripe</span>
+                        <span class="tag tag-adesk">Adesks</span>
+                    </div>
+                </div>
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-icon">🎣</div>
+                        <div class="step-content">
+                            <h4>Единый Webhook (payment_intent.succeeded)</h4>
+                            <p>Stripe уведомляет Make о том, что деньги получены. Сценарий достает <code>deal_id</code>
+                                из метаданных.</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">📊</div>
+                        <div class="step-content">
+                            <h4>Учет в Adesks (Split Transaction)</h4>
+                            <p>1. Создать транзакцию <b>"Приход"</b> (Полная сумма платежа).<br>
+                                2. <b>Sleep (10 сек)</b> — техническая пауза для обработки.<br>
+                                3. Создать транзакцию <b>"Расход"</b> (Комиссия Stripe).<br>
+                                Это обеспечивает идеальный баланс в управленческом учете.</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">📝</div>
+                        <div class="step-content">
+                            <h4>Логирование в CRM</h4>
+                            <p>В сделку добавляется Примечание: <i>"Поступил платеж 5000 CZK (Залог) через Stripe.
+                                    Дата..."</i>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE 5: COMMUNICATION -->
+            <div class="phase-card">
+                <div class="phase-marker">5</div>
+                <div class="phase-header">
+                    <div>
+                        <h2 class="phase-title">Коммуникация</h2>
+                        <div class="phase-desc">Автоматическая отправка писем и ссылок.</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag tag-make">Email</span>
+                    </div>
+                </div>
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-icon">📬</div>
+                        <div class="step-content">
+                            <h4>Сценарий А: Полная Оплата</h4>
+                            <p>Отправить Email с темой "Ваши билеты". Внутри ссылка на чат участников.</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">🔄</div>
+                        <div class="step-content">
+                            <h4>Сценарий Б: Внесен Залог</h4>
+                            <p>Отправить Email с подтверждением. Внутри:<br>
+                                1. Ссылка на чат участников.<br>
+                                2. <span class="highlight">Персональная ссылка на доплату</span> (генерируется на основе
+                                ID сделки).<br>
+                                "Чтобы доплатить остаток позже, используйте эту ссылку: kover.travel/pay?deal_id=..."
+                            </p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon">✅</div>
+                        <div class="step-content">
+                            <h4>Сценарий В: Успешная Доплата</h4>
+                            <p>Когда клиент доплачивает по ссылке, приходит простое письмо "Спасибо, тур полностью
+                                оплачен".</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <div style="margin: 60px auto; width: 100%; max-width: 1000px; text-align: center;">
+        <h2 style="margin-bottom: 20px;">Визуализация Процесса</h2>
+        <div class="mermaid">
+            %%{init: {'theme': 'base', 'themeVariables': { 'fontFamily': 'Inter', 'secondaryColor': '#f2f2f7' }}}%%
+            graph TD
+            A[Start: Клиент] --> B{Тип сценария?}
+
+            B -->|Новая Заявка| C[Widget: Init]
+            C --> D["Make -> AmoCRM (Create Deal)"]
+            D --> E["Stripe (Create Intent)"]
+            E --> F[Widget: Оплата Картой]
+
+            B -->|Доплата| G[Ссылка из Email]
+            G --> H[Widget: Режим Доплаты]
+            H --> I["Make -> AmoCRM (Check Debt)"]
+            I --> J["Stripe (Remaining Amount)"]
+
+            F --> K[Webhook: Success]
+            J --> K
+
+            K --> L[Make: Success Logic]
+            L --> M["Adesks: Приход + Расход"]
+
+            L --> N{Тип платежа?}
+            N -->|Залог| O["Email: Ссылка на доплату"]
+            N -->|Полная| P[Email: Билеты]
+        </div>
+    </div>
+    <script>mermaid.initialize({ startOnLoad: true });</script>
+
+</body>
+
+</html>

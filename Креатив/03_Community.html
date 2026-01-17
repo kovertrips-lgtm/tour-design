@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER: Community</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Gloria+Hallelujah&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FDF6E3;
+            --card: #FFFFFF;
+            --text: #4A4A4A;
+            --highlight: #FFD166;
+            --green: #06D6A0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-bubble {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: popIn 0.5s forwards;
+            max-width: 80%;
+        }
+
+        .chat-left {
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-right {
+            align-self: flex-end;
+            background: #E0F2FE;
+            border-bottom-right-radius: 4px;
+            animation-delay: 0.3s;
+        }
+
+        .chat-highlight {
+            align-self: center;
+            background: #FFD166;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            transform: rotate(-2deg);
+            margin: 20px 0;
+            animation-delay: 0.6s;
+            max-width: 100%;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+            border: 2px solid white;
+        }
+
+        .chat-right .avatar {
+            left: auto;
+            right: -10px;
+        }
+
+        .status-box {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: fadeIn 1s 1s forwards;
+            opacity: 0;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(6, 214, 160, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .cta-big {
+            background: #EF476F;
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #bc2c4f;
+            transition: all 0.1s;
+            margin-top: 20px;
+            animation: fadeIn 0.5s 1.5s forwards;
+            opacity: 0;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .cta-big:active {
+            transform: translateY(10px);
+            box-shadow: 0 0 0 #bc2c4f;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translateY(20px) scale(0.9);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="chat-bubble chat-left">
+            <img src="https://i.pravatar.cc/100?img=5" class="avatar">
+            <strong>Маша, гид:</strong>
+            <p>Ребят, сноуборды уже загрузили! 🏂</p>
+        </div>
+
+        <div class="chat-bubble chat-right">
+            <img src="https://i.pravatar.cc/100?img=12" class="avatar">
+            <strong>Макс:</strong>
+            <p>Я билеты взял, жду в чате 😎</p>
+        </div>
+
+        <div class="chat-bubble chat-highlight">
+            ТЫ С НАМИ? <br>
+            ВЫЕЗД СКОРО!
+        </div>
+
+        <div class="status-box">
+            <div class="live-dot"></div>
+            <div>
+                <small>Статус набора:</small>
+                <div style="font-weight:bold" id="status-text">Осталось 4 места...</div>
+            </div>
+        </div>
+
+        <a href="#" class="cta-big">
+            ПРЫГНУТЬ В ЧАТ
+        </a>
+    </div>
+
+    <script>
+        const statusText = document.getElementById('status-text');
+        const states = ["Осталось 4 места...", "Кто-то смотрит билеты...", "Осталось 3 места!"];
+        let i = 0;
+        setInterval(() => {
+            i = (i + 1) % states.length;
+            statusText.style.opacity = 0;
+            setTimeout(() => {
+                statusText.innerText = states[i];
+                statusText.style.opacity = 1;
+            }, 300);
+        }, 3000);
+    </script>
+</body>
+
+</html>

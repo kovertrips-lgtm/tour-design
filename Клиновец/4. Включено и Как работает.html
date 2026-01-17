@@ -1,0 +1,372 @@
+<style>
+    /* --- НАСТРОЙКИ ЦВЕТОВ --- */
+    :root {
+        --mw-bg: #FFFFFF;
+        --mw-text: #111111;
+        --mw-gray: #666666;
+
+        /* Цвета */
+        --btn-blue: #29B6F6;
+        --mw-green: #00C853;
+        --mw-red: #FF5252;
+        --mw-border: #E0E0E0;
+    }
+
+    .clean-section {
+        font-family: 'Montserrat', sans-serif;
+        background-color: var(--mw-bg);
+        color: var(--mw-text);
+        padding: 60px 20px;
+        box-sizing: border-box;
+    }
+
+    .clean-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* ЗАГОЛОВКИ */
+    .clean-header {
+        margin-bottom: 30px;
+        text-align: left;
+    }
+
+    .clean-title {
+        font-size: 32px;
+        font-weight: 800;
+        margin: 0 0 10px 0;
+        line-height: 1.1;
+        color: var(--mw-text);
+    }
+
+    .clean-subtitle {
+        font-size: 16px;
+        color: var(--mw-gray);
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* СПИСКИ */
+    .lists-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        margin-bottom: 50px;
+        border-bottom: 1px solid var(--mw-border);
+        padding-bottom: 40px;
+    }
+
+    .list-col {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .col-header {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .list-col.inc .col-header {
+        color: var(--mw-text);
+    }
+
+    .list-col.exc .col-header {
+        color: var(--mw-gray);
+    }
+
+    .clean-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .list-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 15px;
+        font-size: 15px;
+        line-height: 1.4;
+    }
+
+    .list-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .icon-check,
+    .icon-cross {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        position: relative;
+        top: 2px;
+    }
+
+    .icon-check {
+        color: var(--mw-green);
+    }
+
+    .icon-cross {
+        color: var(--mw-red);
+        opacity: 0.7;
+    }
+
+    .list-item strong {
+        font-weight: 600;
+    }
+
+    /* ШАГИ */
+    .steps-wrapper {
+        margin-bottom: 40px;
+    }
+
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    .step-card {
+        position: relative;
+    }
+
+    .step-header {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .step-digit {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--btn-blue);
+        background: rgba(41, 182, 246, 0.1);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .step-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0;
+        z-index: 1;
+    }
+
+    .step-desc {
+        font-size: 14px;
+        color: var(--mw-gray);
+        line-height: 1.5;
+        z-index: 1;
+        position: relative;
+    }
+
+    /* КНОПКА */
+    .buttons-showcase {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        margin-top: 50px;
+    }
+
+    .clean-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 320px;
+        padding: 18px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-align: center;
+        box-sizing: border-box;
+
+        /* Стиль 1 (Голубая) */
+        background-color: var(--btn-blue);
+        color: #ffffff !important;
+        border: none;
+        box-shadow: 0 4px 15px rgba(41, 182, 246, 0.3);
+    }
+
+    .clean-btn:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+    }
+
+    .refund-note {
+        margin-top: 20px;
+        font-size: 13px;
+        color: #999;
+        text-align: center;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* АДАПТИВ */
+    @media (max-width: 768px) {
+        .clean-section {
+            padding: 40px 15px;
+        }
+
+        .clean-title {
+            font-size: 26px;
+        }
+
+        .lists-wrapper {
+            flex-direction: column;
+            gap: 30px;
+            padding-bottom: 30px;
+        }
+
+        .list-col {
+            min-width: 100%;
+        }
+
+        .steps-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+</style>
+
+<div class="clean-section">
+    <div class="clean-container">
+
+        <div class="clean-header">
+            <h2 class="clean-title">Всё для твоего отдыха</h2>
+            <p class="clean-subtitle">Прозрачные условия. Никаких скрытых платежей, кроме твоих личных расходов.</p>
+        </div>
+
+        <div class="lists-wrapper">
+            <div class="list-col inc">
+                <div class="col-header">Что включено</div>
+                <ul class="clean-list">
+                    <li class="list-item">
+                        <svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span><strong>Трансфер туда-обратно</strong> <br><span
+                                style="color:#666; font-size:13px;">Комфортный автобус, Wi-Fi, розетки</span></span>
+                    </li>
+                    <li class="list-item">
+                        <svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span><strong>Пирожки и напитки</strong> <br><span style="color:#666; font-size:13px;">Домашние
+                                пирожки, софт-дринки и welcome-drink</span></span>
+                    </li>
+                    <li class="list-item">
+                        <svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span><strong>Обучение новичков</strong> <br><span style="color:#666; font-size:13px;">База
+                                катания на лыжах/сноуборде</span></span>
+                    </li>
+                    <li class="list-item">
+                        <svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span><strong>Команда Kover Travel</strong> <br><span style="color:#666; font-size:13px;">Мы
+                                всегда рядом. Помогаем с арендой, скипассом и любым вопросом на горе.</span></span>
+                    </li>
+                    <li class="list-item">
+                        <svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Розыгрыш призов в пути</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="list-col exc">
+                <div class="col-header">Дополнительно</div>
+                <ul class="clean-list">
+                    <li class="list-item">
+                        <svg class="icon-cross" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        <span>Skipass (~1070 Kč)</span>
+                    </li>
+                    <li class="list-item">
+                        <svg class="icon-cross" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        <span>Аренда снаряжения (~490 Kč)</span>
+                    </li>
+                    <li class="list-item">
+                        <svg class="icon-cross" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        <span>Личные расходы</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="clean-header">
+            <h2 class="clean-title">Как всё работает</h2>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-digit">1</div>
+                    <h3 class="step-title">Забронируй</h3>
+                </div>
+                <p class="step-desc">Оплати тур или внеси залог. Место закрепляется за тобой сразу после оплаты.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-digit">2</div>
+                    <h3 class="step-title">Доступ к чату</h3>
+                </div>
+                <p class="step-desc">Сразу после оплаты откроется доступ в Telegram-чат. Там — участники, детальный
+                    тайминг и полезная информация.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-digit">3</div>
+                    <h3 class="step-title">Поехали!</h3>
+                </div>
+                <p class="step-desc">Просто приходи на место сбора в нужное время. Мы обо всём позаботились.</p>
+            </div>
+        </div>
+
+        <div class="buttons-showcase">
+            <a href="tour" class="clean-btn">ЗАБРОНИРОВАТЬ МЕСТО</a>
+
+            <div class="refund-note">
+                Отмена с полным возвратом возможна за 10 дней до выезда.
+            </div>
+        </div>
+
+    </div>
+</div>

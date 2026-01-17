@@ -1,0 +1,183 @@
+<meta charset="UTF-8">
+<style>
+    .org-section {
+        background-color: #fff;
+        padding: 80px 20px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .org-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .org-title {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .org-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+
+    .org-card {
+        background: #F9F9F9;
+        padding: 30px;
+        border-radius: 16px;
+        border-left: 5px solid #29B6F6;
+    }
+
+    .org-card.lime {
+        border-left-color: #BDFF00;
+    }
+
+    .org-card.dark {
+        border-left-color: #333;
+    }
+
+    .org-head {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .org-price {
+        background: #111;
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-left: auto;
+    }
+
+    .org-text {
+        font-size: 15px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .org-note {
+        margin-top: 15px;
+        font-size: 13px;
+        color: #888;
+        font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+        .org-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .price-card {
+        background: #F9F9F9;
+        padding: 30px;
+        border-radius: 16px;
+        border-left: 5px solid #29B6F6;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .price-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .price-card.lime {
+        border-left-color: #BDFF00;
+    }
+
+    .price-title {
+        font-size: 20px;
+        font-weight: 800;
+        margin: 0 0 10px 0;
+        color: #111;
+        text-transform: uppercase;
+    }
+
+    .price-val {
+        font-size: 32px;
+        font-weight: 900;
+        color: #29B6F6;
+        margin: 0 0 20px 0;
+    }
+
+    .price-card.lime .price-val {
+        color: #8dbd00;
+        /* Darker lime for text visibility */
+    }
+
+    .price-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .price-list li {
+        font-size: 15px;
+        color: #555;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.4;
+    }
+
+    .check {
+        color: #29B6F6;
+        font-weight: bold;
+    }
+
+    .price-card.lime .check {
+        color: #8dbd00;
+    }
+</style>
+<div class="org-section">
+    <div class="org-container">
+        <h2 class="org-title">Важно знать</h2>
+
+        <div class="org-grid">
+            <div class="price-card lime">
+                <h3 class="price-title">Все включено</h3>
+                <p class="price-val">4990 KC</p>
+                <ul class="price-list">
+                    <li><span class="check">&#10004;</span> Комфортный трансфер</li>
+                    <li><span class="check">&#10004;</span> Отель *** с завтраком и SPA</li>
+                    <li><span class="check">&#10004;</span> Сопровождение 24/7</li>
+                    <li><span class="check">&#10004;</span> Фотоотчет</li>
+                    <li><span class="check">&#10004;</span> Сюрпризы в дороге</li>
+                </ul>
+            </div>
+            <div class="price-card">
+                <h3 class="price-title">Доп. расходы</h3>
+                <p class="price-val">~100€</p>
+                <ul class="price-list">
+                    <li><span class="check">&#128184;</span> Прокат саней + подъемник (35€)</li>
+                    <li><span class="check">&#128184;</span> Музей Red Bull (бесплатно)</li>
+                    <li><span class="check">&#128184;</span> Обеды и ужины</li>
+                    <li><span class="check">&#128184;</span> Сувениры</li>
+                </ul>
+            </div>
+
+            <div class="org-card dark">
+                <div class="org-head">Одежда</div>
+                <div class="org-text">
+                    Одевайтесь тепло и удобно! Идеально подойдет лыжный костюм. Возьмите сменную одежду на случай, если
+                    промокнете. Вещи можно оставить в автобусе.
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-top:50px;">
+            <button onclick="openWidget()"
+                style="background:#29B6F6; color:#fff; border:none; padding:18px 40px; border-radius:100px; font-size:18px; font-weight:700; cursor:pointer; box-shadow:0 10px 20px rgba(41,182,246,0.3);">ПОЕХАЛИ
+                С НАМИ!</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,2218 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER Booking Widget</title>
+
+    <!-- FLATPICKR CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- INTL TEL INPUT CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+
+    <style>
+        /* ==========================================================================
+           ???? ЦЕНТР УПРАВЛЕНИЯ ЦВЕТАМИ
+           ========================================================================== */
+        :root {
+            /* --- ОСНОВНЫЕ ЦВЕТА --- */
+            --color-accent: #18B7EA;
+            --color-accent-hover: #159BC8;
+            --color-gradient-secondary: #D2FF3D;
+            --color-success: #34c759;
+            --color-error: #ff3b30;
+
+            /* --- ФОНЫ --- */
+            --bg-page: #F4F5F7;
+            --bg-card: #FFFFFF;
+            --bg-secondary: #fbfbfd;
+
+            /* --- ТЕКСТ --- */
+            --text-main: #1d1d1f;
+            --text-secondary: #86868b;
+            --text-white: #FFFFFF;
+
+            /* --- ГРАНИЦЫ --- */
+            --border-color: #d1d1d6;
+            --border-light: #f0f0f0;
+
+            /* --- СЛОИ И Z-INDEX --- */
+            --z-modal: 999999;
+            --z-modal-close: 1000000;
+        }
+
+        /* Basic Page Style for Demo */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background: #eee;
+            overscroll-behavior-y: none;
+            /* Prevent scroll chaining/bounce in some browsers */
+        }
+
+        /* === MODAL OVERLAY STYLES === */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: var(--z-modal);
+            /* BLOCK LAYOUT FOR NATIVE SCROLLING */
+            display: block;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* Padding to center content visually */
+            padding: 40px 0;
+            -webkit-overflow-scrolling: touch;
+            /* Smooth scrolling on iOS */
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ... close btn ... */
+
+        /* ... */
+
+        #booking-widget-root {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            /* ALLOW FULL HEIGHT EXPANSION */
+            min-height: min-content;
+        }
+
+        #booking-widget-root * {
+            box-sizing: border-box;
+        }
+
+        .b-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 0 16px 160px 16px;
+            /* Massive bottom padding for scroll safety */
+        }
+
+        /* КАРТОЧКИ */
+        .b-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+
+        /* CHECKBOX & CONSENT STYLES */
+        .b-consent-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .b-checkbox {
+            margin: 0;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-accent);
+            cursor: pointer;
+            margin-top: 1px;
+        }
+
+        .b-consent-label {
+            font-size: 12px;
+            color: #888;
+            line-height: 1.4;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .b-link {
+            color: #555;
+            text-decoration: underline;
+            border-bottom: none;
+            transition: 0.2s;
+        }
+
+        .b-link:hover {
+            color: #000;
+            border-bottom: none;
+        }
+
+        .b-card-header {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: #fff;
+            z-index: 2;
+            position: relative;
+        }
+
+        .b-card-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .b-card-status {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--color-accent);
+            opacity: 0;
+            transform: translateX(10px);
+            transition: 0.3s;
+        }
+
+        .b-card-body {
+            padding: 0 24px 24px 24px;
+            opacity: 1;
+            max-height: 5000px;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: top;
+        }
+
+        /* STATES */
+        .b-card.active {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .b-card.done .b-card-body {
+            max-height: 0;
+            padding-bottom: 0;
+            opacity: 0;
+        }
+
+        .b-card.done .b-card-status {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .b-card.done {
+            background: #fafafc;
+            border-color: var(--border-light);
+        }
+
+        .b-card.locked {
+            opacity: 0.6;
+            pointer-events: none;
+            filter: grayscale(1);
+        }
+
+        .b-card.locked .b-card-body {
+            max-height: 0;
+            padding-bottom: 0;
+        }
+
+        /* ПЛАНЫ ОПЛАТЫ */
+        .b-plans-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .b-plan-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-page);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .b-plan-card.selected {
+            background: #fff;
+            border-color: var(--color-accent);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+            position: relative;
+            z-index: 5;
+        }
+
+        .b-left-part {
+            display: flex;
+            align-items: center;
+            /* Allow container to shrink, preventing overflow */
+            min-width: 0;
+        }
+
+        .b-radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            margin-right: 14px;
+            position: relative;
+            flex-shrink: 0;
+            transition: 0.2s;
+            background: #fff;
+        }
+
+        .b-plan-card.selected .b-radio-circle {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+        }
+
+        .b-plan-card.selected .b-radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .b-plan-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+            /* Important for text truncation/wrap */
+        }
+
+        .b-plan-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            /* Prevent breaking single words generally, but allow wrap */
+            white-space: nowrap;
+        }
+
+        .b-plan-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .b-remainder-amount {
+            color: var(--color-accent);
+            font-weight: 800;
+            white-space: nowrap;
+            /* Keep amount + currency together */
+        }
+
+        .b-plan-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-left: 12px;
+            white-space: nowrap;
+            /* Price always on one line */
+            flex-shrink: 0;
+            /* Never shrink price */
+        }
+
+        /* --- MOBILE ADAPTIVE FIXES --- */
+        @media (max-width: 480px) {
+            .b-plan-card {
+                padding: 12px 14px;
+                align-items: flex-start;
+                /* Better alignment if title wraps */
+            }
+
+            .b-radio-circle {
+                margin-top: 2px;
+                /* Visual alignment with first text line */
+                margin-right: 10px;
+            }
+
+            .b-plan-info {
+                gap: 2px;
+            }
+
+            /* Allow title to wrap on very small screens if needed */
+            .b-plan-title {
+                font-size: 14px;
+                white-space: normal;
+            }
+
+            .b-plan-desc {
+                font-size: 11px;
+            }
+
+            .b-plan-price {
+                font-size: 15px;
+                margin-left: 8px;
+                /* Tighter spacing */
+            }
+        }
+
+        /* ПАССАЖИРЫ */
+        .b-passenger-group {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+            /* Increased separation */
+        }
+
+        .b-passenger-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+        }
+
+        /* Warning message for age validation */
+        .b-age-warning {
+            font-size: 12px;
+            color: #d88907;
+            /* Orange/Gold warning */
+            margin-top: 6px;
+            display: none;
+            line-height: 1.4;
+            padding: 8px 12px;
+            background: #fff8e6;
+            border-radius: 8px;
+            border: 1px solid #ffeeba;
+        }
+
+        .b-age-warning.visible {
+            display: block;
+        }
+
+        /* Warning message for unrealistic year */
+        .b-year-error {
+            font-size: 12px;
+            color: var(--color-error);
+            margin-top: 4px;
+            display: none;
+        }
+
+        .b-year-error.visible {
+            display: block;
+        }
+
+        /* Warning text for latin only */
+        .b-latin-error {
+            font-size: 11px;
+            color: var(--color-error);
+            margin-top: 4px;
+            display: none;
+            margin-left: 4px;
+        }
+
+        .b-latin-error.visible {
+            display: block;
+        }
+
+        /* ОБЩЕЕ */
+        .b-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .b-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .b-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .b-stepper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-page);
+            padding: 4px 12px;
+            border-radius: 12px;
+            height: 40px;
+        }
+
+        .b-step-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            user-select: none;
+            transition: 0.1s;
+            padding-bottom: 2px;
+        }
+
+        .b-step-val {
+            font-size: 17px;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* TOGGLE & MAP */
+        .b-switch-wrap {
+            cursor: pointer;
+        }
+
+        .b-switch {
+            position: relative;
+            width: 52px;
+            height: 32px;
+            background: #e9e9ea;
+            border-radius: 32px;
+            transition: 0.3s;
+        }
+
+        .b-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: 0.3s cubic-bezier(0.3, 1.5, 0.7, 1);
+        }
+
+        .b-switch-wrap.active .b-switch {
+            background: var(--color-success);
+        }
+
+        .b-switch-wrap.active .b-switch::after {
+            transform: translateX(20px);
+        }
+
+        .b-map-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease;
+            opacity: 0;
+            margin-top: 10px;
+        }
+
+        .b-map-container.open {
+            max-height: 800px;
+            opacity: 1;
+        }
+
+        .b-map-inner {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .b-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 44px);
+            gap: 10px;
+        }
+
+        .b-seat {
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 2px 0 #e5e5ea;
+            user-select: none;
+        }
+
+        .b-seat.selected {
+            background: var(--color-success);
+            color: #fff;
+            border-color: var(--color-success);
+            box-shadow: 0 3px 0 #248a3d;
+        }
+
+        .b-aisle {
+            width: 44px;
+            pointer-events: none;
+        }
+
+        .b-seat-hint {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--color-error);
+            font-weight: 500;
+            height: 16px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .b-seat-hint.show {
+            opacity: 1;
+        }
+
+        /* RECEIPT & INPUTS */
+        .b-receipt {
+            background: var(--bg-page);
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .b-receipt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .b-receipt-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .b-receipt-row span:last-child {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .b-receipt-divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 10px 0;
+        }
+
+        .b-receipt-total {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .b-input-group {
+            margin-bottom: 12px;
+            position: relative;
+            /* Ensure flatpickr attaches here */
+        }
+
+        /* Intl Phone Input Fixes */
+        .iti {
+            width: 100%;
+        }
+
+        .iti__flag {
+            border-radius: 2px;
+        }
+
+        /* Validation Messages */
+        .msg {
+            display: none;
+            font-size: 12px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .msg.error {
+            color: var(--color-error);
+        }
+
+        .msg.valid {
+            color: var(--color-success);
+        }
+
+        /* Flex group for Name + Surname */
+        .b-input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .b-input-row .b-input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .b-input-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .b-input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+            background: #fff;
+            font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .b-input:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(24, 183, 234, 0.1);
+        }
+
+        .b-input.error {
+            border-color: var(--color-error);
+            background: #fff0f0;
+        }
+
+        .b-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            background: var(--color-accent);
+            color: var(--text-white);
+            margin-top: 10px;
+        }
+
+        .b-btn:active {
+            transform: scale(0.98);
+        }
+
+        .b-btn:disabled {
+            background: var(--border-color);
+            cursor: not-allowed;
+            color: #fff;
+            box-shadow: none;
+        }
+
+        /* Visual "disabled" state that is still clickable for validation */
+        .b-btn.is-locked {
+            background: var(--border-color);
+            color: #fff;
+            cursor: pointer;
+            /* Allow click to show errors */
+            transition: 0.3s;
+        }
+
+        /* Ready state */
+        .b-btn.is-ready {
+            background: var(--color-accent);
+            box-shadow: 0 4px 15px rgba(24, 183, 234, 0.4);
+            animation: pulse-ready 2s infinite;
+        }
+
+        @keyframes pulse-ready {
+            0% {
+                box-shadow: 0 4px 15px rgba(24, 183, 234, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 4px 25px rgba(24, 183, 234, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 4px 15px rgba(24, 183, 234, 0.4);
+            }
+        }
+
+        /* Shake Animation */
+        @keyframes shakeField {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-6px);
+            }
+
+            50% {
+                transform: translateX(6px);
+            }
+
+            75% {
+                transform: translateX(-6px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .shake-field {
+            animation: shakeField 0.4s ease-in-out;
+            border-color: var(--color-error) !important;
+        }
+
+        /* LOADING ANIMATION */
+        .b-spinner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            border-radius: 24px;
+            backdrop-filter: blur(2px);
+        }
+
+        .b-spinner-overlay.visible {
+            display: flex;
+        }
+
+        .b-spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid #e1e1e1;
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* MODAL */
+        .b-payment-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2147483647;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Default: Center for desktop */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .b-payment-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .b-payment-modal {
+            width: 95%;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 24px;
+            padding: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .b-payment-overlay.show .b-payment-modal {
+            transform: scale(1);
+        }
+
+        .b-close-cross {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: #f2f2f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #555;
+            font-size: 20px;
+            z-index: 10;
+        }
+
+        /* --- MOBILE BOTTOM SHEET STYLE (Like Revolut) --- */
+        @media (max-width: 600px) {
+            .b-payment-overlay {
+                align-items: flex-end;
+                /* Push to bottom */
+            }
+
+            .b-payment-modal {
+                width: 100%;
+                max-width: 100%;
+                border-radius: 24px 24px 0 0;
+                margin: 0;
+                transform: translateY(100%);
+                /* Start off-screen */
+                padding: 24px;
+                padding-bottom: 40px;
+                /* Safe area */
+                max-height: 85vh;
+            }
+
+            .b-payment-overlay.show .b-payment-modal {
+                transform: translateY(0);
+                /* Slide up */
+            }
+        }
+
+        #stripe-box {
+            min-height: 300px;
+        }
+
+        .b-loading {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+
+        /* ==========================================================================
+           ???? CUSTOM FLATPICKR THEME (Compact & Attached)
+           ========================================================================== */
+        /* ==========================================================================
+           ???? CUSTOM FLATPICKR THEME (Wide & Attached)
+           ========================================================================== */
+        .flatpickr-calendar {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border: none;
+            font-family: inherit;
+
+            /* Fluid Width to match Input */
+            width: 100% !important;
+            max-width: none !important;
+            padding: 16px;
+            padding-bottom: 5px;
+
+            /* Ensure it appears above everything */
+            z-index: 2147483648 !important;
+            box-sizing: border-box;
+            /* Important for padding */
+        }
+
+        /* FORCE STATIC CALENDAR TO FLOAT LIKE POPUP RELATIVE TO WRAPPER */
+        .flatpickr-calendar.static {
+            position: absolute !important;
+            top: calc(100% + 5px) !important;
+            left: 0 !important;
+            right: 0 !important;
+            /* Stretch to right */
+            width: 100% !important;
+            transform: none !important;
+        }
+
+        .flatpickr-days {
+            width: 100% !important;
+        }
+
+        .dayContainer {
+            min-width: 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            justify-content: space-around;
+        }
+
+        /* Header: Clean & White */
+        .flatpickr-header {
+            margin-bottom: 10px;
+            padding: 0 10px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .flatpickr-months {
+            background: #fff;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+            width: 100%;
+        }
+
+        .flatpickr-months .flatpickr-month {
+            background: transparent;
+            color: #000;
+            fill: #000;
+            height: auto;
+            overflow: visible;
+            text-align: left;
+            padding-left: 0;
+            margin-left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .flatpickr-current-month {
+            font-size: 18px;
+            padding: 0;
+            left: 0;
+            width: 100%;
+            position: static;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 60px;
+            /* INCREASED PADDING */
+            box-sizing: border-box;
+        }
+
+        /* FORCE FULL WIDTH FOR STATIC WRAPPER */
+        .flatpickr-wrapper {
+            width: 100% !important;
+            display: block !important;
+        }
+
+        /* Make Month/Year look like buttons/dropdowns */
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-weight: 700;
+            color: #333;
+            font-size: 19px;
+            margin-right: 6px;
+            background: #f3f3f3;
+            padding: 4px 8px;
+            border-radius: 8px;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .flatpickr-current-month .numInputWrapper {
+            width: 75px;
+            flex-shrink: 0;
+        }
+
+        .flatpickr-current-month input.cur-year {
+            font-weight: 700;
+            color: #333;
+            font-size: 19px;
+            padding: 4px 8px;
+            background: #f3f3f3;
+            border-radius: 8px;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        /* Arrows styling */
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(24, 183, 234, 0.1);
+            color: var(--color-accent);
+            fill: var(--color-accent);
+            z-index: 10;
+            transition: 0.2s;
+            text-decoration: none !important;
+            border: none !important;
+        }
+
+        /* Kill Tilda artifacts */
+        .flatpickr-months .flatpickr-prev-month::after,
+        .flatpickr-months .flatpickr-next-month::after,
+        .flatpickr-months .flatpickr-prev-month::before,
+        .flatpickr-months .flatpickr-next-month::before {
+            display: none !important;
+            content: none !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month {
+            left: 5px;
+            right: auto;
+        }
+
+        .flatpickr-months .flatpickr-next-month {
+            right: 5px;
+        }
+
+        .flatpickr-months .flatpickr-prev-month:hover,
+        .flatpickr-months .flatpickr-next-month:hover {
+            background: var(--color-accent);
+            color: #fff !important;
+            fill: #fff !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month:hover svg,
+        .flatpickr-months .flatpickr-next-month:hover svg {
+            fill: #fff !important;
+            stroke: #fff !important;
+        }
+
+        /* HIDE PREV/NEXT MONTH DAYS (Gray Dates) */
+        .flatpickr-day.prevMonthDay,
+        .flatpickr-day.nextMonthDay {
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        /* Compact sizing */
+        .flatpickr-calendar {
+            padding-bottom: 5px !important;
+        }
+
+        .flatpickr-day {
+            margin: 1px 0 !important;
+            /* Tighter margins */
+        }
+
+        /* Center the Month/Year Container */
+        .flatpickr-current-month {
+            width: 100%;
+            justify-content: center;
+            padding: 0 40px;
+            /* Space for arrows */
+        }
+
+        /* Weekdays */
+        .flatpickr-weekdays {
+            margin-bottom: 8px;
+        }
+
+        .flatpickr-weekday {
+            color: #8e8e93;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        /* Days */
+        .flatpickr-day {
+            border-radius: 50% !important;
+            color: #333;
+            font-weight: 500;
+            height: 38px;
+            line-height: 38px;
+            margin: 2px 0;
+            font-size: 15px;
+            max-width: 38px;
+        }
+
+        .flatpickr-day.today {
+            border: 1px solid var(--border-color);
+            color: var(--color-accent);
+        }
+
+        .flatpickr-day:hover {
+            background: #f2f2f7;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange,
+        .flatpickr-day.selected.inRange,
+        .flatpickr-day.startRange.inRange,
+        .flatpickr-day.endRange.inRange,
+        .flatpickr-day.selected:focus,
+        .flatpickr-day.startRange:focus,
+        .flatpickr-day.endRange:focus,
+        .flatpickr-day.selected:hover,
+        .flatpickr-day.startRange:hover,
+        .flatpickr-day.endRange:hover {
+            background: var(--color-accent) !important;
+            border-color: var(--color-accent) !important;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(24, 183, 234, 0.4);
+        }
+
+        /* HERO SECTION FOR DEMO */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background: radial-gradient(circle at 50% 30%, #fbfbfd 0%, #f0f0f2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Abstract Shape */
+        .hero-blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, #d2ff3d 0%, #18b7ea 100%);
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+            animation: blobFloat 10s infinite alternate ease-in-out;
+        }
+
+        @keyframes blobFloat {
+            0% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            100% {
+                transform: translateX(-50%) translateY(40px);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin: 0 0 30px 0;
+            color: #86868b;
+            line-height: 1.4;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #86868b;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .hero-btn {
+            background: var(--color-accent);
+            color: #fff;
+            font-size: 19px;
+            font-weight: 600;
+            padding: 18px 48px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(24, 183, 234, 0.25);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(24, 183, 234, 0.35);
+            background: var(--color-accent-hover);
+        }
+
+        .hero-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- DEMO TRIGGER BUTTON -->
+    <!-- DEMO HERO SECTION -->
+    <div class="hero-section">
+        <div class="hero-blob"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Демонстрация виджета бронирования</h1>
+            <button onclick="openBookingModal()" class="hero-btn">
+                Забронировать тур
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ???? BOOKING WIDGET MODAL COMPONENT -->
+    <!-- ========================================== -->
+    <div id="booking-modal-overlay" class="modal-overlay" onmousedown="handleOverlayMouseDown(event)"
+        onclick="handleOverlayClick(event)">
+        <!-- Close Button for Main Modal -->
+        <div class="modal-close-btn" onclick="closeBookingModal()">✕</div>
+
+        <script src="https://js.stripe.com/v3/"></script>
+        <!-- FLATPICKR JS -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+
+        <!-- INTL TEL INPUT JS -->
+        <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+        <script>
+            // Preload utils script
+            const utilsScriptUrl = "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js";
+        </script>
+
+        <div id="booking-widget-root">
+            <div class="b-loading">Загрузка v61...</div>
+        </div>
+
+        <script>
+            (function () {
+                // ... (Tour Settings and Config remain same) ...
+                const TOUR_SETTINGS = {
+                    tourName: "Клиновец 31.01.2026",
+                    tourId: "klinovec_31_01_26",
+                    tourDate: "31.01.2026",
+                    tourType: "oneday",
+                    telegramLink: "https://t.me/kover_klinovec_31_01",
+                    priceFull: 1190,
+                    priceDeposit: 500
+                };
+                const SYSTEM_CONFIG = {
+                    webhook: "https://hook.eu2.make.com/t118j4fcirfp3s6srdt97ahsr9hggo63",
+                    stripePublicKey: "pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6",
+                    priceSeat: 100
+                };
+
+                const ROWS_TEMPLATE = [1, 1, 0, 1, 1];
+                const START_ROW = 3;
+                const ROW_COUNT = 5;
+
+                let state = { count: 1, payType: 'full', step: 1 };
+                let stripe = null;
+                let checkout = null;
+                let iti = null;
+
+                function init() {
+                    try { stripe = Stripe(SYSTEM_CONFIG.stripePublicKey); } catch (e) { console.error(e); }
+                    render();
+                }
+
+                function render() {
+                    // ... Same render function mostly, but inputs updated
+                    const root = document.getElementById('booking-widget-root');
+                    root.innerHTML = `
+                <div class="b-container" onclick="event.stopPropagation()">
+                    
+                    <div class="b-card active" id="card-step-1">
+                        <div class="b-card-header" id="header-1">
+                            <div class="b-card-title">1. Параметры поездки</div>
+                            <div class="b-card-status" id="status-1">Изменить</div>
+                        </div>
+                        <div class="b-card-body">
+                            
+                            <div class="b-plans-grid">
+                                <div class="b-plan-card selected" id="plan-full">
+                                    <div class="b-left-part">
+                                        <div class="b-radio-circle"></div>
+                                        <div class="b-plan-info">
+                                            <div class="b-plan-title">Оплатить полностью</div>
+                                            <div class="b-plan-desc">Без доплат в&nbsp;будущем</div>
+                                        </div>
+                                    </div>
+                                    <div class="b-plan-price">${TOUR_SETTINGS.priceFull} Kč</div>
+                                </div>
+
+                                <div class="b-plan-card" id="plan-depo">
+                                    <div class="b-left-part">
+                                        <div class="b-radio-circle"></div>
+                                        <div class="b-plan-info">
+                                            <div class="b-plan-title">Внести залог</div>
+                                            <div class="b-plan-desc">Остаток <span class="b-remainder-amount" id="lbl-remainder">${TOUR_SETTINGS.priceFull - TOUR_SETTINGS.priceDeposit} Kč</span> за&nbsp;10 дней до&nbsp;тура</div>
+                                        </div>
+                                    </div>
+                                    <div class="b-plan-price">${TOUR_SETTINGS.priceDeposit} Kč</div>
+                                </div>
+                            </div>
+
+                            <div class="b-row">
+                                <div class="b-label">Участники</div>
+                                <div class="b-stepper">
+                                    <div class="b-step-btn" id="btn-minus">–</div>
+                                    <div class="b-step-val" id="val-cnt">1</div>
+                                    <div class="b-step-btn" id="btn-plus">+</div>
+                                </div>
+                            </div>
+                            <!-- SEATS SELECTOR REMOVED -->
+                            
+                            <div class="b-receipt" id="receipt-1"></div>
+
+                            <button class="b-btn" id="btn-next">Далее</button>
+                        </div>
+                    </div>
+
+                    <div class="b-card locked" id="card-step-2">
+                        <div id="card-loader" class="b-spinner-overlay"><div class="b-spinner"></div></div>
+                        <div class="b-card-header">
+                            <div class="b-card-title">2. Данные участников</div>
+                        </div>
+                        <div class="b-card-body">
+                            <div id="passengers-list"></div>
+
+                            <div style="margin-top: 30px; border-top: 1px solid var(--border-light); padding-top: 20px;">
+                                <div class="b-input-group" style="margin-top: 12px; margin-bottom: 0;">
+                                    <div class="b-consent-wrapper">
+                                        <input type="checkbox" id="chk-consent" class="b-checkbox">
+                                        <label for="chk-consent" class="b-consent-label">
+                                            Я даю <span class="b-link" onclick="openPrivacyModal(event)">согласие на обработку персональных данных</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="b-receipt" id="receipt-2"></div>
+
+                            <button class="b-btn" id="btn-pay">Оплатить</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="b-payment-overlay" id="payment-overlay">
+                    <div class="b-payment-modal">
+                        <div class="b-close-cross" id="btn-close-pay">✕</div>
+                        <h3 style="margin:0 0 20px 0; font-size:22px;">Оплата картой</h3>
+                        <div id="stripe-box"></div>
+                    </div>
+                </div>
+                <div class="b-payment-overlay" id="privacy-overlay" style="z-index: 2000000;" onclick="closePrivacyModal(); event.stopPropagation()">
+                    <div class="b-payment-modal" style="max-width: 600px;" onclick="event.stopPropagation()">
+                        <div class="b-close-cross" onclick="closePrivacyModal(); event.stopPropagation()">✕</div>
+                        <h3 style="margin:0 0 20px 0; font-size:20px;">Zpracování osobních údajů</h3>
+                        <div style="font-size: 14px; line-height: 1.6; color: #333;">
+                            <p><strong>1. Správce osobních údajů</strong><br>
+                            Správcem vašich osobních údajů je společnost Kover Travel s.r.o.</p>
+                            
+                            <p><strong>2. Účel zpracování</strong><br>
+                            Vaše osobní údaje zpracováváme za účelem:<br>
+                            - Vyřízení vaší objednávky a poskytnutí služeb.<br>
+                            - Komunikace týkající se vaší rezervace.<br>
+                            - Plnění zákonných povinností (např. účetnictví).</p>
+
+                            <p><strong>3. Rozsah zpracování</strong><br>
+                            Zpracováváme údaje, které nám poskytnete v rámci objednávky: jméno, příjmení, telefon, e-mail a případně další údaje nutné pro poskytnutí služby.</p>
+
+                            <p><strong>4. Doba uchování</strong><br>
+                            Osobní údaje uchováváme po dobu nezbytnou k naplnění účelu zpracování nebo po dobu stanovenou zákonem.</p>
+                            
+                            <p><strong>5. Vaše práva</strong><br>
+                            Máte právo na přístup ke svým údajům, jejich opravu, výmaz nebo omezení zpracování.</p>
+                        </div>
+                    </div>
+                </div>
+
+                `;
+
+                    bindEvents();
+                    updateUI();
+                }
+
+                function bindEvents() {
+                    document.getElementById('plan-full').addEventListener('click', function () { setPlan('full'); });
+                    document.getElementById('plan-depo').addEventListener('click', function () { setPlan('deposit'); });
+                    document.getElementById('header-1').onclick = () => goToStep(1);
+                    document.getElementById('btn-minus').onclick = () => changeCount(-1);
+                    document.getElementById('btn-plus').onclick = () => changeCount(1);
+                    document.getElementById('btn-next').onclick = toStep2;
+                    document.getElementById('btn-pay').onclick = pay;
+                    document.getElementById('btn-close-pay').onclick = closePay;
+
+                    // Note: chk-consent is still static at bottom, keep listener? 
+                    // Actually, in previous step I REMOVED buyer section but KEPT consent at bottom of step 2 HTML?
+                    // Let's verify if chk-consent is dynamic or static.
+                    // In the multi_replace above, I put chk-consent inside the static HTML block of card-step-2 (lines 1389+).
+                    // So it is static.
+                    const consent = document.getElementById('chk-consent');
+                    if (consent) consent.addEventListener('change', checkReadiness);
+                }
+
+                function setPlan(type) {
+                    state.payType = type;
+                    document.getElementById('plan-full').classList.toggle('selected', type === 'full');
+                    document.getElementById('plan-depo').classList.toggle('selected', type === 'deposit');
+                    updateUI();
+                }
+
+                function goToStep(step) {
+                    if (step === 1) {
+                        const c1 = document.getElementById('card-step-1');
+                        const c2 = document.getElementById('card-step-2');
+                        c1.classList.remove('done', 'locked');
+                        c1.classList.add('active');
+                        c2.classList.remove('active');
+                        c2.classList.add('locked');
+                    }
+                }
+
+                function initPhoneLogic() {
+                    const ph = document.getElementById('inp-phone');
+                    // Reset global if element missing (e.g. going back/forth)
+                    if (!ph) {
+                        iti = null;
+                        return;
+                    }
+
+                    const errorMsg = document.querySelector("#error-msg");
+                    const validMsg = document.querySelector("#valid-msg");
+
+                    // Error Map (Russian)
+                    const errorMap = [
+                        "Неверный номер",
+                        "Неверный код страны",
+                        "Слишком короткий",
+                        "Слишком длинный",
+                        "Неверный номер"
+                    ];
+
+                    const reset = () => {
+                        ph.classList.remove("error");
+                        if (errorMsg) {
+                            errorMsg.innerHTML = "";
+                            errorMsg.style.display = "none";
+                        }
+                        if (validMsg) validMsg.style.display = "none";
+                    };
+
+                    // Initialize Intl Tel Input
+                    if (window.intlTelInput) {
+                        // Destroy existing instance if any
+                        if (iti) iti.destroy();
+
+                        iti = window.intlTelInput(ph, {
+                            utilsScript: utilsScriptUrl,
+                            initialCountry: "cz",
+                            preferredCountries: ["cz", "ua", "ru", "at", "de", "pl"],
+                            separateDialCode: true,
+                            autoPlaceholder: "aggressive"
+                        });
+
+                        // Blur validation
+                        ph.addEventListener('blur', () => {
+                            reset();
+                            if (ph.value.trim()) {
+                                if (iti.isValidNumber()) {
+                                    if (validMsg) validMsg.style.display = "block";
+                                } else {
+                                    ph.classList.add("error");
+                                    const errorCode = iti.getValidationError();
+                                    if (errorMsg) {
+                                        errorMsg.innerHTML = errorMap[errorCode] || "Неверный номер";
+                                        errorMsg.style.display = "block";
+                                    }
+                                }
+                            }
+                            checkReadiness();
+                        });
+
+                        // Reset on input/change
+                        ph.addEventListener('change', reset);
+                        ph.addEventListener('keyup', reset);
+                        ph.addEventListener('countrychange', () => {
+                            reset();
+                            checkReadiness();
+                        });
+                    }
+                    ph.addEventListener('input', checkReadiness);
+                }
+
+                // Name Validation: Input (Filter) + Blur (Capitalize)
+                const setupNameValidation = (cls) => {
+                    document.querySelectorAll(cls).forEach((el) => {
+                        // INPUT: Filter characters, preserve cursor
+                        el.addEventListener('input', function () {
+                            const start = this.selectionStart;
+                            const end = this.selectionEnd;
+                            const original = this.value;
+
+                            // Remove non-latin
+                            const clean = original.replace(/[^a-zA-Z\s-]/g, '');
+
+                            // Find error element SAFELY using DOM traversal
+                            const parent = this.parentNode; // .b-input-group
+                            const errEl = parent ? parent.querySelector('.b-latin-error') : null;
+
+                            if (original !== clean) {
+                                this.value = clean;
+                                // Restore cursor
+                                this.setSelectionRange(start - (original.length - clean.length), end - (original.length - clean.length));
+
+                                // Shake logic
+                                this.classList.add('shake-field');
+                                setTimeout(() => this.classList.remove('shake-field'), 400);
+
+                                // SHOW ERROR PERSISTENTLY
+                                if (errEl) {
+                                    errEl.classList.add('visible');
+                                    errEl.style.display = 'block'; // Force display
+
+                                    // Clear previous timeout to restart timer
+                                    if (el.errorTimeout) clearTimeout(el.errorTimeout);
+
+                                    // Hide after 3 seconds
+                                    el.errorTimeout = setTimeout(() => {
+                                        errEl.classList.remove('visible');
+                                        errEl.style.display = ''; // Reset inline style
+                                    }, 3000);
+                                }
+                                this.classList.add('error');
+                            } else {
+                                // If valid input, we generally want to clear error, BUT
+                                // if the timer is running (user just typed bad char), maybe keep it?
+                                // User wants to SEE the error.
+                                // If we hide it immediately on next valid char, fast typists miss it.
+                                // Let's ONLY hide it if NO timer is running (i.e. it wasn't recently bad)
+                                // OR: Let's enforce the 3s rule. If they type valid char, we DON'T hide early.
+                                // We just let the timer run out. This ensures visibility.
+
+                                // However, if they clear the field completely, maybe hide?
+                                if (clean.length === 0 && errEl) {
+                                    clearTimeout(el.errorTimeout);
+                                    errEl.classList.remove('visible');
+                                    errEl.style.display = '';
+                                    this.classList.remove('error');
+                                } else {
+                                    this.classList.remove('error');
+                                    // Do NOT force hide errEl here, let timeout handle it
+                                    // unless we want instant feedback on correction.
+                                    // Given the user's rage, sticking it on screen is safer.
+                                }
+                            }
+
+                            checkReadiness();
+                        });
+
+                        // BLUR: Capitalize First Letter
+                        el.addEventListener('blur', function () {
+                            let val = this.value;
+                            if (val.length > 0) {
+                                // Capitalize first letter, rest lower (Standard Name)
+                                val = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+                                this.value = val;
+                            }
+                            checkReadiness();
+                        });
+                    });
+                }
+
+                function toStep2() {
+                    // Switch Cards logic
+                    document.getElementById('card-step-1').classList.remove('active');
+                    document.getElementById('card-step-1').classList.add('done');
+                    document.getElementById('status-1').innerText = getSummaryText();
+
+                    const c2 = document.getElementById('card-step-2');
+                    c2.classList.remove('locked');
+                    c2.classList.add('active');
+
+                    const container = document.getElementById('passengers-list');
+                    container.innerHTML = '';
+
+                    for (let i = 0; i < state.count; i++) {
+                        const group = document.createElement('div');
+                        group.className = 'b-passenger-group';
+
+                        let contactFields = '';
+                        // IF First Participant -> Add Contact Fields
+                        if (i === 0) {
+                            contactFields = `
+                            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light);">
+                                <div class="b-input-label" style="font-weight:600; color:var(--text-main); margin-bottom:10px;">Контактные данные</div>
+                                <div class="b-input-group">
+                                    <input type="email" class="b-input" id="inp-email" placeholder="Email (для билетов)" 
+                                           name="email" autocomplete="email">
+                                    <div id="err-email" class="msg error" style="display:none;">Введите корректный Email</div>
+                                </div>
+                                <div class="b-input-group" style="margin-bottom:0px;">
+                                    <input type="tel" class="b-input" id="inp-phone" name="phone" autocomplete="tel">
+                                    <span id="valid-msg" class="msg valid">✓ Номер подтвержден</span>
+                                    <span id="error-msg" class="msg error"></span>
+                                </div>
+                            </div>
+                            `;
+                        }
+
+                        group.innerHTML = `
+                        <div class="b-passenger-title">Участник ${i + 1}</div>
+                        <!-- SPLIT NAME INPUTS -->
+                        <div class="b-input-row">
+                            <div class="b-input-group">
+                                <input type="text" class="b-input pass-firstname" data-id="${i}" 
+                                       placeholder="Имя" 
+                                       name="passenger_${i}_firstname" 
+                                       autocomplete="section-pass${i} given-name">
+                                <div class="b-latin-error" id="err-first-${i}">Только латинские буквы</div>
+                            </div>
+                            <div class="b-input-group">
+                                <input type="text" class="b-input pass-lastname" data-id="${i}" 
+                                       placeholder="Фамилия" 
+                                       name="passenger_${i}_lastname" 
+                                       autocomplete="section-pass${i} family-name">
+                                <div class="b-latin-error" id="err-last-${i}">Только латинские буквы</div>
+                            </div>
+                        </div>
+
+                        <div class="b-input-group" style="margin-bottom:0">
+                            <input type="text" class="b-input pass-dob flatpickr-input" data-id="${i}" 
+                                   placeholder="Дата рождения (ДД.ММ.ГГГГ)" autocomplete="off">
+                            <div class="b-age-warning" id="warn-young-${i}">
+                                Внимание: действуют возрастные ограничения для детей младше 7 лет. Пожалуйста, свяжитесь с нами в Instagram.
+                            </div>
+                            <div class="b-age-warning" id="warn-old-${i}">
+                                Внимание: действуют возрастные ограничения для людей старше 62 лет. Пожалуйста, свяжитесь с нами в Instagram.
+                            </div>
+                            <div class="b-year-error" id="err-year-${i}">
+                                Пожалуйста, проверьте правильность года.
+                            </div>
+                        </div>
+                        ${contactFields}
+                    `;
+                        container.appendChild(group);
+                    }
+
+                    // 1. Init Phone
+                    initPhoneLogic();
+
+                    // 2. Init Email Validation (Visual)
+                    const setupEmailValidation = () => {
+                        const el = document.getElementById('inp-email');
+                        const errEl = document.getElementById('err-email');
+                        if (!el) return;
+
+                        // Robust Regex (Chromium based)
+                        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                        el.addEventListener('blur', () => {
+                            const val = el.value.trim();
+                            if (val.length > 0 && !re.test(val)) {
+                                el.classList.add('error');
+                                if (errEl) errEl.style.display = 'block';
+                            } else {
+                                el.classList.remove('error');
+                                if (errEl) errEl.style.display = 'none';
+                            }
+                            checkReadiness();
+                        });
+
+                        el.addEventListener('input', () => {
+                            const val = el.value.trim();
+                            // If it becomes valid while typing, hide error
+                            if (re.test(val)) {
+                                el.classList.remove('error');
+                                if (errEl) errEl.style.display = 'none';
+                            }
+                            checkReadiness();
+                        });
+                    };
+                    setupEmailValidation();
+
+                    // 3. Init Name Validation
+                    setupNameValidation('.pass-firstname');
+                    setupNameValidation('.pass-lastname');
+
+                    // 4. Init Flatpickr
+                    document.querySelectorAll('.pass-dob').forEach((el, index) => {
+                        initValidations(index, el, el.parentNode);
+                    });
+
+                    checkReadiness();
+
+                    // Smooth Scroll
+                    const overlay = document.getElementById('booking-modal-overlay');
+                    setTimeout(() => {
+                        const startY = overlay.scrollTop;
+                        const dist = -startY;
+                        const duration = 1200;
+                        let startTime = null;
+                        function step(timestamp) {
+                            if (!startTime) startTime = timestamp;
+                            const progress = timestamp - startTime;
+                            const percent = Math.min(progress / duration, 1);
+                            const ease = percent < 0.5 ? 4 * percent * percent * percent : 1 - Math.pow(-2 * percent + 2, 3) / 2;
+                            overlay.scrollTop = startY + (dist * ease);
+                            if (progress < duration) window.requestAnimationFrame(step);
+                        }
+                        window.requestAnimationFrame(step);
+                    }, 50);
+                }
+
+                function initValidations(index, el, parentWrapper) {
+                    const fp = flatpickr(el, {
+                        dateFormat: "d.m.Y",
+                        defaultDate: null,
+                        allowInput: false, // Force picker usage
+                        locale: "ru",
+                        yearSelectorType: "dropdown",
+                        maxDate: "today",
+                        disableMobile: "true",
+                        appendTo: parentWrapper,
+                        static: true,
+                        onReady: function (dObj, dStr, fp, dayElem) {
+                            // If empty, jump to 2000 for convenience
+                            if (!fp.selectedDates.length) fp.jumpToDate("01.01.2000");
+                        },
+                        onChange: function (selectedDates, dateStr, instance) {
+                            validateAge(selectedDates[0], index);
+                            validateYear(selectedDates[0], index, el);
+                            checkReadiness();
+                        }
+                    });
+                    // Also validate on blur (though picker close is main trigger)
+                    el.addEventListener('blur', () => {
+                        checkReadiness();
+                    });
+                    el.addEventListener('input', checkReadiness);
+                }
+
+                function checkReadiness() {
+                    const btn = document.getElementById('btn-pay');
+                    if (!btn) return;
+
+                    // Elements might not exist if we are on step 1 (though function called usually in step 2)
+                    // If Phone/Email missing, we are likely not fully ready or in step 1.
+                    const emEl = document.getElementById('inp-email');
+                    const phEl = document.getElementById('inp-phone');
+
+                    if (!emEl || !phEl) {
+                        // If we are merely checking, it's fine. But button should be locked if we expect payment.
+                        // Assuming this runs when Step 2 is active.
+                        // If elements missing, default to locked.
+                        btn.classList.add('is-locked');
+                        btn.classList.remove('is-ready');
+                        return;
+                    }
+
+                    let allOk = true;
+
+                    // 1. Passengers
+                    const groups = document.querySelectorAll('.b-passenger-group');
+                    if (groups.length === 0) allOk = false;
+
+                    groups.forEach(g => {
+                        const fn = g.querySelector('.pass-firstname').value.trim();
+                        const ln = g.querySelector('.pass-lastname').value.trim();
+                        const dob = g.querySelector('.pass-dob').value.trim();
+                        if (fn.length < 2 || ln.length < 2 || !dob) allOk = false;
+                    });
+
+                    // 2. Email
+                    const em = emEl.value.trim();
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(em)) allOk = false;
+
+                    // 3. Phone
+                    let phoneValid = false;
+                    if (window.iti && typeof window.iti.isValidNumber === 'function') {
+                        phoneValid = window.iti.isValidNumber();
+                    } else {
+                        // Fallback logic
+                        phoneValid = phEl.value.trim().length >= 9;
+                    }
+                    if (!phoneValid) allOk = false;
+
+                    // 4. Consent
+                    const consent = document.getElementById('chk-consent');
+                    if (!consent || !consent.checked) allOk = false;
+
+                    // Update Button Text
+                    const total = (state.payType === 'full' ? TOUR_SETTINGS.priceFull : TOUR_SETTINGS.priceDeposit) * state.count;
+                    if (btn.innerText !== "Загрузка...") {
+                        btn.innerText = `Оплатить ${total} Kč`;
+                    }
+
+                    if (allOk) {
+                        btn.classList.remove('is-locked');
+                        btn.classList.add('is-ready');
+                    } else {
+                        btn.classList.add('is-locked');
+                        btn.classList.remove('is-ready');
+                    }
+                }
+
+
+
+                function validateAge(dateObj, index) {
+                    if (!dateObj) return;
+                    const now = new Date();
+                    const ageDiff = now - dateObj;
+                    const ageDate = new Date(ageDiff);
+                    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+                    const year = dateObj.getFullYear();
+                    const isValidYear = year > 1920 && year <= now.getFullYear();
+
+                    if (isValidYear) {
+                        document.getElementById(`warn-young-${index}`).classList.toggle('visible', age < 7);
+                        document.getElementById(`warn-old-${index}`).classList.toggle('visible', age > 62);
+                    } else {
+                        document.getElementById(`warn-young-${index}`).classList.remove('visible');
+                        document.getElementById(`warn-old-${index}`).classList.remove('visible');
+                    }
+                }
+
+                function validateYear(dateObj, index, inputEl) {
+                    const errorEl = document.getElementById(`err-year-${index}`);
+                    if (!dateObj) {
+                        if (inputEl.value.length > 0) {
+                            inputEl.classList.add('error');
+                            if (errorEl) errorEl.classList.add('visible');
+                        }
+                        return;
+                    }
+                    const year = dateObj.getFullYear();
+                    if (year < 1920) {
+                        inputEl.classList.add('error');
+                        if (errorEl) errorEl.classList.add('visible');
+                    } else {
+                        inputEl.classList.remove('error');
+                        if (errorEl) errorEl.classList.remove('visible');
+                    }
+                }
+
+                function getSummaryText() {
+                    const type = state.payType === 'full' ? 'Полная' : 'Залог';
+                    return `${state.count} чел • ${type}`;
+                }
+
+                function closePay() {
+                    document.getElementById('payment-overlay').classList.remove('show');
+                    if (checkout) { try { checkout.destroy(); } catch (e) { } checkout = null; }
+                    document.getElementById('stripe-box').innerHTML = '';
+                    document.getElementById('btn-pay').disabled = false;
+                    document.getElementById('btn-pay').innerText = "Оплатить";
+                }
+
+                function changeCount(diff) {
+                    if (state.count + diff >= 1 && state.count + diff <= 10) {
+                        state.count += diff;
+                        updateUI();
+                    }
+                }
+
+                /* SEAT LOGIC REMOVED */
+
+                /* GRID LOGIC REMOVED */
+
+                /* NOUN LOGIC REMOVED */
+
+                function updateUI() {
+                    const isFull = state.payType === 'full';
+
+                    document.getElementById('val-cnt').innerText = state.count;
+
+                    const base = isFull ? TOUR_SETTINGS.priceFull : TOUR_SETTINGS.priceDeposit;
+                    const total = base * state.count;
+
+                    const remainder = (TOUR_SETTINGS.priceFull - TOUR_SETTINGS.priceDeposit);
+                    document.getElementById('lbl-remainder').innerText = remainder + " Kč";
+
+                    const receiptHtml = `
+                <div class="b-receipt-row">
+                    <span>${state.count} x ${isFull ? 'Билет' : 'Залог'}</span>
+                    <span>${state.count * base} Kč</span>
+                </div>
+                <div class="b-receipt-divider"></div>
+                <div class="b-receipt-total">
+                    <span>Итого</span>
+                    <span id="final-price-1">${total} Kč</span>
+                </div>
+            `;
+                    document.getElementById('receipt-1').innerHTML = receiptHtml;
+                    document.getElementById('receipt-2').innerHTML = receiptHtml;
+
+                    const btnNext = document.getElementById('btn-next');
+                    const btnPay = document.getElementById('btn-pay');
+
+                    btnNext.innerText = `Далее`;
+                    btnNext.disabled = false;
+
+
+                    btnPay.innerText = `Оплатить ${total} Kč`;
+                }
+
+                // Privacy Modal Helpers
+                window.openPrivacyModal = function (e) {
+                    if (e) e.preventDefault(); // prevent checkbox toggle if clicked on link
+                    // e.stopPropagation(); // maybe needed
+                    document.getElementById('privacy-overlay').classList.add('show');
+                }
+                window.closePrivacyModal = function () {
+                    document.getElementById('privacy-overlay').classList.remove('show');
+                }
+
+                async function pay() {
+                    const btn = document.getElementById('btn-pay');
+
+                    const passengers = [];
+                    let hasError = false;
+
+                    const nameRegex = /^[A-Za-z\s-]*$/;
+
+                    document.querySelectorAll('.b-passenger-group').forEach((group, index) => {
+                        // Gather split inputs
+                        const nameInp = group.querySelector('.pass-firstname');
+                        const surnameInp = group.querySelector('.pass-lastname');
+                        const dobInp = group.querySelector('.pass-dob');
+
+                        if (nameInp.value.trim().length < 2 || !nameRegex.test(nameInp.value)) {
+                            nameInp.classList.add('error');
+                            document.getElementById(`err-first-${index}`).classList.add('visible');
+                            hasError = true;
+                        } else {
+                            nameInp.classList.remove('error');
+                            document.getElementById(`err-first-${index}`).classList.remove('visible');
+                        }
+
+                        if (surnameInp.value.trim().length < 2 || !nameRegex.test(surnameInp.value)) {
+                            surnameInp.classList.add('error');
+                            document.getElementById(`err-last-${index}`).classList.add('visible');
+                            hasError = true;
+                        } else {
+                            surnameInp.classList.remove('error');
+                            document.getElementById(`err-last-${index}`).classList.remove('visible');
+                        }
+
+                        // Check date
+                        if (!dobInp.value) { dobInp.classList.add('error'); hasError = true; }
+                        else dobInp.classList.remove('error');
+
+                        passengers.push({
+                            index: index + 1,
+                            firstname: nameInp.value.trim(),
+                            lastname: surnameInp.value.trim(),
+                            dob: dobInp.value
+                        });
+                    });
+
+                    const email = document.getElementById('inp-email').value.trim();
+                    const phoneVal = document.getElementById('inp-phone').value.trim();
+
+                    if (!email.includes('@')) { document.getElementById('inp-email').classList.add('error'); hasError = true; } else document.getElementById('inp-email').classList.remove('error');
+
+                    // Validate Phone using ITI
+                    let isPhoneValid = false;
+                    if (iti) isPhoneValid = iti.isValidNumber();
+                    else isPhoneValid = phoneVal.length >= 5;
+
+                    if (!isPhoneValid) {
+                        document.getElementById('inp-phone').classList.add('error');
+                        hasError = true;
+                        // Optional: Show specific error code text if needed
+                    } else {
+                        document.getElementById('inp-phone').classList.remove('error');
+                    }
+
+                    if (!document.getElementById('chk-consent').checked) {
+                        const chk = document.getElementById('chk-consent');
+                        chk.parentElement.style.color = 'red';
+                        setTimeout(() => chk.parentElement.style.color = '', 1000);
+                        hasError = true;
+                    }
+
+                    if (hasError) {
+                        const firstError = document.querySelector('.b-card.active .error');
+                        if (firstError) {
+                            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // Optional: shake the first error field too for emphasis
+                            firstError.classList.add('shake-field');
+                            setTimeout(() => firstError.classList.remove('shake-field'), 400);
+                        }
+                        return;
+                    }
+                    if (!SYSTEM_CONFIG.webhook) return alert("Error: Webhook URL not found!");
+
+                    // SHOW LOADER
+                    document.getElementById('card-loader').classList.add('visible');
+                    btn.disabled = true;
+
+                    const isFull = state.payType === 'full';
+                    const seat = (state.isMapActive) ? SYSTEM_CONFIG.priceSeat : 0;
+
+                    const getDeviceType = () => {
+                        const ua = navigator.userAgent;
+                        if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) return "Tablet";
+                        if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated/.test(ua)) return "Mobile";
+                        return "Desktop";
+                    };
+
+                    const basePrice = isFull ? TOUR_SETTINGS.priceFull : TOUR_SETTINGS.priceDeposit;
+                    const finalTotal = basePrice * state.count;
+
+                    // Explicitly calculate remaining balance
+                    let remainingBalance = 0;
+                    if (state.payType === 'deposit') {
+                        remainingBalance = (TOUR_SETTINGS.priceFull - TOUR_SETTINGS.priceDeposit) * state.count;
+                    }
+                    // Calculate Total Order Value (Full Price context)
+                    const totalOrderValue = TOUR_SETTINGS.priceFull * state.count;
+
+                    // Get Formatted Phone if possible
+                    let finalPhone = phoneVal;
+                    if (iti && typeof iti.getNumber === 'function') {
+                        finalPhone = iti.getNumber();
+                    }
+
+                    const payload = {
+                        timestamp: new Date().toLocaleString("ru-RU", { timeZone: "Europe/Prague" }),
+                        device_type: getDeviceType(),
+                        tour_name: TOUR_SETTINGS.tourName,
+                        tour_id: TOUR_SETTINGS.tourId,
+                        tour_date: TOUR_SETTINGS.tourDate,
+                        tour_type: TOUR_SETTINGS.tourType,
+                        telegram_link: TOUR_SETTINGS.telegramLink,
+                        passenger_count: state.count,
+                        selected_seats: "Без выбора мест",
+                        payment_type: state.payType === 'full' ? 'Полная оплата' : 'Залог',
+                        currency: "CZK",
+                        locale: "ru", // Interface in Russian
+                        total_pay_now: finalTotal,
+                        remaining_balance: remainingBalance,
+                        total_order_value: totalOrderValue, // NEW FIELD: Total cost of the trip
+                        seats_surcharge: 0,
+                        buyer_email: email,
+                        buyer_phone: finalPhone,
+                        productName: TOUR_SETTINGS.tourName
+                    };
+
+                    // --- PASSENGERS (SPLIT NAME UPDATE) ---
+                    passengers.forEach((p, i) => {
+                        payload[`passenger_${i + 1}_firstname`] = p.firstname;
+                        payload[`passenger_${i + 1}_lastname`] = p.lastname;
+                        // Keep full name for backward compatibility/readability
+                        payload[`passenger_${i + 1}_name`] = `${p.firstname} ${p.lastname}`;
+                        payload[`passenger_${i + 1}_dob`] = p.dob;
+                    });
+
+                    payload.all_passengers_summary = passengers.map(p => `${p.firstname} ${p.lastname}`).join(', ');
+
+                    try {
+                        const res = await fetch(SYSTEM_CONFIG.webhook, {
+                            method: "POST", headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload)
+                        });
+                        const data = await res.json();
+                        if (!data.clientSecret) throw new Error("Make error");
+
+                        // SMOOTH SCROLL TO TOP to ensure Overlay is visible (fixes "appears at top" issue)
+                        const overlayContainer = document.getElementById('booking-modal-overlay');
+                        const startY = overlayContainer.scrollTop;
+                        if (startY > 0) {
+                            const duration = 800;
+                            let startTime = null;
+                            function scrollStep(timestamp) {
+                                if (!startTime) startTime = timestamp;
+                                const progress = timestamp - startTime;
+                                const percent = Math.min(progress / duration, 1);
+                                const ease = percent < 0.5 ? 4 * percent * percent * percent : 1 - Math.pow(-2 * percent + 2, 3) / 2;
+                                overlayContainer.scrollTop = startY + (-startY * ease);
+                                if (progress < duration) window.requestAnimationFrame(scrollStep);
+                            }
+                            window.requestAnimationFrame(scrollStep);
+                        }
+
+                        document.getElementById('payment-overlay').classList.add('show');
+
+                        // HIDE LOADER
+                        document.getElementById('card-loader').classList.remove('visible');
+
+                        checkout = await stripe.initEmbeddedCheckout({ clientSecret: data.clientSecret });
+                        checkout.mount('#stripe-box');
+                    } catch (e) {
+                        console.error(e);
+                        alert("Ошибка: " + e.message);
+
+                        // HIDE LOADER ON ERROR
+                        document.getElementById('card-loader').classList.remove('visible');
+                        btn.disabled = false;
+                    }
+                }
+
+                setTimeout(init, 1000);
+            })();
+
+            // ... (Global helpers remain same) ...
+            function openBookingModal() {
+                const overlay = document.getElementById('booking-modal-overlay');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeBookingModal() {
+                const overlay = document.getElementById('booking-modal-overlay');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            let overlayMouseDownTarget = null;
+            function handleOverlayMouseDown(e) {
+                overlayMouseDownTarget = e.target;
+            }
+            function handleOverlayClick(e) {
+                // Only close if mousedown AND click happened on the overlay itself
+                if (e.target === e.currentTarget && overlayMouseDownTarget === e.currentTarget) {
+                    closeBookingModal();
+                }
+                overlayMouseDownTarget = null;
+            }
+            document.addEventListener('click', function (e) {
+                const target = e.target.closest('a[href="#book-now"], .js-open-booking');
+                if (target) {
+                    e.preventDefault();
+                    openBookingModal();
+                }
+            });
+        </script>
+    </div>
+</body>
+
+</html>

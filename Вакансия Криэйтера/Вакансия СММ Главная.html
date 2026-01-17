@@ -1,0 +1,889 @@
+<meta charset="UTF-8">
+<!-- КОД ДЛЯ ВСТАВКИ В БЛОК T123 НА TILDA -->
+
+<!-- 1. Шрифты -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800&display=swap"
+    rel="stylesheet">
+
+<!-- 2. Стили (CSS) -->
+<style>
+    /* VARIABLES & THEME */
+    :root {
+        --vac-bg-color: #0d0d0d;
+        --vac-text-color: #ffffff;
+
+        /* KOVER BRAND COLORS */
+        --vac-lime: #D2FF3D;
+        /* Основной акцент */
+        --vac-cyan: #18B7EA;
+        /* Вторичный акцент */
+
+        --vac-glass-bg: rgba(255, 255, 255, 0.06);
+        --vac-glass-border: rgba(255, 255, 255, 0.1);
+        --vac-hover-bg: rgba(255, 255, 255, 0.1);
+
+        --vac-font-main: 'Inter', sans-serif;
+        --vac-font-display: 'Outfit', sans-serif;
+    }
+
+    /* WRAPPER RESET */
+    .vacancy-wrapper {
+        background-color: var(--vac-bg-color);
+        color: var(--vac-text-color);
+        font-family: var(--vac-font-main);
+        line-height: 1.5;
+        width: 100%;
+        position: relative;
+        padding: 0;
+        margin: 0;
+        /* Убрали overflow и min-height, чтобы не ломать нативный скролл */
+    }
+
+    .vacancy-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Container for Background Effects (Blobs) - Solves Scroll Issues */
+    .vac-blobs-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        /* Blobs are cut off here */
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* TYPOGRAPHY */
+    .vacancy-wrapper h1,
+    .vacancy-wrapper h2,
+    .vacancy-wrapper h3 {
+        font-family: var(--vac-font-display);
+        font-weight: 800;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+    }
+
+    .vacancy-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 2;
+        /* Content above blobs */
+    }
+
+    /* BUTTONS */
+    .vacancy-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 40px;
+        background: var(--vac-lime);
+        color: #000 !important;
+        text-decoration: none !important;
+        font-weight: 800;
+        font-family: var(--vac-font-display);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 60px;
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 20px rgba(210, 255, 61, 0.2);
+    }
+
+    .vacancy-btn:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 40px rgba(210, 255, 61, 0.4);
+    }
+
+    /* HERO SECTION */
+    .vac-hero {
+        padding: 80px 0 60px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Subtle Background Blobs */
+    .vac-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(140px);
+        opacity: 0.25;
+    }
+
+    .vac-blob-1 {
+        width: 400px;
+        height: 400px;
+        background: var(--vac-cyan);
+        top: -100px;
+        left: -100px;
+    }
+
+    .vac-blob-2 {
+        width: 500px;
+        height: 500px;
+        background: var(--vac-lime);
+        bottom: -100px;
+        right: -100px;
+    }
+
+    .vac-hero h1 {
+        font-size: 4.5rem;
+        line-height: 0.95;
+        margin-bottom: 24px;
+        color: white;
+    }
+
+    .vac-hero h1 span {
+        color: var(--vac-lime);
+    }
+
+    .vac-hero p {
+        font-size: 1.35rem;
+        color: #aaa;
+        max-width: 700px;
+        margin: 0 auto 40px;
+        font-weight: 400;
+    }
+
+    /* SECTIONS */
+    .vac-content-section {
+        padding-top: 40px;
+        padding-bottom: 100px;
+    }
+
+    /* SECTION TITLES */
+    .vac-section-title {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 60px !important;
+        color: white;
+        line-height: 1.1;
+        padding-bottom: 0;
+    }
+
+    .vac-section-title.cyan span {
+        color: var(--vac-cyan);
+    }
+
+    .vac-section-title.lime span {
+        color: var(--vac-lime);
+    }
+
+    /* CHECKLIST (SKILLS) */
+    .vac-checklist-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        margin-bottom: 40px;
+        margin-top: 0;
+    }
+
+    .vac-check-item {
+        background: var(--vac-glass-bg);
+        border: 1px solid var(--vac-glass-border);
+        padding: 40px 30px;
+        border-radius: 20px;
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        transition: 0.3s;
+    }
+
+    .vac-check-item:hover {
+        background: var(--vac-hover-bg);
+        border-color: var(--vac-cyan);
+    }
+
+    .vac-icon {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        background: rgba(24, 183, 234, 0.15);
+        color: var(--vac-cyan);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 2px;
+    }
+
+    .vac-text h3 {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+        color: white;
+        font-family: var(--vac-font-display);
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .vac-text p {
+        font-size: 1rem;
+        color: #bbb;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* MUST HAVE BLOCK */
+    .vac-must-have {
+        grid-column: span 2;
+        background: rgba(24, 183, 234, 0.08);
+        border: 1px solid var(--vac-cyan);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 30px;
+        border-radius: 20px;
+        gap: 16px;
+    }
+
+    .vac-must-have h3 {
+        color: var(--vac-cyan);
+        text-transform: uppercase;
+        font-size: 1.5rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Special SVG icon style */
+    .vac-svg-icon {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
+    }
+
+    /* OFFER CARDS */
+    .vac-offer-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .vac-offer-card {
+        background: var(--vac-glass-bg);
+        border: 1px solid var(--vac-glass-border);
+        padding: 50px 30px;
+        border-radius: 24px;
+        text-align: left;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .vac-offer-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--vac-lime);
+        opacity: 0;
+        transition: 0.3s;
+    }
+
+    .vac-offer-card:hover {
+        transform: translateY(-5px);
+        background: rgba(210, 255, 61, 0.05);
+    }
+
+    .vac-offer-card:hover::before {
+        opacity: 1;
+    }
+
+    .vac-offer-num {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--vac-lime);
+        opacity: 0.15;
+        margin-bottom: -15px;
+        display: block;
+        font-family: var(--vac-font-display);
+    }
+
+    .vac-offer-card h3 {
+        font-size: 1.8rem;
+        color: white;
+        margin-bottom: 14px;
+        margin-top: 10px;
+    }
+
+    .vac-offer-card p {
+        font-size: 1.1rem;
+        color: #ccc;
+        line-height: 1.6;
+    }
+
+    .vac-offer-price {
+        font-size: 1.4rem;
+        color: var(--vac-lime);
+        font-weight: 700;
+        margin-top: 10px;
+        display: block;
+    }
+
+    /* FOOTER/MODAL SPACING */
+    .vac-footer {
+        text-align: center;
+        margin-top: 80px;
+        padding-bottom: 20px;
+    }
+
+    /* MODAL (Apple Style Desktop) */
+    .vac-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 999999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .vac-modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .vac-modal {
+        background: #151515;
+        /* Deep dark bg */
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        width: 90%;
+        max-width: 440px;
+        padding: 40px;
+        border-radius: 28px;
+        position: relative;
+        transform: scale(0.95);
+        transition: transform 0.3s ease;
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+    }
+
+    .vac-modal-overlay.active .vac-modal {
+        transform: scale(1);
+    }
+
+    .vac-modal h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 28px;
+        color: white;
+    }
+
+    .vac-close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: #ccc;
+        font-size: 20px;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+    }
+
+    .vac-close-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .vac-input {
+        width: 100%;
+        padding: 16px;
+        margin-bottom: 12px;
+        background: #252525;
+        /* Apple Dark Gray Input */
+        border: 1px solid transparent;
+        /* Cleaner look */
+        border-radius: 12px;
+        color: white;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.2s;
+        font-family: var(--vac-font-main);
+    }
+
+    .vac-input:focus {
+        background: #2F2F2F;
+        border-color: var(--vac-lime);
+        box-shadow: 0 0 0 3px rgba(210, 255, 61, 0.1);
+    }
+
+    .vac-input::placeholder {
+        color: #777;
+    }
+
+    .vac-submit {
+        width: 100%;
+        padding: 18px;
+        margin-top: 12px;
+        border-radius: 14px;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    /* --- MOBILE OTPIMIZATION (COMPACT & SMOOTH) --- */
+    @media (max-width: 768px) {
+
+        /* Hero Compact */
+        .vac-hero {
+            padding: 110px 0 30px;
+        }
+
+        .vac-hero h1 {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .vac-hero p {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .vacancy-btn {
+            padding: 14px 28px;
+            font-size: 0.9rem;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        /* Titles Compact */
+        .vac-section-title {
+            font-size: 1.8rem;
+            margin-bottom: 24px !important;
+        }
+
+        .vac-content-section {
+            padding-top: 10px;
+            padding-bottom: 30px;
+        }
+
+        /* Skills Compact List */
+        .vac-checklist-grid {
+            gap: 8px;
+            grid-template-columns: 1fr;
+        }
+
+        .vac-check-item {
+            padding: 20px 16px;
+            border-radius: 12px;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .vac-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .vac-text h3 {
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .vac-text p {
+            font-size: 0.85rem;
+            line-height: 1.35;
+        }
+
+        /* Must Have Compact */
+        .vac-must-have {
+            grid-column: span 1;
+            padding: 20px 16px;
+            gap: 8px;
+            flex-direction: column;
+        }
+
+        .vac-must-have h3 {
+            font-size: 1rem;
+        }
+
+        .vac-must-have p {
+            font-size: 0.85rem;
+        }
+
+        /* Offer Compact Cards */
+        .vac-offer-grid {
+            gap: 8px;
+            grid-template-columns: 1fr;
+        }
+
+        .vac-offer-card {
+            padding: 24px 16px;
+            border-radius: 12px;
+        }
+
+        /* Even smaller padding */
+        .vac-offer-num {
+            font-size: 2rem;
+            margin-bottom: -5px;
+        }
+
+        .vac-offer-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 6px;
+            margin-top: 5px;
+        }
+
+        .vac-offer-card p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .vac-offer-price {
+            font-size: 1.1rem;
+            margin-top: 6px;
+        }
+
+        /* Footer */
+        .vac-footer {
+            margin-top: 20px;
+        }
+
+        /* Modal on Mobile - Apple Style */
+        .vac-modal-overlay {
+            align-items: flex-end;
+            /* Sheet style */
+        }
+
+        .vac-modal {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            border-radius: 0;
+            padding: 24px 20px;
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateY(100%);
+        }
+
+        .vac-modal-overlay.active .vac-modal {
+            transform: translateY(0);
+        }
+
+        .vac-modal h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .vac-close-btn {
+            top: 20px;
+            right: 20px;
+            font-size: 32px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vac-input {
+            padding: 18px;
+            font-size: 16px;
+            /* No iOS Zoom */
+            background: #222;
+            border: none;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+
+        .vac-submit {
+            margin-top: auto;
+            /* Push to bottom */
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 20px;
+            font-size: 1.1rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(210, 255, 61, 0.2);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+    }
+</style>
+
+<!-- 3. HTML CONTENT -->
+<div class="vacancy-wrapper">
+
+    <!-- Blobs inside wrapper but isolated from flow -->
+    <div class="vac-blobs-container">
+        <div class="vac-blob vac-blob-1"></div>
+        <div class="vac-blob vac-blob-2"></div>
+    </div>
+
+    <!-- HERO -->
+    <section class="vac-hero">
+        <div class="vacancy-container">
+            <h1>TRAVEL-КРИЭЙТОР</h1>
+            <p>Ты снимаешь, мы платим и возим тебя по Европе. Идеальная работа для тех, кто устал от офиса и хочет жить
+                в движении.</p>
+            <button class="vacancy-btn" onclick="openVacModal()">ПОЛУЧИТЬ ТЕСТОВОЕ ЗАДАНИЕ</button>
+        </div>
+    </section>
+
+    <!-- SECTION 1: SKILLS (CYAN THEME) -->
+    <section class="vacancy-container vac-content-section">
+        <h2 class="vac-section-title cyan">ТВОИ <span>СКИЛЛЫ</span></h2>
+
+        <div class="vac-checklist-grid">
+            <!-- Item 1: VISUAL -->
+            <div class="vac-check-item">
+                <div class="vac-icon">1</div>
+                <div class="vac-text">
+                    <h3>ВИЗУАЛ & СТИЛЬ</h3>
+                    <p>Ты «чувствуешь» картинку. Нам не нужен сложный киношный монтаж, важнее твой вкус и
+                        насмотренность.</p>
+                </div>
+            </div>
+
+            <!-- Item 2: MARKETING -->
+            <div class="vac-check-item">
+                <div class="vac-icon">2</div>
+                <div class="vac-text">
+                    <h3>МАРКЕТИНГОВОЕ МЫШЛЕНИЕ</h3>
+                    <p>Ты понимаешь, что мы продаем продукт. Ты используешь структуру и приемы, которые удерживают
+                        внимание и доводят зрителя до целевого действия.</p>
+                </div>
+            </div>
+
+            <!-- Item 3: COPYWRITING -->
+            <div class="vac-check-item">
+                <div class="vac-icon">3</div>
+                <div class="vac-text">
+                    <h3>КОПИРАЙТИНГ</h3>
+                    <p>Ты умеешь писать сильно и без воды. Твои заголовки бьют в цель, а тексты грамотны (<span
+                            style="color:var(--vac-lime)">русский язык</span>).</p>
+                </div>
+            </div>
+
+            <!-- Item 4: TRENDS -->
+            <div class="vac-check-item">
+                <div class="vac-icon">4</div>
+                <div class="vac-text">
+                    <h3>ТРЕНДЫ & РОСТ</h3>
+                    <p>Ты чувствуешь, что «работает» именно сейчас. Ты постоянно мониторишь тренды, обучаешься и быстро
+                        внедряешь свежие механики в контент, не давая ему устареть.</p>
+                </div>
+            </div>
+
+            <!-- CRITICAL REQ: LOCATION -->
+            <div class="vac-must-have" style="padding: 30px;">
+                <h3>
+                    <svg class="vac-svg-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    </svg>
+
+                </h3>
+                <p style="margin:0; color:var(--vac-cyan);">
+                    Старты всех туров из Праги, поэтому кандидатам отсюда — приоритет. Строгого графика в офисе нет,
+                    главное — результат и готовность к путешествиям.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: OFFER (LIME THEME) -->
+    <section class="vacancy-container vac-content-section">
+        <h2 class="vac-section-title lime">НАШ <span>ОФФЕР</span></h2>
+
+        <div class="vac-offer-grid">
+            <!-- Offer 1 -->
+            <div class="vac-offer-card">
+                <span class="vac-offer-num">01</span>
+                <h3>Travel-Бонусы</h3>
+                <p>Регулярные бесплатные туры по Европе с командой. Полное покрытие логистики и проживания во время
+                    съемок.</p>
+            </div>
+            <!-- Offer 2 -->
+            <div class="vac-offer-card">
+                <span class="vac-offer-num">02</span>
+                <h3>Оплата</h3>
+                <p>Понятная система оплаты.
+                    <span class="vac-offer-price" style="margin-bottom: 2px;">500–1000 CZK</span>
+                    <span style="font-size: 0.85rem; opacity: 0.7; display: block; margin-bottom: 10px;">сторител /
+                        карусель / рилс</span>
+                    Объем: около 30 единиц контента в месяц.
+                </p>
+            </div>
+            <!-- Offer 3 -->
+            <div class="vac-offer-card">
+                <span class="vac-offer-num">03</span>
+                <h3>Рост</h3>
+                <p>Мы поощряем развитие и оплачиваем профильные обучения, чтобы вместе оставаться на пике актуальных
+                    трендов и скиллов. Также всегда есть возможность карьерного роста внутри отдела маркетинга.
+                </p>
+            </div>
+        </div>
+
+        <div class="vac-footer">
+            <button class="vacancy-btn" onclick="openVacModal()">ПОЛУЧИТЬ ТЕСТОВОЕ ЗАДАНИЕ</button>
+        </div>
+    </section>
+
+    <!-- MODAL -->
+    <div class="vac-modal-overlay" id="vacModalOverlay">
+        <div class="vac-modal">
+            <button class="vac-close-btn" onclick="closeVacModal()">&times;</button>
+            <h2>ПОЛУЧИТЬ ТЕСТОВОЕ</h2>
+            <form onsubmit="submitVacForm(event)">
+                <input class="vac-input" type="text" id="firstName" placeholder="Имя" required>
+                <input class="vac-input" type="text" id="lastName" placeholder="Фамилия" required>
+                <input class="vac-input" type="tel" id="phone" placeholder="Телефон / TG" required>
+                <input class="vac-input" type="email" id="email" placeholder="Email" required>
+                <input class="vac-input" type="text" id="instagram" placeholder="Ваш Личный Instagram" required>
+                <button type="submit" class="vacancy-btn vac-submit">ПОЛУЧИТЬ ТЕСТОВОЕ</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- ANALYTICS TRACKING ---
+    function sendAnalyticsEvent(eventName) {
+        // 1. Yandex Metrica
+        if (typeof ym === 'function') {
+            // Try to find the counter ID automatically or use a generic call
+            try {
+                // Get all counter IDs
+                var counters = window.Ya ? window.Ya._metrika.counters : [];
+                // If counters found, send to the first one
+                // Or just try the standard global call if available
+                // We will assume the user has set up a goal with this ID in Tilda/Yandex
+                // ym(YOUR_COUNTER_ID, 'reachGoal', eventName); 
+                // Since we don't know the ID, we log a message:
+                console.log('Reach Goal:', eventName);
+            } catch (e) { }
+        }
+        // 2. Google Analytics
+        if (typeof gtag === 'function') {
+            gtag('event', eventName, { 'event_category': 'Kover_Vacancy' });
+        }
+        // 3. Tilda Statistics (Optional)
+        if (typeof Tilda !== 'undefined' && typeof Tilda.sendEventToStatistics === 'function') {
+            Tilda.sendEventToStatistics(eventName, eventName, 0);
+        }
+    }
+
+    const modal = document.getElementById('vacModalOverlay');
+    function openVacModal() {
+        sendAnalyticsEvent('open_test_modal');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeVacModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeVacModal();
+    });
+    function submitVacForm(e) {
+        e.preventDefault();
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = 'ОТПРАВКА...';
+        submitBtn.disabled = true;
+
+        const data = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            instagram: document.getElementById('instagram').value,
+            source: 'vacancy_landing'
+        };
+
+        fetch('https://hook.eu2.make.com/sosu4eqscs1qe9ddfw1hxo3j8ge1xi3z', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    sendAnalyticsEvent('submit_application');
+                    // Success UI
+                    const modalBox = document.querySelector('.vac-modal');
+                    modalBox.innerHTML = `
+                        <button class="vac-close-btn" onclick="closeVacModal()" style="position: absolute; top: 20px; right: 20px;">&times;</button>
+                        <div style="text-align:center; padding: 40px 0; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+                            <div style="width: 80px; height: 80px; background: rgba(210, 255, 61, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22 2L11 13" stroke="#D2FF3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#D2FF3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <h2 style="margin-top:0; margin-bottom:16px; font-size: 2rem;">ОТПРАВЛЕНО!</h2>
+                            <p style="font-size: 1.1rem; color: #ccc; line-height: 1.5; margin-bottom: 30px; max-width: 320px;">
+                                Тестовое задание отправлено на твой Email.<br><br>
+                                <strong style="color:var(--vac-lime)">Проверяй входящие</strong> (и папку Спам) — письмо придет в течение пары минут.
+                            </p>
+                            <button class="vacancy-btn" onclick="closeVacModal()" style="width:100%; max-width:100%; margin:0;">ПОНЯТНО</button>
+                        </div>
+                    `;
+                } else {
+                    alert('Ошибка отправки. Попробуйте позже.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка отправки. Проверьте интернет.');
+            })
+            .finally(() => {
+                if (submitBtn) {
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+    }
+</script>

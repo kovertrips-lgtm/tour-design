@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER: Motion First</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,800;1,900&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF3366;
+            --dark: #0F172A;
+            --light: #F8FAFC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            height: 100dvh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: url('https://images.unsplash.com/photo-1520627799516-2415307b0445?q=80&w=2670&auto=format&fit=crop') center/cover;
+            filter: brightness(0.6);
+            transform: translateZ(-50px) scale(1.2);
+            /* Parallax base */
+        }
+
+        .content {
+            z-index: 10;
+            text-align: center;
+            max-width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(3rem, 12vw, 6rem);
+            line-height: 0.9;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: slideBlur 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .highlight {
+            color: transparent;
+            -webkit-text-stroke: 1px var(--light);
+        }
+
+        .color-pop {
+            color: var(--primary);
+        }
+
+        .timer-badge {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            animation: slideBlur 0.8s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .cta-btn {
+            background: var(--light);
+            color: var(--dark);
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
+            opacity: 0;
+            animation: slideBlur 0.8s 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .cta-btn:active {
+            transform: scale(0.95);
+        }
+
+        .cta-micro {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: -10px;
+            animation: fadeIn 1s 0.8s forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideBlur {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+                filter: blur(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 51, 102, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 51, 102, 0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 0.7;
+            }
+        }
+
+        /* Mobile specific */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 14vw;
+            }
+
+            .content {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <div class="hero-bg" id="parallaxBg"></div>
+
+        <div class="content">
+            <div class="timer-badge">
+                <div class="pulse-dot"></div>
+                <span id="timer">Старт через 04:23:14</span>
+            </div>
+
+            <h1>
+                <span class="highlight">GOGOGO</span><br>
+                <span class="color-pop">ПОГНАЛИ</span>
+            </h1>
+
+            <a href="#" class="cta-btn">Я В ДЕЛЕ</a>
+            <span class="cta-micro">Никаких скучных гидов. Только свои.</span>
+        </div>
+    </div>
+
+    <script>
+        // Simple parallax on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const bg = document.getElementById('parallaxBg');
+            bg.style.transform = `translateZ(-50px) scale(1.2) translateY(${scrolled * 0.5}px)`;
+        });
+
+        // Timer logic
+        const timer = document.getElementById('timer');
+        let hours = 4, mins = 23, secs = 14;
+
+        setInterval(() => {
+            secs--;
+            if (secs < 0) { secs = 59; mins--; }
+            if (mins < 0) { mins = 59; hours--; }
+            if (hours < 0) { hours = 4; } // Reset loop
+
+            timer.innerText = `Старт через 0${hours}:${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
+        }, 1000);
+    </script>
+</body>
+
+</html>

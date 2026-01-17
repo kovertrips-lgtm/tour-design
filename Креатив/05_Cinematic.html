@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER: Cinematic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            height: 100dvh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 0%, #000 120%);
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            padding: 2rem;
+            opacity: 0;
+            animation: slowFade 2s 0.5s forwards ease-in-out;
+        }
+
+        h1 {
+            font-weight: 200;
+            font-size: 3rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 50px;
+        }
+
+        .cinematic-timer {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 40px;
+            display: inline-block;
+            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slowFade {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Fallback image if video fails or on load */
+        .video-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?q=80&w=2670&auto=format&fit=crop') center/cover;
+            animation: zoomPan 30s infinite alternate;
+        }
+
+        @keyframes zoomPan {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="video-fallback"></div>
+    <!-- <video class="video-bg" autoplay muted loop playsinline src="placeholder.mp4"></video> -->
+
+    <div class="overlay"></div>
+
+    <div class="content">
+        <h1>Прикосновение<br>к высоте</h1>
+        <p>КЛИНОВЕЦ // СЕЗОН 2026</p>
+
+        <div class="cinematic-timer" id="cine-timer">
+            ДО ЗАКАТА 04:22
+        </div>
+    </div>
+
+    <script>
+        // Simply update time subtly
+        setInterval(() => {
+            let d = new Date();
+            let s = d.getSeconds();
+            document.getElementById('cine-timer').style.borderColor = s % 2 === 0 ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.5)';
+        }, 1000);
+    </script>
+</body>
+
+</html>

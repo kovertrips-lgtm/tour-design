@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER Booking Widget (Base V3)</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+        /* --- COPYING STYLES FROM "Доплата остатка.html" (Modal & General) --- */
+        :root {
+            --color-bg: #f2f2f7;
+            --color-accent: #007aff;
+            --color-success: #34c759;
+            --color-text-main: #1d1d1f;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+        }
+
+        /* BUTTON TRIGGER */
+        .open-modal-btn {
+            display: none;
+        }
+
+        /* MODAL OVERLAY */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: #1d1d1f;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .widget-container {
+            width: 100%;
+            max-width: 440px;
+            height: 620px;
+            /* Fixed Height like Widget V1 */
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.open .widget-container {
+            transform: scale(1);
+        }
+
+        /* HEADER */
+        .widget-header {
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid #e5e5ea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            flex-shrink: 0;
+        }
+
+        .close-modal-btn {
+            width: 32px;
+            height: 32px;
+            background: #f2f2f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8e8e93;
+            font-weight: 600;
+        }
+
+        /* BODY (Scrollable) */
+        .widget-body {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #fff;
+        }
+
+        /* FOOTER */
+        .widget-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e5e5ea;
+            background: #fff;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* SLIDES LOGIC */
+        .step-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100%;
+            padding: 24px;
+            display: none;
+            animation-duration: 0.3s;
+        }
+
+        .step-slide.active {
+            display: block;
+        }
+
+        /* UI HELPERS */
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-primary:disabled {
+            background: #e5e5ea;
+            color: #8e8e93;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #007aff;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* STEPPER */
+        .stepper {
+            display: flex;
+            gap: 8px;
+        }
+
+        .step-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ccc;
+        }
+
+        .step-dot.active {
+            border-color: #007aff;
+            background: #007aff;
+            color: #fff;
+        }
+
+        .step-dot.done {
+            border-color: #34c759;
+            background: #34c759;
+            color: #fff;
+        }
+
+        /* INPUTS */
+        .inp-field {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #d1d1d6;
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .inp-field.error {
+            border-color: #ff3b30;
+            background: #fff0f0;
+        }
+
+        /* STRIPE SPECIFIC (From Base) */
+        .stripe-box {
+            padding: 12px 16px;
+            border: 1px solid #d1d1d6;
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .loader-overlay-local {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vibey-loader {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e5e5ea;
+            border-top-color: #007aff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* PLAN CARDS */
+        .plan-card {
+            border: 2px solid #e5e5ea;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .plan-card.selected {
+            border-color: #007aff;
+            background: rgba(0, 122, 255, 0.03);
+        }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+
+            .widget-container {
+                max-height: 85vh;
+                height: 85vh;
+                border-radius: 24px 24px 0 0;
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        .flatpickr-calendar,
+        .iti__country-list {
+            z-index: 20000 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TRIGGER -->
+    <button class="open-modal-btn" onclick="openWidget()">Book Now</button>
+
+    <!-- MODAL -->
+    <div id="stripe-overlay" class="modal-overlay">
+        <div class="widget-container">
+
+            <!-- HEADER -->
+            <div class="widget-header">
+                <div class="stepper">
+                    <div class="step-dot active" id="s1">1</div>
+                    <div class="step-dot" id="s2">2</div>
+                    <div class="step-dot" id="s3">3</div>
+                </div>
+                <div class="close-modal-btn" onclick="closeWidget()">✕</div>
+            </div>
+
+            <!-- BODY -->
+            <div class="widget-body">
+
+                <!-- STEP 1 -->
+                <div class="step-slide active" id="slide-1">
+                    <h2 style="margin-top:0;">Параметры</h2>
+                    <div class="plan-card selected" id="opt-full" onclick="selectPlan('full')">
+                        <div><b>Оплатить полностью</b><br><span style="font-size:12px; color:#888;">Без доплат</span>
+                        </div>
+                        <div style="font-weight:700" id="price-full">...</div>
+                    </div>
+                    <div class="plan-card" id="opt-deposit" onclick="selectPlan('deposit')">
+                        <div><b>Внести залог</b><br><span style="font-size:12px; color:#888;">Остаток позже</span></div>
+                        <div style="font-weight:700" id="price-depo">...</div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px;">
+                        <span>Участники</span>
+                        <div
+                            style="background:#f2f2f7; padding:4px; border-radius:8px; display:flex; align-items:center;">
+                            <div style="width:32px; height:32px; background:#fff; display:flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer;"
+                                onclick="updCount(-1)">-</div>
+                            <div style="width:32px; text-align:center; font-weight:600;" id="cnt-val">1</div>
+                            <div style="width:32px; height:32px; background:#fff; display:flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer;"
+                                onclick="updCount(1)">+</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px; text-align:center; color:#888;">Итого: <b style="color:#000;"
+                            id="total-val">...</b></div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="step-slide" id="slide-2">
+                    <h2 style="margin-top:0;">Участники</h2>
+                    <div id="pax-list"></div>
+                    <div style="border-top:1px solid #e5e5ea; padding-top:20px; margin-top:20px;">
+                        <input class="inp-field" id="email" type="email" placeholder="Email">
+                        <input class="inp-field" id="phone" type="tel" placeholder="Phone">
+                        <label style="display:flex; gap:10px; font-size:13px; margin-top:10px;">
+                            <input type="checkbox" id="consent"> Я принимаю условия
+                        </label>
+                    </div>
+                </div>
+
+                <!-- STEP 3 (PAYMENT - COPIED STRUCTURE) -->
+                <div class="step-slide" id="slide-3">
+                    <div id="stripe-loader" class="loader-overlay-local" style="display:none;">
+                        <div class="vibey-loader"></div>
+                        <div>Загрузка...</div>
+                    </div>
+
+                    <h2 style="margin-top:0;">Оплата</h2>
+
+                    <div id="wallet-container" style="display:none; margin-bottom: 24px;">
+                        <div id="wallet-element" style="height: 48px;"></div>
+                        <div style="text-align:center; margin:16px 0; color:#888; font-size:12px;">ИЛИ КАРТОЙ</div>
+                    </div>
+
+                    <div style="margin-bottom:16px;">
+                        <div style="font-size:12px; color:#888; margin-bottom:4px;">БАНКОВСКАЯ КАРТА</div>
+                        <div id="card-element" class="stripe-box"></div>
+                        <div id="payment-message" style="color:#ff3b30; font-size:13px; margin-top:8px; display:none;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUCCESS -->
+                <div class="step-slide" id="slide-success" style="text-align:center; padding-top:60px;">
+                    <div style="font-size:60px; color:#34c759;">✓</div>
+                    <h2>Успешно!</h2>
+                    <p>Билеты отправлены на почту.</p>
+                    <button class="btn-primary" onclick="closeWidget()">Закрыть</button>
+                </div>
+            </div>
+
+            <!-- FOOTER ACTION -->
+            <div class="widget-footer">
+                <button id="btn-action" class="btn-primary" onclick="handleAction()">Продолжить</button>
+                <button id="btn-back" class="btn-secondary" onclick="handleBack()" style="display:none;">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
+
+    <script>
+        // CONFIG
+        let CONFIG = {
+            id: 'klinovec_31_01_26',               // ID тура (внутренний, для базы данных)
+            name: 'Клиновец 31.01.2026',           // Название тура (видит клиент)
+            date: '31.01.2026',                    // Дата тура (ДД.ММ.ГГГГ)
+            price: 1190,                           // Полная стоимость
+            deposit: 500,                          // Залог
+            stripeKey: 'pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6',
+            webhook: 'https://hook.eu2.make.com/t118j4fcirfp3s6srdt97ahsr9hggo63', // Correct webhook from user
+            tourType: 'Ski Tour',                  // Тип тура
+            telegram_link: 'https://t.me/kover_travel' // Fallback link
+        };
+
+        // PRE-FILLED STATE FOR TESTING
+        let state = {
+            step: 1,
+            count: 1,
+            plan: 'full',
+            pax: [{ name: 'Test', surname: 'User', dob: '01.01.1990' }],
+            email: 'test@kover.travel',
+            phone: '+420123456789',
+            clientSecret: null,
+            contact: { name: 'Test User', email: 'test@kover.travel', phone: '+420123456789' }
+        };
+
+        let stripe;
+        let applePayPr, applePayElements, walletElement; // Modified local vars to match fix
+        let cardElements, cardElement;
+        let iti;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.KOVER_WIDGET_CONFIG) CONFIG = { ...CONFIG, ...window.KOVER_WIDGET_CONFIG };
+
+            // Render Prices
+            document.getElementById('price-full').innerText = CONFIG.price + " Kč";
+            document.getElementById('price-depo').innerText = CONFIG.deposit + " Kč";
+            updTotal();
+
+            // 1. Init Stripe
+            stripe = Stripe(CONFIG.stripeKey);
+
+            // Init Apple Pay Safe
+            initApplePay();
+
+            // AUTO-OPEN FOR TESTING
+            setTimeout(() => {
+                openWidget();
+                goTo(2);
+            }, 500);
+
+            checkHash();
+            window.addEventListener('hashchange', checkHash);
+        });
+
+        function initApplePay() {
+            // ZOMBIE FIX
+            if (walletElement) { try { walletElement.destroy(); } catch (e) { } walletElement = null; }
+            if (applePayElements) { applePayElements = null; }
+
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+
+            applePayPr = stripe.paymentRequest({
+                country: 'CZ', currency: 'czk',
+                total: { label: CONFIG.name, amount: total * 100 },
+                requestPayerName: true, requestPayerEmail: true
+            });
+
+            applePayPr.canMakePayment().then(result => {
+                console.log("Apple Pay Check:", result);
+                if (result) {
+                    applePayElements = stripe.elements();
+                    walletElement = applePayElements.create('paymentRequestButton', {
+                        paymentRequest: applePayPr,
+                        style: { paymentRequestButton: { theme: 'dark', height: '48px', type: 'book' } }
+                    });
+                    walletElement.mount('#wallet-element');
+                    document.getElementById('wallet-container').style.display = 'block';
+                }
+            });
+
+            applePayPr.on('paymentmethod', async (ev) => {
+                if (!state.clientSecret) {
+                    ev.complete('fail');
+                    alert("Подождите, данные заказа загружаются...");
+                    return;
+                }
+                const { error: confirmError } = await stripe.confirmCardPayment(
+                    state.clientSecret,
+                    { payment_method: ev.paymentMethod.id },
+                    { handleActions: false }
+                );
+                if (confirmError) {
+                    ev.complete('fail');
+                    alert(confirmError.message);
+                } else {
+                    ev.complete('success');
+                    const { error } = await stripe.confirmCardPayment(state.clientSecret);
+                    if (!error) goTo(4);
+                }
+            });
+        }
+
+        function updateApplePayPrice() {
+            if (applePayPr) {
+                const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+                const total = price * state.count;
+                applePayPr.update({
+                    total: { label: CONFIG.name, amount: total * 100 }
+                });
+            }
+        }
+
+        function checkHash() { if (window.location.hash === '#book-now') openWidget(); }
+
+
+        // NAV
+        function handleAction() {
+            if (state.step === 1) goTo(2);
+            else if (state.step === 2) {
+                validateStep2();
+                const btn = document.getElementById('btn-action');
+                btn.disabled = true;
+
+                fetchSecret().then(secret => {
+                    if (secret) {
+                        state.clientSecret = secret;
+                        // Init Card Element now that we have secret
+                        initCardElement(secret);
+                        setTimeout(() => {
+                            goTo(3);
+                            btn.disabled = false;
+                        }, 100);
+                    } else {
+                        btn.disabled = false;
+                    }
+                });
+            } else if (state.step === 3) {
+                confirmPay();
+            }
+        }
+
+
+        function handleBack() {
+            if (state.step > 1) goTo(state.step - 1);
+        }
+
+        function goTo(s) {
+            state.step = s;
+            document.querySelectorAll('.step-slide').forEach(el => el.classList.remove('active'));
+            document.getElementById(`slide-${s}`).classList.add('active');
+
+            // Stepper
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById(`s${i}`);
+                dot.classList.remove('active', 'done');
+                if (i === s) dot.classList.add('active');
+                else if (i < s) { dot.classList.add('done'); dot.innerText = '✓'; }
+                else dot.innerText = i;
+            }
+
+            // Buttons
+            const btn = document.getElementById('btn-action');
+            const back = document.getElementById('btn-back');
+
+            if (s === 1) { btn.innerText = "Продолжить"; back.style.display = 'none'; }
+            if (s === 2) {
+                renderPax(); // WILL RENDER PRE-FILLED DATA
+                btn.innerText = "К оплате"; back.style.display = 'block';
+            }
+            if (s === 3) {
+                const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+                const total = price * state.count;
+                btn.innerText = `Оплатить ${total} Kč`;
+                back.style.display = 'block';
+                // Card element is initialized in handleAction; Apple Pay is already ready.
+            }
+            if (s === 4) { document.querySelector('.widget-footer').style.display = 'none'; document.querySelector('.widget-header').style.display = 'none'; }
+        }
+
+        // LOGIC
+        function selectPlan(p) {
+            state.plan = p;
+            document.getElementById('opt-full').classList.toggle('selected', p === 'full');
+            document.getElementById('opt-deposit').classList.toggle('selected', p === 'deposit');
+            updTotal();
+            updateApplePayPrice();
+        }
+        function updCount(d) {
+            let n = state.count + d;
+            if (n >= 1 && n <= 10) {
+                state.count = n;
+                document.getElementById('cnt-val').innerText = n;
+                updTotal();
+                updateApplePayPrice();
+            }
+        }
+        function updTotal() { document.getElementById('total-val').innerText = ((state.plan === 'full' ? CONFIG.price : CONFIG.deposit) * state.count) + " Kč"; }
+
+        function renderPax() {
+            const c = document.getElementById('pax-list');
+            c.innerHTML = '';
+            for (let i = 0; i < state.count; i++) {
+                // USE PRE-FILLED DATA IF AVAILABLE
+                const p = state.pax[i] || { name: 'Test', surname: 'User', dob: '01.01.2000' };
+                if (!state.pax[i]) state.pax[i] = p; // Ensure state tracks it
+
+                c.innerHTML += `<div style="margin-bottom:16px;">
+                    <div style="font-weight:700; margin-bottom:8px;">Участник ${i + 1}</div>
+                    <input class="inp-field p-name" placeholder="Name" value="${p.name}">
+                    <input class="inp-field p-surname" placeholder="Surname" value="${p.surname}">
+                    <input class="inp-field p-dob" placeholder="DOB" value="${p.dob}">
+                </div>`;
+            }
+            // Pre-fill Contacts
+            document.getElementById('email').value = state.email;
+            document.getElementById('phone').value = state.phone;
+            document.getElementById('consent').checked = true;
+
+            // Init plugins
+            if (typeof flatpickr !== 'undefined') flatpickr('.p-dob', { dateFormat: 'd.m.Y', locale: 'ru', disableMobile: true });
+            if (!iti) iti = window.intlTelInput(document.getElementById('phone'), { utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js", initialCountry: "cz", separateDialCode: true });
+        }
+
+        function validateStep2() {
+            // SYNC INPUTS TO STATE
+            state.pax = [];
+            const names = document.querySelectorAll('.p-name');
+            const surs = document.querySelectorAll('.p-surname');
+            const dobs = document.querySelectorAll('.p-dob');
+            for (let i = 0; i < state.count; i++) {
+                state.pax.push({ name: names[i].value, surname: surs[i].value, dob: dobs[i].value });
+            }
+            state.email = document.getElementById('email').value;
+            if (iti) state.phone = iti.getNumber();
+            return true;
+        }
+
+        // --- FULL V2 PAYLOAD LOGIC ---
+        async function fetchSecret() {
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+
+            let paxSummary = [];
+            state.pax.forEach(p => paxSummary.push(`${p.name} ${p.surname}`));
+
+            const payload = {
+                // --- REQUIRED FIELDS FROM USER MAPPING ---
+                tour_name: CONFIG.name,                  // {{1.tour_name}}
+                total_pay_now: total,                    // {{1.total_pay_now}} (Price field)
+                payment_type: state.plan === 'full' ? 'Полная оплата' : 'Залог', // {{1.payment_type}}
+                total_order_value: CONFIG.price * state.count, // {{1.total_order_value}}
+                device_type: "Experimental Widget V3 Base",    // {{1.device_type}}
+                tour_date: CONFIG.date,                  // {{1.tour_date}}
+                tour_type: CONFIG.tourType,              // {{1.tour_type}}
+                telegram_link: CONFIG.telegram_link || "https://t.me/kover_travel", // {{1.telegram_link}}
+                remaining_balance: state.plan === 'full' ? 0 : (CONFIG.price - CONFIG.deposit) * state.count, // {{1.remaining_balance}}
+                passenger_count: state.count,            // {{1.passenger_count}}
+                buyer_email: state.email,                // {{1.buyer_email}}
+                buyer_phone: state.phone,                // {{1.buyer_phone}}
+                all_passengers_summary: paxSummary.join(', '), // {{1.all_passengers_summary}}
+
+                // --- ADDITIONAL NECESSARY META ---
+                order_id: `${CONFIG.id}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+                timestamp: new Date().toISOString(),
+                tour_id: CONFIG.id,
+                currency: "CZK",
+                locale: "ru",
+
+                // --- CONTEXT ---
+                browser_userAgent: navigator.userAgent,
+                page_url: window.location.href,
+
+                // --- DUMPS ---
+                passengers_json_dump: JSON.stringify(state.pax),
+                raw_selected_plan: state.plan,
+                consent_terms_checked: true
+            };
+
+            // DYNAMIC FIELDS (passenger_1_name, etc)
+            state.pax.forEach((p, i) => {
+                // Matches {{1.passenger_1_name}} when i=0
+                payload[`passenger_${i + 1}_name`] = `${p.name} ${p.surname}`;
+
+                // Extra separate fields just in case
+                payload[`passenger_${i + 1}_firstname`] = p.name;
+                payload[`passenger_${i + 1}_lastname`] = p.surname;
+                payload[`passenger_${i + 1}_dob`] = p.dob;
+            });
+
+            console.log("FINAL PAYLOAD:", payload); // Look here in console
+
+            try {
+                const r = await fetch(CONFIG.webhook, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                // Try to parse JSON, if fails text
+                const text = await r.text();
+                try {
+                    const data = JSON.parse(text);
+                    console.log("Webhook Response (JSON):", data);
+
+                    if (!data.clientSecret) {
+                        alert("Ошибка Webhook: " + JSON.stringify(data));
+                        return null;
+                    }
+                    return data.clientSecret;
+                } catch (err) {
+                    console.error("Webhook Non-JSON:", text);
+                    alert("Ошибка Webhook (Text): " + text);
+                    return null;
+                }
+            } catch (e) {
+                console.error("Fetch Error:", e);
+                alert("Ошибка сети: " + e.message);
+                return null;
+            }
+
+        }
+
+
+
+        // --- CARD ELEMENT INIT (Requires Secret) ---
+        function initCardElement(secret) {
+            if (cardElements) return; // already init
+
+            cardElements = stripe.elements({
+                clientSecret: secret,
+                appearance: { theme: 'stripe', variables: { fontSizeBase: '16px', colorPrimary: '#007aff', borderRadius: '12px' } }
+            });
+
+            cardElement = cardElements.create('card', {
+                hidePostalCode: true,
+                style: { base: { fontSize: '16px', color: '#1d1d1f', '::placeholder': { color: '#888' } } }
+            });
+            cardElement.mount('#card-element');
+        }
+
+        async function confirmPay() {
+            const { error } = await stripe.confirmCardPayment(state.clientSecret, {
+                payment_method: { card: cardElement, billing_details: { email: state.email } }
+            });
+            if (error) {
+                document.getElementById('payment-message').innerText = error.message;
+                document.getElementById('payment-message').style.display = 'block';
+            } else {
+                goTo(4);
+            }
+        }
+
+        function openWidget() {
+            document.getElementById('stripe-overlay').classList.add('open');
+            initApplePay(); // Re-init to be safe
+            goTo(1);
+        }
+
+        function closeWidget() {
+            document.getElementById('stripe-overlay').classList.remove('open');
+            setTimeout(() => {
+                destroyStripe();
+            }, 300);
+        }
+
+        function destroyStripe() {
+            if (cardElement) { try { cardElement.destroy(); } catch (e) { } cardElement = null; }
+            if (cardElements) { cardElements = null; }
+
+            if (walletElement) { try { walletElement.destroy(); } catch (e) { } walletElement = null; }
+            if (applePayElements) { applePayElements = null; }
+
+            const cardContainer = document.getElementById('card-element');
+            if (cardContainer) cardContainer.innerHTML = '';
+
+            state.clientSecret = null;
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .m-org-section {
+            background: #F4F5F7;
+            padding: 40px 20px 80px;
+            /* Extra bottom padding for floating btn */
+            color: #111;
+        }
+
+        .m-org-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .m-org-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        /* Cards */
+        .m-info-card {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            margin-bottom: 16px;
+        }
+
+        .m-info-card.accent {
+            border: 2px solid #29B6F6;
+        }
+
+        .m-info-h {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .m-price-tag {
+            background: #29B6F6;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .m-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .m-list li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+            font-size: 15px;
+            color: #444;
+            line-height: 1.4;
+        }
+
+        .m-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            background: #29B6F6;
+            border-radius: 50%;
+        }
+
+        .m-list li.check::before {
+            background: transparent;
+            content: '✓';
+            color: #29B6F6;
+            font-weight: 900;
+            font-size: 14px;
+            top: 0;
+            left: -4px;
+        }
+
+        .m-info-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /* Floating Start Button */
+        .m-float-cta {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            right: 24px;
+            background: #29B6F6;
+            color: white;
+            padding: 18px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 16px;
+            box-shadow: 0 10px 30px rgba(41, 182, 246, 0.4);
+            z-index: 100;
+            text-align: center;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .m-float-spacer {
+            height: 60px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="m-org-section">
+        <div class="m-org-header">
+            <h2 class="m-org-title">Организация</h2>
+        </div>
+
+        <!-- Included -->
+        <div class="m-info-card accent">
+            <div class="m-info-h">
+                <span>Включено</span>
+                <span class="m-price-tag">4990 KC</span>
+            </div>
+            <ul class="m-list">
+                <li class="check">Комфортный трансфер туда-обратно</li>
+                <li class="check">Проживание в отеле 3-4*</li>
+                <li class="check">Завтрак (шведский стол)</li>
+                <li class="check">SPA зона (бассейн, сауна)</li>
+                <li class="check">Сопровождение гидов 24/7</li>
+                <li class="check">Фотоотчет поездки</li>
+            </ul>
+        </div>
+
+        <!-- Extra -->
+        <div class="m-info-card">
+            <div class="m-info-h">
+                <span>Доп. расходы</span>
+            </div>
+            <ul class="m-list">
+                <li>Прокат саней + подъемник (35€)</li>
+                <li>Музей Hangar-7 (Бесплатно)</li>
+                <li>Обеды и ужины</li>
+                <li>Сувениры</li>
+            </ul>
+        </div>
+
+        <!-- Clothing -->
+        <div class="m-info-card">
+            <div class="m-info-h">
+                <span>Что надеть?</span>
+            </div>
+            <p class="m-info-text">
+                Одевайтесь удобно и тепло! Идеально — лыжный костюм или непромокаемые штаны + куртка.
+                <br><br>
+                Обязательно: перчатки, шапка, шарф и удобная зимняя обувь. Вещи можно будет оставить в автобусе во время
+                прогулок.
+            </p>
+        </div>
+
+        <div class="m-float-spacer"></div>
+    </div>
+
+    <button onclick="openWidget()" class="m-float-cta">
+        Забронировать место
+    </button>
+
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<meta charset="UTF-8">
+<style>
+    .time-section {
+        background-color: #F5F5F7;
+        padding: 80px 20px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .time-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .time-title {
+        font-size: 36px;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .days-grid {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+    }
+
+    .day-col {}
+
+    .day-header {
+        font-size: 24px;
+        font-weight: 800;
+        /* Extra bold */
+        color: #29B6F6;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #E0E0E0;
+    }
+
+    .t-item {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        align-items: flex-start;
+    }
+
+    .t-time {
+        font-weight: 700;
+        font-size: 15px;
+        color: #111;
+        min-width: 50px;
+        padding-top: 3px;
+    }
+
+    .t-desc {
+        font-size: 15px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .t-desc strong {
+        color: #000;
+        display: block;
+        margin-bottom: 3px;
+    }
+
+    @media (max-width: 768px) {
+        .days-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+    }
+</style>
+
+<div class="time-section">
+    <div class="time-header">
+        <h2 class="time-title">Тайминг путешествия</h2>
+    </div>
+
+    <div class="days-grid">
+        <!-- DAY 1 -->
+        <div class="day-col">
+            <div class="day-header">Суббота, 28.02</div>
+
+            <div class="t-item">
+                <div class="t-time">02:45</div>
+                <div class="t-desc"><strong>Сбор</strong> Hlavní Nádraží, выезд</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">09:00</div>
+                <div class="t-desc"><strong>Гальштат</strong> Прибытие и экскурсия</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">11:00</div>
+                <div class="t-desc">Свободное время в Гальштате</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">12:00</div>
+                <div class="t-desc">Выезд в Wildkogel Arena</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">15:00</div>
+                <div class="t-desc"><strong>Сани!</strong> Аренда и начало катания</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">18:00</div>
+                <div class="t-desc">Сбор и выезд в отель</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">19:00</div>
+                <div class="t-desc">Заселение и ужин</div>
+            </div>
+        </div>
+
+        <!-- DAY 2 -->
+        <div class="day-col">
+            <div class="day-header">Воскресенье, 01.03</div>
+
+            <div class="t-item">
+                <div class="t-time">07:30</div>
+                <div class="t-desc">Завтрак</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">08:45</div>
+                <div class="t-desc">Выселение, выезд в Hangar-7</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">11:00</div>
+                <div class="t-desc"><strong>Музей Red Bull</strong> Экскурсия</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">13:00</div>
+                <div class="t-desc">Выезд в Зальцбург</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">13:30</div>
+                <div class="t-desc"><strong>Зальцбург</strong> Прибытие и прогулка</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">15:00</div>
+                <div class="t-desc">Свободное время</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">18:00</div>
+                <div class="t-desc">Выезд в Прагу</div>
+            </div>
+            <div class="t-item">
+                <div class="t-time">23:00</div>
+                <div class="t-desc">Возвращение в Прагу</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;">
+        <button onclick="openWidget()"
+            style="background:#29B6F6; color:#fff; border:none; padding:15px 30px; border-radius:100px; font-size:16px; font-weight:700; cursor:pointer;">ЗАБРОНИРОВАТЬ
+            ТУР</button>
+    </div>
+</div>

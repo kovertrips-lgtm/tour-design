@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER Booking Widget (V3 Stable)</title>
+
+    <!-- FONTS & STYLES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+
+    <style>
+        :root {
+            --color-bg: #f2f2f7;
+            --color-card: #ffffff;
+            --color-text-main: #1d1d1f;
+            --color-text-second: #86868b;
+            --color-accent: #007aff;
+            --color-error: #ff3b30;
+            --color-success: #34c759;
+            --border-radius: 20px;
+            --border-color: #d1d1d6;
+            --border-light: #e5e5ea;
+        }
+
+        /* SCOPED RESET */
+        #widget-overlay *,
+        #widget-overlay *::before,
+        #widget-overlay *::after {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        .flatpickr-calendar,
+        .flatpickr-calendar * {
+            box-sizing: border-box;
+        }
+
+        /* BUTTON HIDDEN */
+        .open-modal-btn {
+            display: none;
+        }
+
+        /* MODAL OVERLAY */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--color-text-main);
+            line-height: 1.5;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* WIDGET CONTAINER */
+        .widget-container {
+            width: 100%;
+            max-width: 480px;
+            height: 600px;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            text-align: left;
+        }
+
+        .modal-overlay.active .widget-container {
+            transform: scale(1);
+        }
+
+        /* HEADER */
+        .widget-header {
+            flex-shrink: 0;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            background: #f2f2f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8e8e93;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #1d1d1f;
+            background: #e5e5ea;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.4;
+            transition: 0.3s;
+        }
+
+        .step-item.active {
+            opacity: 1;
+        }
+
+        .step-item span {
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .step-item.active span {
+            display: block;
+            color: var(--color-text-main);
+        }
+
+        .step-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #c7c7cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #8e8e93;
+        }
+
+        .step-item.active .step-circle {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .step-item.completed .step-circle {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: #fff;
+            content: '✓';
+        }
+
+        /* MAIN BODY */
+        .widget-body {
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .step-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 24px;
+            padding-bottom: 20px;
+            background: #fff;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s;
+            opacity: 0;
+            transform: translateX(50px);
+            display: none;
+        }
+
+        .step-slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            display: block;
+        }
+
+        /* SLIDE ANIMATIONS */
+        .slide-enter-next {
+            animation: slideInRight 0.4s forwards;
+        }
+
+        .slide-exit-next {
+            animation: slideOutLeft 0.4s forwards;
+            z-index: 0;
+        }
+
+        .slide-enter-prev {
+            animation: slideInLeft 0.4s forwards;
+        }
+
+        .slide-exit-prev {
+            animation: slideOutRight 0.4s forwards;
+            z-index: 0;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(-30%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-30%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* FOOTER */
+        .widget-footer {
+            flex-shrink: 0;
+            padding: 16px 24px;
+            background: #fff;
+            border-top: 1px solid var(--border-light);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* UI ELEMENTS */
+        .widget-container h2 {
+            margin: 0 0 24px 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--color-text-main);
+        }
+
+        .plan-card {
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .plan-card:hover {
+            border-color: #b0b0b8;
+        }
+
+        .plan-card.selected {
+            border-color: var(--color-accent);
+            background: rgba(0, 122, 255, 0.03);
+        }
+
+        .plan-card.selected .radio-circle {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+        }
+
+        .plan-card.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #d1d1d6;
+            margin-top: 2px;
+            position: relative;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .counter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0;
+        }
+
+        .counter-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .counter-ctrl {
+            background: #f2f2f7;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 4px;
+        }
+
+        .c-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            user-select: none;
+        }
+
+        .c-val {
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--color-accent);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            background: #e5e5ea;
+            color: #8e8e93;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--color-accent);
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #86868b;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .inp-field {
+            width: 100%;
+            height: 50px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+            -webkit-appearance: none;
+            background: #fff;
+        }
+
+        .inp-field:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        .inp-field.error {
+            border-color: var(--color-error);
+            background: #fff0f0;
+        }
+
+        .input-error-msg {
+            color: var(--color-error);
+            font-size: 11px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .inp-field.error+.input-error-msg {
+            display: block;
+        }
+
+        .stripe-box {
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .stripe-box:focus-within {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+
+            .widget-container {
+                max-height: 85vh;
+                height: 85vh;
+                border-radius: 24px 24px 0 0;
+                transform: translateY(100%);
+                max-width: 100%;
+            }
+
+            .modal-overlay.active .widget-container {
+                transform: translateY(0);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            25% {
+                transform: translateX(-5px)
+            }
+
+            75% {
+                transform: translateX(5px)
+            }
+        }
+
+        .flatpickr-calendar,
+        .iti__country-list,
+        .rolldate-container {
+            z-index: 20000 !important;
+        }
+
+        .iti {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="open-modal-btn" onclick="openWidget()">Забронировать место</button>
+
+    <div class="modal-overlay" id="widget-overlay">
+        <div class="widget-container" id="widget-card">
+
+            <!-- HEADER -->
+            <div class="widget-header">
+                <div class="stepper" id="stepper">
+                    <div class="step-item active" id="step-ind-1">
+                        <div class="step-circle">1</div><span>Параметры</span>
+                    </div>
+                    <div class="step-item" id="step-ind-2">
+                        <div class="step-circle">2</div><span>Участники</span>
+                    </div>
+                    <div class="step-item" id="step-ind-3">
+                        <div class="step-circle">3</div><span>Оплата</span>
+                    </div>
+                </div>
+                <div class="close-btn" onclick="closeWidget()">✕</div>
+            </div>
+
+            <!-- BODY -->
+            <div class="widget-body" id="widget-body">
+
+                <!-- STEP 1: CONFIG -->
+                <div class="step-slide active" id="slide-1">
+                    <h2>Параметры поездки</h2>
+                    <div style="margin-bottom: 24px;">
+                        <div class="plan-card selected" id="opt-full" onclick="selectPlan('full')">
+                            <div style="display:flex; align-items:flex-start;">
+                                <div class="radio-circle"></div>
+                                <div>
+                                    <div style="font-weight:600; font-size:16px; margin-bottom: 2px;">Оплатить полностью
+                                    </div>
+                                    <div style="font-size:13px; color:#86868b;">Без доплат в будущем</div>
+                                </div>
+                            </div>
+                            <div style="font-weight:700; font-size:16px;" id="price-full-display">...</div>
+                        </div>
+                        <div class="plan-card" id="opt-deposit" onclick="selectPlan('deposit')">
+                            <div style="display:flex; align-items:flex-start;">
+                                <div class="radio-circle"></div>
+                                <div>
+                                    <div style="font-weight:600; font-size:16px; margin-bottom: 2px;">Внести залог</div>
+                                    <div style="font-size:13px; color:#86868b;">Остаток <span id="remain-val">...</span>
+                                        позже</div>
+                                </div>
+                            </div>
+                            <div style="font-weight:700; font-size:16px;" id="price-depo-display">...</div>
+                        </div>
+                    </div>
+                    <div class="counter-row">
+                        <span class="counter-label">Количество участников</span>
+                        <div class="counter-ctrl">
+                            <div class="c-btn" onclick="updateCount(-1)">–</div>
+                            <div class="c-val" id="count-val">1</div>
+                            <div class="c-btn" onclick="updateCount(1)">+</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:20px; font-size:14px; color:#86868b; text-align:center;">
+                        Общая стоимость: <span id="summ-total" style="font-weight:700; color:#1d1d1f;">...</span>
+                    </div>
+                </div>
+
+                <!-- STEP 2: PASSENGERS -->
+                <div class="step-slide" id="slide-2">
+                    <h2>Участники</h2>
+                    <div id="passengers-container"></div>
+                </div>
+
+                <!-- STEP 3: PAYMENT -->
+                <div class="step-slide" id="slide-3" style="display:flex; flex-direction:column; height:100%;">
+                    <h2>Оплата</h2>
+
+                    <div id="stripe-mount-point" style="flex:1; display:flex; flex-direction:column;">
+                        <!-- WALLET SECTION (Always Mounted Early) -->
+                        <div id="wallet-container" style="display:none; margin-bottom: 24px;">
+                            <div id="wallet-element"></div>
+                            <div style="display:flex; align-items:center; margin: 20px 0;">
+                                <div style="flex:1; height:1px; background:#e5e5ea;"></div>
+                                <div style="padding:0 10px; font-size:13px; color:#86868b; font-weight:500;">ИЛИ КАРТОЙ
+                                </div>
+                                <div style="flex:1; height:1px; background:#e5e5ea;"></div>
+                            </div>
+                        </div>
+
+                        <!-- CARD SECTION -->
+                        <div class="form-group" style="margin-bottom:24px;">
+                            <div class="form-label" style="margin-left:4px;">БАНКОВСКАЯ КАРТА</div>
+                            <div id="card-element" class="stripe-box" style="padding: 12px 16px;"></div>
+                            <div id="payment-message"
+                                style="margin-top: 12px; padding: 12px; background: #fff0f0; color: var(--color-error); font-size: 13px; border-radius: 12px; display: none; line-height: 1.4;">
+                            </div>
+                        </div>
+
+                        <!-- SUMMARY CARD -->
+                        <div style="background:#f2f2f7; border-radius:16px; padding:16px; margin-bottom:20px;">
+                            <div
+                                style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px; color:#666;">
+                                <span>К оплате сейчас</span><span style="font-weight:600; color:#000;"
+                                    id="pay-now-val">...</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:13px; color:#86868b;">
+                                <span>Тип оплаты</span><span id="payment-type-label">...</span>
+                            </div>
+                        </div>
+
+                        <!-- SECURE BADGE -->
+                        <div style="margin-top:auto; text-align:center; padding-top:20px; padding-bottom:10px;">
+                            <div style="display:inline-flex; align-items:center; gap:6px; opacity:0.6;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#666"
+                                    stroke-width="2.5">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <span style="font-size:11px; color:#666; font-weight:500;">Платежи защищены
+                                    Stripe</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: SUCCESS -->
+                <div class="step-slide" id="slide-success">
+                    <div style="text-align:center; padding: 20px 20px 40px 20px;">
+                        <div style="font-size:60px; color:#34c759; margin-bottom:20px;">✓</div>
+                        <h2>Оплата прошла успешно!</h2>
+                        <p style="color:#666; margin-bottom:24px; line-height:1.5;">Мы отправили подтверждение на <span
+                                id="success-email" style="font-weight:600; color:#000;"></span>.</p>
+                        <div id="success-message-dynamic"
+                            style="font-size:15px; color:#1d1d1f; line-height:1.6; margin-bottom: 24px;"></div>
+                        <a href="#" target="_blank" id="tg-join-btn" class="btn-primary"
+                            style="text-decoration:none; display:flex; align-items:center; justify-content:center; background-color:#2AABEE; margin-bottom:12px;">Вступить
+                            в чат поездки</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="widget-footer" id="widget-footer">
+                <button class="btn-primary" id="btn-next-action" onclick="handleNextClick()">Продолжить</button>
+                <button class="btn-secondary" id="btn-back-action" onclick="handleBackClick()"
+                    style="display:none;">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMRS POPUP OMITTED -->
+
+    <!-- SCRIPTS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
+
+    <script>
+        let CONFIG = {
+            id: 'default_tour',
+            name: 'Default Tour',
+            date: '01.01.2025',
+            price: 0,
+            deposit: 0,
+            stripeKey: 'pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6',
+            webhook: '',
+            tourType: 'Tour',
+            telegram_link: ''
+        };
+
+        let state = {
+            step: 1,
+            count: 1,
+            plan: 'full',
+            passengers: [],
+            contact: { email: '', phone: '' },
+            clientSecret: null
+        };
+
+        let stripe;
+        let elementsApple; // dedicated elements group for Apple Pay
+        let pr;            // payment request object
+        let elementsCard;  // dedicated elements group for Card (requires secret)
+        let cardElement;
+        let iti;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.KOVER_WIDGET_CONFIG) CONFIG = { ...CONFIG, ...window.KOVER_WIDGET_CONFIG };
+
+            // UI Init
+            const pFull = document.getElementById('price-full-display');
+            if (pFull) pFull.innerText = CONFIG.price + " Kč";
+            const pDepo = document.getElementById('price-depo-display');
+            if (pDepo) pDepo.innerText = CONFIG.deposit + " Kč";
+            updateSummary();
+
+            // STRIPE INIT - IMMEDIATE (CRITICAL FOR APPLE PAY)
+            stripe = Stripe(CONFIG.stripeKey);
+            initApplePayEarly(); // <--- MAGIC HAPPENS HERE
+
+            checkHash();
+            window.addEventListener('hashchange', checkHash);
+        });
+
+        // --- CRITICAL: APPLE PAY EARLY INIT ---
+        function initApplePayEarly() {
+            // 1. Calculate initial amount
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+
+            // 2. Create Payment Request INSTANTLY (No secret needed)
+            if (total <= 0) return; // safety
+
+            pr = stripe.paymentRequest({
+                country: 'CZ', currency: 'czk',
+                total: { label: CONFIG.name, amount: Math.round(total * 100) },
+                requestPayerName: true, requestPayerEmail: true
+            });
+
+            // 3. Create Elements group specifically for Apple Pay
+            elementsApple = stripe.elements(); // No clientSecret needed for PR Button!
+
+            // 4. Check availability
+            pr.canMakePayment().then(result => {
+                if (result) {
+                    // 5. Mount button even if hidden
+                    const prBtn = elementsApple.create('paymentRequestButton', {
+                        paymentRequest: pr,
+                        style: {
+                            paymentRequestButton: { type: 'default', theme: 'dark', height: '48px' }
+                        }
+                    });
+                    document.getElementById('wallet-container').style.display = 'block';
+                    prBtn.mount('#wallet-element');
+                    console.log("APB Mounted early");
+                } else {
+                    document.getElementById('wallet-container').style.display = 'none';
+                    console.log("APB Not available");
+                }
+            });
+
+            // 6. Bind Listener - WE WILL NEED SECRET HERE, BUT LATER
+            pr.on('paymentmethod', async (ev) => {
+                // By the time user clicks this, we MUST have clientSecret from Step 2 transition
+                if (!state.clientSecret) {
+                    ev.complete('fail');
+                    alert("Ошибка сессии оплаты. Попробуйте еще раз.");
+                    return;
+                }
+
+                const { error: confirmError } = await stripe.confirmCardPayment(
+                    state.clientSecret,
+                    { payment_method: ev.paymentMethod.id },
+                    { handleActions: false }
+                );
+
+                if (confirmError) {
+                    ev.complete('fail');
+                    alert(confirmError.message);
+                } else {
+                    ev.complete('success');
+                    const { error } = await stripe.confirmCardPayment(state.clientSecret);
+                    if (!error) goToStep(4);
+                }
+            });
+        }
+
+        // --- UPDATE PR TOTALS ---
+        function updatePR() {
+            if (!pr) return;
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+            pr.update({
+                total: { label: CONFIG.name, amount: Math.round(total * 100) }
+            });
+        }
+
+        // --- FETCH LOGIC ---
+        async function fetchClientSecret() {
+            saveState2();
+            let paxSummary = [];
+            state.passengers.forEach(p => paxSummary.push(`${p.name} ${p.surname}`));
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+
+            const payload = {
+                order_id: `${CONFIG.id}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+                timestamp: new Date().toISOString(),
+                device_type: "V3 Stable Widget", // updated
+                tour_id: CONFIG.id,
+                tour_type: CONFIG.tourType,
+                passenger_count: state.count,
+                selected_seats: "Без выбора мест",
+                payment_type: state.plan === 'full' ? 'Полная оплата' : 'Залог',
+                currency: "CZK",
+                locale: "ru",
+                buyer_phone: state.contact.phone,
+                browser_userAgent: navigator.userAgent,
+                page_url: window.location.href,
+                tour_name: CONFIG.name,
+                tour_date: CONFIG.date,
+                passengers: paxSummary.join(', '),
+                contact_name: state.contact.name,
+                contact_email: state.contact.email,
+                contact_phone: state.contact.phone,
+                count: state.count,
+                plan: state.plan,
+                total_pay_now: total,
+                total_order_value: CONFIG.price * state.count,
+                remaining_balance: state.plan === 'full' ? 0 : (CONFIG.price - CONFIG.deposit) * state.count,
+                buyer_email: state.contact.email,
+                passengers_json_dump: JSON.stringify(state.passengers),
+                telegram_link: CONFIG.telegram_link
+            };
+
+            // Add pax
+            state.passengers.forEach((p, i) => {
+                payload[`passenger_${i + 1}_firstname`] = p.name;
+                payload[`passenger_${i + 1}_lastname`] = p.surname;
+                payload[`passenger_${i + 1}_name`] = `${p.name} ${p.surname}`;
+                payload[`passenger_${i + 1}_dob`] = p.dob;
+            });
+
+            const r = await fetch(CONFIG.webhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await r.json();
+            if (data.clientSecret) {
+                state.orderId = data.Order_id || data.order_id;
+                return data.clientSecret;
+            }
+            return null;
+        }
+
+        // --- NAV ---
+        async function handleNextClick() {
+            if (state.step === 1) {
+                goToStep(2);
+            } else if (state.step === 2) {
+                if (validateStep2()) {
+                    const btn = document.getElementById('btn-next-action');
+                    btn.disabled = true;
+
+                    try {
+                        const secret = await fetchClientSecret();
+                        if (secret) {
+                            state.clientSecret = secret;
+                            goToStep(3);
+                        } else {
+                            throw new Error("Не удалось получить данные оплаты");
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        alert("Ошибка: " + e.message);
+                    } finally {
+                        btn.disabled = false;
+                    }
+                }
+            } else if (state.step === 3) {
+                confirmPayment();
+            } else if (state.step === 4) {
+                closeWidget();
+            }
+        }
+
+        function handleBackClick() {
+            if (state.step === 2) goToStep(1);
+            else if (state.step === 3) goToStep(2);
+        }
+
+        function goToStep(step, force = false) {
+            if (step === state.step && !force) return;
+
+            // Destroy CARD if leaving step 3 (Apple Pay stays!)
+            if (state.step === 3 && step !== 3) destroyCard();
+
+            // Pre-render
+            if (step === 2) renderPassengers();
+            if (step === 3) initCardPayment(); // Init Card ONLY
+
+            // Slides
+            const currentSlide = document.getElementById(state.step === 4 ? 'slide-success' : `slide-${state.step}`);
+            const nextSlide = document.getElementById(step === 4 ? 'slide-success' : `slide-${step}`);
+
+            document.querySelectorAll('.step-slide').forEach(s => {
+                s.classList.remove('active');
+                if (s !== currentSlide && s !== nextSlide) s.style.display = 'none';
+            });
+
+            if (force) {
+                nextSlide.classList.add('active');
+                nextSlide.style.display = 'block';
+            } else {
+                currentSlide.style.display = 'none';
+                nextSlide.classList.add('active');
+                nextSlide.style.display = 'block';
+            }
+
+            state.step = step;
+            updateFooterAndStepper();
+        }
+
+        function updateFooterAndStepper() {
+            const btnNext = document.getElementById('btn-next-action');
+            const btnBack = document.getElementById('btn-back-action');
+            for (let i = 1; i <= 3; i++) {
+                const el = document.getElementById(`step-ind-${i}`);
+                el.classList.remove('active', 'completed');
+                el.querySelector('.step-circle').innerText = i;
+                if (i === state.step) el.classList.add('active');
+                else if (i < state.step) { el.classList.add('completed'); el.querySelector('.step-circle').innerText = '✓'; }
+            }
+            if (state.step === 4) document.getElementById('stepper').style.visibility = 'hidden';
+
+            if (state.step === 1) {
+                btnNext.innerText = 'Продолжить'; btnBack.style.display = 'none';
+            } else if (state.step === 2) {
+                btnNext.innerText = 'Перейти к оплате'; btnBack.style.display = 'block'; btnBack.innerText = 'Назад';
+            } else if (state.step === 3) {
+                const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+                btnNext.innerText = `Оплатить ${price * state.count} Kč`; btnBack.innerText = 'Назад';
+            } else if (state.step === 4) {
+                btnNext.innerText = 'Закрыть'; btnBack.style.display = 'none';
+            }
+        }
+
+        function initCardPayment() {
+            if (!state.clientSecret) return;
+            const price = state.plan === 'full' ? CONFIG.price : CONFIG.deposit;
+            const total = price * state.count;
+
+            document.getElementById('pay-now-val').innerText = total + " Kč";
+            document.getElementById('payment-type-label').innerText = state.plan === 'full' ? "Полная оплата" : "Залог";
+
+            // Init Card Elements separate from Apple Pay
+            if (!elementsCard) {
+                elementsCard = stripe.elements({
+                    clientSecret: state.clientSecret,
+                    appearance: {
+                        theme: 'stripe',
+                        variables: { fontFamily: 'Inter, system-ui, sans-serif', fontSizeBase: '16px', colorPrimary: '#007aff', colorText: '#1d1d1f', borderRadius: '12px' }
+                    }
+                });
+                cardElement = elementsCard.create('card', {
+                    hidePostalCode: true,
+                    style: { base: { fontSize: '16px', color: '#1d1d1f', '::placeholder': { color: '#86868b' } } }
+                });
+                cardElement.mount('#card-element');
+            }
+        }
+
+        async function confirmPayment() {
+            const btn = document.getElementById('btn-next-action');
+            btn.disabled = true; btn.innerText = "Обработка...";
+            const { error } = await stripe.confirmCardPayment(state.clientSecret, {
+                payment_method: { card: cardElement, billing_details: { name: state.contact.name, email: state.contact.email } }
+            });
+            if (error) {
+                const msg = document.getElementById('payment-message');
+                msg.innerText = error.message; msg.style.display = 'block';
+                btn.disabled = false; btn.innerText = 'Оплатить';
+            } else {
+                goToStep(4);
+            }
+        }
+
+        function destroyCard() {
+            if (elementsCard) {
+                const cardEl = document.getElementById('card-element');
+                if (cardEl) cardEl.innerHTML = '';
+                elementsCard = null; cardElement = null;
+            }
+        }
+
+        // --- STEP 1 UPDATES WITH PR SYNC ---
+        function selectPlan(p) {
+            state.plan = p;
+            document.getElementById('opt-full').classList.toggle('selected', p === 'full');
+            document.getElementById('opt-deposit').classList.toggle('selected', p === 'deposit');
+            updateSummary();
+            updatePR(); // Sync with Apple Pay
+        }
+        function updateCount(d) {
+            const n = state.count + d;
+            if (n >= 1 && n <= 10) {
+                state.count = n;
+                document.getElementById('count-val').innerText = n;
+                updateSummary();
+                updatePR(); // Sync
+            }
+        }
+        function updateSummary() { const p = state.plan === 'full' ? CONFIG.price : CONFIG.deposit; document.getElementById('summ-total').innerText = (p * state.count) + " Kč"; }
+
+        // --- UX RESTORED (Shortened for saving space, logic is same) ---
+        function openWidget() { document.getElementById('widget-overlay').classList.add('active'); goToStep(1, true); }
+        function closeWidget() { document.getElementById('widget-overlay').classList.remove('active'); setTimeout(destroyCard, 300); }
+
+        async function saveState2() {
+            state.passengers = [];
+            document.querySelectorAll('.p-name').forEach((el, i) => {
+                state.passengers[i] = {
+                    name: el.value,
+                    surname: document.getElementById(`p-surname-${i}`).value,
+                    dob: document.getElementById(`p-dob-${i}`).value
+                };
+            });
+            const em = document.getElementById('inp-email');
+            if (em) state.contact.email = em.value;
+            if (iti) state.contact.phone = iti.getNumber();
+        }
+
+        function renderPassengers() {
+            const container = document.getElementById('passengers-container');
+            container.innerHTML = '';
+            for (let i = 0; i < state.count; i++) {
+                const p = state.passengers[i] || { name: '', surname: '', dob: '' };
+                container.innerHTML += `
+                    <div class="form-group">
+                        <div style="font-weight:700; margin-bottom:12px; margin-top:24px;">Участник ${i + 1}</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                            <input class="inp-field p-name" id="p-name-${i}" placeholder="Имя (Latin)" value="${p.name}">
+                            <input class="inp-field p-surname" id="p-surname-${i}" placeholder="Фамилия" value="${p.surname}">
+                        </div>
+                        <input class="inp-field p-dob" id="p-dob-${i}" data-idx="${i}" placeholder="Дата рождения (ДД.ММ.ГГГГ)" value="${p.dob}" style="margin-top:16px;">
+                    </div>
+                `;
+            }
+            container.innerHTML += `<div style="border-top:1px solid #e5e5ea; padding-top:16px; margin-top:24px;"><div class="form-label">Контактные данные</div><div class="form-group"><input type="email" id="inp-email" class="inp-field" placeholder="Email" value="${state.contact.email}"></div><div class="form-group"><input type="tel" id="inp-phone" class="inp-field" value="${state.contact.phone}"></div><div style="display:flex;gap:10px;margin-top:10px"><input type="checkbox" id="consent-chk" style="transform:scale(1.2)"><label for="consent-chk" style="font-size:13px">Я принимаю условия</label></div></div>`;
+
+            if (typeof flatpickr !== 'undefined') document.querySelectorAll('.p-dob').forEach(el => flatpickr(el, { locale: "ru", dateFormat: "d.m.Y", disableMobile: true }));
+            const ph = document.getElementById('inp-phone');
+            if (iti) iti.destroy();
+            iti = window.intlTelInput(ph, { utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js", initialCountry: "cz", preferredCountries: ["cz", "ua", "ru"], separateDialCode: true });
+        }
+
+        function validateStep2() {
+            saveState2();
+            let valid = true;
+            document.querySelectorAll('.p-name, .p-surname').forEach(e => { if (e.value.length < 2) { e.classList.add('error'); valid = false; } else e.classList.remove('error'); });
+            const em = document.getElementById('inp-email');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)) { em.classList.add('error'); valid = false; } else em.classList.remove('error');
+            const ph = document.getElementById('inp-phone');
+            if (!iti.isValidNumber()) { ph.classList.add('error'); valid = false; } else ph.classList.remove('error');
+            const chk = document.getElementById('consent-chk');
+            if (!chk.checked) { chk.parentElement.style.color = 'red'; valid = false; } else chk.parentElement.style.color = '';
+            return valid;
+        }
+
+        function checkHash() { if (window.location.hash === '#book-now') openWidget(); }
+        document.body.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && link.getAttribute('href') === '#book-now') { e.preventDefault(); openWidget(); }
+        });
+    </script>
+</body>
+
+</html>

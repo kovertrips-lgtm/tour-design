@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Mobile Sledding - Story Style Layout */
+        .m-sled-section {
+            background: #000;
+            color: white;
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        /* Visual container for the section */
+        .m-sled-visual {
+            height: 60vh;
+            width: 100%;
+            position: relative;
+        }
+
+        /* The video fills the top 60% of the screen */
+        .m-sled-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            /* Slight dim for text if needed, or keeping it bright */
+        }
+
+        .m-sled-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #000 0%, transparent 100%);
+            padding: 40px 24px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .m-sled-tag {
+            background: #BDFF00;
+            color: #000;
+            display: inline-block;
+            align-self: flex-start;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .m-sled-title {
+            font-size: 32px;
+            font-weight: 900;
+            line-height: 1;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+        }
+
+        .m-sled-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .m-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .m-stat-v {
+            font-size: 20px;
+            font-weight: 700;
+            color: #29B6F6;
+        }
+
+        .m-stat-l {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .m-sled-content {
+            padding: 24px;
+            background: #000;
+        }
+
+        .m-sled-text {
+            color: #ccc;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        /* Industry Standard Responsive Video Container (Intrinsic Ratio) */
+        .m-video-responsive {
+            position: relative;
+            width: 100%;
+            padding-bottom: 125%;
+            /* 4:5 Aspect Ratio (More compact than 9:16) */
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            background: #000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Industry Standard Responsive Video Container (Intrinsic Ratio) */
+        .m-video-responsive {
+            position: relative;
+            width: 100%;
+            padding-bottom: 125%;
+            /* 4:5 Aspect Ratio (More compact than 9:16) */
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            background: #000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .m-video-responsive iframe,
+        .m-video-responsive video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            object-fit: cover;
+        }
+
+        .m-cta-btn.outline {
+            background: transparent;
+            border: 2px solid #29B6F6;
+            color: #29B6F6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="m-sled-wrapper">
+        <div class="m-sled-section">
+            <!-- Sticky-ish top visual area -->
+            <div class="m-sled-visual">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
+                    class="m-sled-video" alt="Sledding">
+                <div class="m-sled-overlay">
+                    <span class="m-sled-tag">Wildkogel Arena</span>
+                    <h2 class="m-sled-title">14 Км Драйва</h2>
+                    <div class="m-sled-stats">
+                        <div class="m-stat">
+                            <span class="m-stat-v">14 км</span>
+                            <span class="m-stat-l">Дистанция</span>
+                        </div>
+                        <div class="m-stat">
+                            <span class="m-stat-v">2200 м</span>
+                            <span class="m-stat-l">Высота</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-sled-content">
+                <p class="m-sled-text">
+                    Поднимемся на гору к закату. Трасса освещена, вокруг ни души, только снег и скорость. Вы сами
+                    управляете санями — это безопасный, но очень эмоциональный опыт.
+                </p>
+
+                <!-- Custom Interactive Video Player -->
+                <div class="m-video-responsive" style="cursor: pointer;" onclick="toggleVideo(this)">
+
+                    <video id="sled-video"
+                        src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
+                        poster="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
+                        playsinline webkit-playsinline preload="metadata" style="object-fit: cover;">
+                    </video>
+
+                    <!-- Custom Play Button Overlay -->
+                    <div class="play-overlay">
+                        <div class="play-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 5V19L19 12L8 5Z" fill="black" />
+                            </svg>
+                        </div>
+                    </div>
+
+                </div>
+
+                <style>
+                    /* Additional styles for play button */
+                    .play-overlay {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        background: rgba(0, 0, 0, 0.2);
+                        transition: all 0.3s;
+                        pointer-events: none;
+                        /* Let click pass to container */
+                    }
+
+                    .play-icon {
+                        width: 60px;
+                        height: 60px;
+                        background: #BDFF00;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+                        transform: scale(1);
+                        transition: transform 0.2s;
+                    }
+
+                    /* Hide overlay when playing */
+                    .m-video-responsive.playing .play-overlay {
+                        opacity: 0;
+                        transform: scale(1.1);
+                    }
+                </style>
+
+                <script>
+                    function toggleVideo(container) {
+                        const video = container.querySelector('video');
+                        if (video.paused) {
+                            video.play();
+                            container.classList.add('playing');
+                        } else {
+                            video.pause();
+                            container.classList.remove('playing');
+                        }
+                    }
+                </script>
+
+                <button onclick="openWidget()" class="m-cta-btn"
+                    style="background:#29B6F6; color:white; border:none; width:100%; padding:16px; border-radius:12px; font-weight:700; margin-top:24px; font-size:16px; text-transform:uppercase;">
+                    Забронировать Сани
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата успешна</title>
+    <style>
+        /* Reset & Basics */
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            outline: none;
+            text-decoration: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #F4F5F7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1d1d1f;
+        }
+
+        /* Styles */
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #F4F5F7;
+            padding-bottom: 40px;
+        }
+
+        .main-table {
+            background-color: #ffffff;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 600px;
+            border-spacing: 0;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .header {
+            background: #18B7EA;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            color: #1d1d1f;
+        }
+
+        .text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555555;
+            margin: 0 0 24px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background-color: #18B7EA;
+            color: #ffffff !important;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(24, 183, 234, 0.4);
+            mso-padding-alt: 0;
+        }
+
+        .btn:hover {
+            background-color: #159BC8;
+        }
+
+        .footer {
+            padding: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #999999;
+        }
+
+        .footer a {
+            color: #999999;
+            text-decoration: underline;
+        }
+
+        .check-icon {
+            width: 64px;
+            height: 64px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: inline-block;
+            line-height: 64px;
+            color: #18B7EA;
+            font-size: 32px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Mobile */
+        @media screen and (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <table class="wrapper" role="presentation">
+        <tr>
+            <td align="center" style="padding-top: 40px;">
+                <table class="main-table" role="presentation">
+                    <!-- Header with Icon -->
+                    <tr>
+                        <td class="header">
+                            <div class="check-icon">✓</div>
+                        </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <tr>
+                        <td class="content">
+                            <h1 class="title">Оплата прошла успешно!</h1>
+                            <p class="text">
+                                Рады, что ты с нами! Твоё место в туре подтверждено.<br>
+                                Чтобы быть в курсе всех деталей и общаться с другими участниками, вступай в
+                                наш Telegram-чат.
+                            </p>
+
+                            <!-- Button -->
+                            <table width="100%" role="presentation">
+                                <tr>
+                                    <td align="center" style="padding-top: 10px; padding-bottom: 10px;">
+                                        <a href="{{32.telegram_link}}" target="_blank" class="btn">
+                                            <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i><![endif]-->
+                                            <span style="mso-text-raise: 15pt;">Вступить в чат поездки</span>
+                                            <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i><![endif]-->
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer">
+                            KOVER Travel<br>
+                            Желаем отличной поездки!
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

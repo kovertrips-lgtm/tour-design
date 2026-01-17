@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доплата тура (EUR) | Kover Travel</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+        /* --- DESIGN SYSTEM: APPLE-INSPIRED PREMIUM DARK MODE --- */
+        :root {
+            --hero-blue: #29B6F6;
+            /* Brand Blue */
+            --hero-blue-hover: #0288D1;
+            --hero-neon: #BDFF00;
+            --hero-white: #FFFFFF;
+            --glass-bg: rgba(22, 22, 24, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.12);
+        }
+
+        html {
+            height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000;
+            min-height: 100vh;
+            min-height: 100dvh;
+            color: var(--hero-white);
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND & WRAPPER --- */
+        .hero-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+
+            background-image: url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2670&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center bottom;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px 40px 20px;
+            box-sizing: border-box;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        /* --- HEADER --- */
+        .hero-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 40px;
+            box-sizing: border-box;
+        }
+
+        .hero-logo img {
+            height: 32px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .hero-socials {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .social-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        /* --- CENTRAL CARD --- */
+        .glass-card {
+            position: relative;
+            z-index: 5;
+            background: var(--glass-bg);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+            animation: cardFloat 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        }
+
+        @keyframes cardFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* --- TYPOGRAPHY & ELEMENTS --- */
+        .date-badge-wrapper {
+            margin-bottom: 24px;
+        }
+
+        .date-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--hero-neon);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 25px rgba(189, 255, 0, 0.25);
+        }
+
+        .tour-title {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.35;
+            color: #FFFFFF;
+            margin: 0 0 32px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .tour-prefix {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        .price-box {
+            background: #FFFFFF;
+            width: 100%;
+            border-radius: 20px;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+        }
+
+        .price-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #8E8E93;
+        }
+
+        .price-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #000;
+            letter-spacing: -1px;
+        }
+
+        /* Updated Button Styles */
+        .btn-primary {
+            width: 100%;
+            background-color: var(--hero-blue);
+            /* Brand Blue */
+            color: #FFFFFF !important;
+            /* Force White Text */
+            font-size: 17px;
+            font-weight: 700;
+            /* Bolder */
+            padding: 18px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            text-transform: none;
+            /* Clean title case */
+            letter-spacing: -0.2px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(41, 182, 246, 0.3);
+            /* Matches brand blue glow */
+            text-decoration: none !important;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--hero-blue-hover);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        /* --- ERROR STATE --- */
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .icon-circle svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .error-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .error-desc {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- MOBILE ADAPTATION --- */
+        @media (max-width: 600px) {
+            .hero-wrapper {
+                padding: 100px 20px 40px 20px;
+            }
+
+            .glass-card {
+                padding: 40px 24px;
+                border-radius: 28px;
+            }
+
+            .hero-logo img {
+                height: 26px;
+            }
+
+            .tour-title {
+                font-size: 20px;
+                margin-bottom: 24px;
+            }
+
+            .price-box {
+                margin-bottom: 24px;
+                padding: 20px 16px;
+            }
+
+            .price-value {
+                font-size: 32px;
+            }
+
+            .btn-primary {
+                padding: 20px;
+                font-size: 18px;
+            }
+        }
+
+        /* --- UTILS & LOADER --- */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Adjusted Icon Size for Plane */
+        .loader-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .orbit {
+            width: 100%;
+            height: 100%;
+            border: 2px dashed rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            /* Slower spin as requested */
+            animation: spin 4s linear infinite;
+        }
+
+        /* Center Planet (SVG Globe) */
+        .planet-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            z-index: 10;
+        }
+
+        /* Plane wrapper */
+        .plane-wrapper {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -16px;
+            margin-top: -16px;
+            /* Center 32px item */
+            width: 32px;
+            height: 32px;
+            /* Rotate 90deg to face forward in orbit */
+            transform: rotate(90deg);
+        }
+
+        .loader-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--hero-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(41, 182, 246, 0.4);
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Stripe Modal */
+        .stripe-layer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 5000;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stripe-layer.open {
+            display: flex;
+        }
+
+        /* Local Loader for Modal */
+        .loader-local {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 24px;
+        }
+
+        .stripe-modal {
+            background: #fff;
+            width: 95%;
+            /* Slightly wider on mobile for better fit */
+            max-width: 480px;
+
+            /* TALLER & FIXED Height Constraint */
+            max-height: 85dvh;
+            height: auto;
+
+            /* Flex layout to isolate scroll area */
+            display: flex;
+            flex-direction: column;
+
+            border-radius: 24px;
+            position: relative;
+            padding: 0;
+            /* Removing padding from container */
+
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+            animation: slideUp 0.4s ease-out;
+            overflow: hidden;
+            /* Clip everything */
+        }
+
+        /* Dedicated Scroll Area */
+        .stripe-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 50px 20px 30px 20px;
+            /* Top padding for Close Button */
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: #f2f2f7;
+            border-radius: 50%;
+            color: #8e8e93;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            /* Always on top */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. LOADER -->
+    <div id="loader" class="loader-overlay">
+        <div class="loader-icon">
+            <div class="orbit">
+                <div class="plane-wrapper">
+                    <!-- Sleek Plane SVG -->
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M21 16V14L13 9V3.5C13 2.67 12.33 2 11.5 2C10.67 2 10 2.67 10 3.5V9L2 14V16L10 13.5V19L8 20.5V22L11.5 21L15 22V20.5L13 19V13.5L21 16Z"
+                            fill="#ffcc00" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="planet-wrapper">
+                <!-- Glowing Planet -->
+                <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#1A237E" stroke="#29B6F6" stroke-width="1.5" />
+                    <path d="M2.5 12H21.5" stroke="#29B6F6" stroke-width="1" stroke-opacity="0.6" />
+                    <path
+                        d="M12 2.5C14.5 5 15.5 8.5 15.5 12C15.5 15.5 14.5 19 12 21.5C9.5 19 8.5 15.5 8.5 12C8.5 8.5 9.5 5 12 2.5Z"
+                        stroke="#29B6F6" stroke-width="1" stroke-opacity="0.6" />
+                </svg>
+            </div>
+        </div>
+        <div class="loader-text">Ищем твое приключение</div>
+    </div>
+
+    <!-- 2. CONTENT -->
+    <div id="content" class="hero-wrapper" style="display:none;">
+        <div class="hero-overlay"></div>
+
+        <!-- HEADER -->
+        <div class="hero-header">
+            <a href="#" class="hero-logo">
+                <img src="https://static.tildacdn.com/tild6534-3663-4838-b563-336463663732/Kover_travel_logo.svg"
+                    alt="Kover Travel">
+            </a>
+            <div class="hero-socials">
+                <a href="https://www.instagram.com/kover_travel" target="_blank" class="social-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+                            fill="white" />
+                    </svg>
+                </a>
+                <a href="https://t.me/koverevents" target="_blank" class="social-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l-.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"
+                            fill="white" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- CENTER BLOCK: SUCCESS/PAYMENT -->
+        <div class="glass-card" id="payment-card">
+
+            <!-- DATE BADGE -->
+            <div class="date-badge-wrapper">
+                <div class="date-badge" id="deadline-badge">
+                    Загрузка...
+                </div>
+            </div>
+
+            <!-- TITLE -->
+            <h1 class="tour-title">
+                <span class="tour-prefix">Тур:</span> <span id="tour-name">Загрузка...</span>
+            </h1>
+
+            <!-- PRICE -->
+            <div class="price-box">
+                <span class="price-label">Остаток к оплате</span>
+                <span class="price-value" id="price-val">...</span>
+            </div>
+
+            <!-- BUTTON -->
+            <button class="btn-primary" id="btn-pay">Оплатить</button>
+        </div>
+
+        <!-- CENTER BLOCK: ERROR -->
+        <div class="glass-card" id="error-screen" style="display:none;">
+            <!-- SVG Icon instead of emoji -->
+            <div class="icon-circle">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                        fill="white" />
+                </svg>
+            </div>
+
+            <div class="error-title">Мы не смогли найти твое путешествие</div>
+            <div class="error-desc">Пожалуйста, нажмите на кнопку ниже и отправьте нам преднабранное сообщение в
+                Telegram. Мы быстро поможем!</div>
+
+            <a href="#" id="btn-error-support" class="btn-primary"
+                style="text-decoration:none; display:inline-block; text-align:center;">
+                Написать
+            </a>
+        </div>
+
+    </div>
+
+    <!-- STRIPE OVERLAY -->
+    <div id="stripe-overlay" class="stripe-layer">
+        <div class="stripe-modal">
+            <div class="close-btn" onclick="closePay()">✕</div>
+
+            <!-- Local Loader inside Modal -->
+            <div id="stripe-loader" class="loader-local" style="display:none;">
+                <div class="loader-icon">
+                    <div class="orbit">
+                        <div class="plane-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M21 16V14L13 9V3.5C13 2.67 12.33 2 11.5 2C10.67 2 10 2.67 10 3.5V9L2 14V16L10 13.5V19L8 20.5V22L11.5 21L15 22V20.5L13 19V13.5L21 16Z"
+                                    fill="#29B6F6" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="loader-text" style="color: #29B6F6; font-size:10px;">Загрузка оплаты...</div>
+            </div>
+
+            <!-- Scrollable Content Wrapper -->
+            <div class="stripe-scroll-area">
+                <div id="stripe-element"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS OVERLAY -->
+    <div id="success-overlay" class="loader-overlay" style="display:none;">
+        <span style="font-size:60px; margin-bottom:16px;">🎉</span>
+        <h2 style="font-size:24px; color:white; margin-bottom:8px;">Готово!</h2>
+        <p style="color:#888; font-size:16px;">Оплата принята. Увидимся в туре!</p>
+    </div>
+
+    <script>
+        const API_URL = "https://hook.eu2.make.com/91jzirouvc1nnjjjec49l6fxplng6mbw";
+        const KEY = "pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6";
+
+        let stripe = null;
+        let checkout = null;
+
+        async function initApp() {
+            try {
+                stripe = Stripe(KEY);
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('order_id');
+
+                if (!id) throw new Error("No Order ID");
+
+                // NO ARTIFICIAL DELAY - Load as fast as real network
+                // await new Promise(r => setTimeout(r, 0));
+
+                const resp = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'get_payment_data',
+                        order_id: id,
+                        rest_payment: true,
+                        // FORCE EUR CURRENCY
+                        currency: 'EUR',
+                        metadata: { order_id: id, currency: 'EUR' }
+                    })
+                });
+
+                if (!resp.ok) throw new Error("Net Error");
+                const data = await resp.json();
+
+                if (!data || !data.clientSecret) throw new Error("Invalid Data");
+
+                render(data);
+
+            } catch (e) {
+                console.error("App Error:", e);
+                // Also respect delay on error
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('content').style.display = 'flex';
+
+                    // Switch cards
+                    document.getElementById('payment-card').style.display = 'none';
+                    document.getElementById('error-screen').style.display = 'flex';
+
+                    // Setup Telegram Link
+                    const params = new URLSearchParams(window.location.search);
+                    const id = params.get('order_id') || 'неизвестен';
+                    const msg = encodeURIComponent(`Привет! У меня не работает ссылка на доплату остатка за тур, ниже пишу название тура (ID: ${id})`);
+
+                    document.getElementById('btn-error-support').href = `https://t.me/koverfriend?text=${msg}`;
+                }, 500); // Minimal buffer for error transition
+            }
+        }
+
+        function render(data) {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('content').style.display = 'flex';
+            // Ensure Payment Card is shown
+            document.getElementById('payment-card').style.display = 'flex';
+            document.getElementById('error-screen').style.display = 'none';
+
+            // NAME
+            let rawName = data.tour_name || "Тур";
+            let cleanName = rawName.replace(/^[^a-zA-Zа-яА-Я0-9]+/, "").trim();
+            document.getElementById('tour-name').innerText = cleanName;
+
+            // PRICE
+            const amount = data.amount || 0;
+            // Force display logic to respect data, or fallback to Eur if consistent
+            const currency = (data.currency || "EUR").toUpperCase();
+            const symbol = currency === 'CZK' ? 'KČ' : (currency === 'EUR' ? '€' : currency);
+
+            // Format for EUR (often e.g. 1 200 €)
+            document.getElementById('price-val').innerHTML = `${amount.toLocaleString('ru-RU')}&nbsp;${symbol}`;
+
+            // DATE LOGIC
+            const match = cleanName.match(/(\d{1,2})\.(\d{2})\.(\d{4})/);
+            let tourDate = new Date();
+            let paymentDeadline = new Date();
+
+            if (match) {
+                const d = parseInt(match[1]);
+                const m = parseInt(match[2]) - 1;
+                const y = parseInt(match[3]);
+                tourDate = new Date(y, m, d);
+                paymentDeadline = new Date(tourDate.getTime());
+                paymentDeadline.setDate(paymentDeadline.getDate() - 10);
+            } else {
+                paymentDeadline.setDate(paymentDeadline.getDate() + 3);
+            }
+
+            const dlD = paymentDeadline.getDate().toString().padStart(2, '0');
+            const dlM = (paymentDeadline.getMonth() + 1).toString().padStart(2, '0');
+            const dlY = paymentDeadline.getFullYear();
+
+            document.getElementById('deadline-badge').innerText = `ДОПЛАТА ДО ${dlD}.${dlM}.${dlY}`;
+
+            document.getElementById('btn-pay').onclick = () => openStripe(data.clientSecret);
+        }
+
+        async function openStripe(secret) {
+            const btn = document.getElementById('btn-pay');
+            const overlay = document.getElementById('stripe-overlay');
+            const loader = document.getElementById('stripe-loader');
+            const elementArea = document.getElementById('stripe-element');
+
+            overlay.classList.add('open');
+            loader.style.display = 'flex'; // Show modal loader
+            elementArea.style.opacity = '0'; // Hide element visually until loaded
+
+            if (!checkout) {
+                try {
+                    // Start initialization (Network Request)
+                    checkout = await stripe.initEmbeddedCheckout({
+                        clientSecret: secret,
+                        onComplete: () => {
+                            overlay.classList.remove('open');
+                            document.getElementById('content').style.display = 'none';
+                            document.getElementById('success-overlay').style.display = 'flex';
+                        }
+                    });
+
+                    // Mount the widget
+                    checkout.mount('#stripe-element');
+
+                    // Minimal 500ms buffer to let inner iframe paint buttons smoothly
+                    await new Promise(r => setTimeout(r, 500));
+
+                    loader.style.display = 'none'; // Hide loader
+                    elementArea.style.opacity = '1'; // Show form
+
+                } catch (e) {
+                    alert('Error: ' + e.message);
+                    closePay();
+                }
+            } else {
+                // Already loaded
+                loader.style.display = 'none';
+                elementArea.style.opacity = '1';
+            }
+        }
+
+        window.closePay = function () {
+            document.getElementById('stripe-overlay').classList.remove('open');
+            const btn = document.getElementById('btn-pay');
+            btn.innerText = "ОПЛАТИТЬ";
+            btn.style.opacity = "1";
+            btn.disabled = false;
+        }
+
+        initApp();
+    </script>
+</body>
+
+</html>

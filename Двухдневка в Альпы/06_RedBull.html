@@ -1,0 +1,110 @@
+<meta charset="UTF-8">
+<style>
+    .rb-section {
+        background: radial-gradient(circle at center, #2c3e50 0%, #000000 100%);
+        color: #fff;
+        padding: 80px 20px;
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+    }
+
+    .rb-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .rb-logo {
+        font-size: 50px;
+        font-weight: 900;
+        font-style: italic;
+        margin-bottom: 20px;
+        color: #E0E0E0;
+        /* Silver/Metal look */
+        letter-spacing: -2px;
+    }
+
+    .rb-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .rb-img {
+        width: 100%;
+        border-radius: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 40px;
+        box-shadow: 0 0 50px rgba(41, 182, 246, 0.2);
+        max-height: 500px;
+        object-fit: cover;
+    }
+
+    .rb-text {
+        text-align: left;
+        font-size: 16px;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.8);
+        column-count: 2;
+        column-gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    .rb-link {
+        color: #BDFF00;
+        font-weight: 700;
+        text-decoration: none;
+        border: 1px solid #BDFF00;
+        padding: 10px 20px;
+        border-radius: 100px;
+        transition: 0.3s;
+        display: inline-block;
+    }
+
+    .rb-link:hover {
+        background: #BDFF00;
+        color: #000;
+    }
+
+    @media (max-width: 768px) {
+        .rb-text {
+            column-count: 1;
+        }
+
+        .rb-logo {
+            font-size: 40px;
+        }
+    }
+</style>
+
+<div class="rb-section">
+    <div class="rb-container">
+        <h2 class="rb-logo">Hangar-7</h2>
+        <div class="rb-title">Музей Red Bull: Искусство и Техника</div>
+
+        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/bull1.jpg"
+            alt="Hangar-7" class="rb-img">
+
+        <div class="rb-text">
+            <p>
+                Второй день мы начнем с легендарного места — Hangar-7. Это не просто музей, а живой ангар, созданный
+                основателем Red Bull Дитрихом Матешицем.
+            </p>
+            <p>
+                Здание из стекла и стали в форме крыла самолёта стало архитектурной иконой Зальцбурга. Здесь собрана
+                уникальная коллекция исторических самолётов Flying Bulls, болидов Формулы-1 и арт-объектов.
+            </p>
+            <p>
+                Экспозиция постоянно меняется: техника обслуживается и летает, а пространство наполняется новыми
+                смыслами на стыке авиации и искусства.
+            </p>
+        </div>
+
+        <div style="margin-top:20px; display:flex; gap:15px; align-items:center; justify-content:center;">
+            <a href="https://www.hangar-7.com/en/" target="_blank" class="rb-link">Официальный сайт Hangar-7</a>
+            <button onclick="openWidget()"
+                style="background:#29B6F6; color:#fff; border:none; padding:15px 30px; border-radius:100px; font-weight:700; cursor:pointer; font-size:16px;">
+                ХОЧУ СЮДА!
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата тура | Kover Travel</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Main Page Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Modal Font (Experimental Widget Style) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+        /* --- DESIGN SYSTEM: APPLE-INSPIRED PREMIUM DARK MODE --- */
+        :root {
+            --hero-blue: #29B6F6;
+            --hero-neon: #BDFF00;
+            --hero-white: #FFFFFF;
+            --glass-bg: rgba(22, 22, 24, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.12);
+        }
+
+        /* GLOBAL RESET FOR PROPER SIZING */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000;
+            color: var(--hero-white);
+            overflow-x: hidden;
+        }
+
+        .hero-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2670&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center bottom;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px 40px 20px;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .hero-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 40px;
+        }
+
+        .hero-logo img {
+            height: 32px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .hero-socials {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .social-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        .glass-card {
+            position: relative;
+            z-index: 5;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+            animation: cardFloat 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        }
+
+        @keyframes cardFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .tour-title {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.35;
+            margin: 0 0 32px 0;
+            letter-spacing: -0.3px;
+            color: #fff;
+        }
+
+        .tour-prefix {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        .price-box {
+            background: #FFFFFF;
+            width: 100%;
+            border-radius: 20px;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .price-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #8E8E93;
+        }
+
+        .price-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #000;
+            letter-spacing: -1px;
+        }
+
+        .btn-page-primary {
+            width: 100%;
+            background-color: var(--hero-blue);
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            padding: 18px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(41, 182, 246, 0.3);
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-page-primary:hover {
+            background-color: #0288D1;
+        }
+
+        .error-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        .error-desc {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 32px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* --- PRELOADER --- */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .orbit {
+            width: 100%;
+            height: 100%;
+            border: 2px dashed rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            animation: spin 4s linear infinite;
+        }
+
+        .planet-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+        }
+
+        .plane-wrapper {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -16px;
+            margin-top: -16px;
+            width: 32px;
+            height: 32px;
+            transform: rotate(90deg);
+        }
+
+        .loader-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--hero-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* --- EXPERIMENTAL MODAL STYLES (One-to-One Match) --- */
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+
+            /* Reset Font to Experimental Style */
+            font-family: 'Inter', system-ui, sans-serif;
+            color: #1d1d1f;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .widget-container {
+            width: 100%;
+            max-width: 440px;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.open .widget-container {
+            transform: scale(1);
+        }
+
+        /* Modal Header */
+        .widget-header {
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid #e5e5ea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .widget-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .close-modal-btn {
+            width: 32px;
+            height: 32px;
+            background: #f2f2f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8e8e93;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            color: #1d1d1f;
+            background: #e5e5ea;
+        }
+
+        /* Modal Body */
+        .widget-body {
+            padding: 24px;
+            background: #fff;
+            position: relative;
+        }
+
+        /* Form Elements from Experimental */
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #86868b;
+            margin-bottom: 6px;
+            display: block;
+            margin-left: 4px;
+        }
+
+        .stripe-box {
+            padding: 12px 16px;
+            border: 1px solid #d1d1d6;
+            border-radius: 12px;
+            background: #fff;
+            transition: 0.2s;
+        }
+
+        .stripe-box:focus-within {
+            border-color: #007aff;
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        .summary-box {
+            background: #f2f2f7;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            margin-top: 24px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .summary-val {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .btn-modal-pay {
+            width: 100%;
+            padding: 16px;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-modal-pay:hover {
+            background: #0062cc;
+        }
+
+        .btn-modal-pay:disabled {
+            background: #e5e5ea;
+            color: #8e8e93;
+            cursor: not-allowed;
+        }
+
+        /* "Vibey Loader" from Experimental */
+        .loader-overlay-local {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .vibey-loader {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e5e5ea;
+            border-top-color: #007aff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .secure-badge {
+            margin-top: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            align-items: center;
+            opacity: 0.6;
+        }
+
+        /* Mobile Adjust */
+        @media (max-width: 600px) {
+            .modal-overlay {
+                align-items: flex-end;
+            }
+
+            .widget-container {
+                border-radius: 24px 24px 0 0;
+                margin-bottom: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- GLOBAL LOADER -->
+    <div id="loader" class="loader-overlay">
+        <div class="loader-icon">
+            <div class="orbit">
+                <div class="plane-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M21 16V14L13 9V3.5C13 2.67 12.33 2 11.5 2C10.67 2 10 2.67 10 3.5V9L2 14V16L10 13.5V19L8 20.5V22L11.5 21L15 22V20.5L13 19V13.5L21 16Z"
+                            fill="#ffcc00" />
+                    </svg>
+                </div>
+            </div>
+            <div class="planet-wrapper">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#1A237E" stroke="#29B6F6" stroke-width="1.5" />
+                    <path d="M2.5 12H21.5" stroke="#29B6F6" stroke-width="1" stroke-opacity="0.6" />
+                    <path
+                        d="M12 2.5C14.5 5 15.5 8.5 15.5 12C15.5 15.5 14.5 19 12 21.5C9.5 19 8.5 15.5 8.5 12C8.5 8.5 9.5 5 12 2.5Z"
+                        stroke="#29B6F6" stroke-width="1" stroke-opacity="0.6" />
+                </svg>
+            </div>
+        </div>
+        <div class="loader-text">Ищем твое приключение</div>
+    </div>
+
+    <!-- MAIN PAGE CONTENT (DARK) -->
+    <div id="content" class="hero-wrapper" style="display:none;">
+        <div class="hero-overlay"></div>
+        <div class="hero-header">
+            <a href="#" class="hero-logo"><img
+                    src="https://static.tildacdn.com/tild6534-3663-4838-b563-336463663732/Kover_travel_logo.svg"
+                    alt="Kover Travel"></a>
+            <div class="hero-socials">
+                <a href="https://www.instagram.com/kover_travel" target="_blank" class="social-icon"><svg
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+                            fill="white" />
+                    </svg></a>
+                <a href="https://t.me/koverevents" target="_blank" class="social-icon"><svg viewBox="0 0 24 24">
+                        <path
+                            d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l-.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"
+                            fill="white" />
+                    </svg></a>
+            </div>
+        </div>
+
+        <div class="glass-card" id="payment-card">
+            <h1 class="tour-title"><span class="tour-prefix">Тур:</span> <span id="tour-name">Загрузка...</span></h1>
+            <div class="price-box"><span class="price-label">К оплате</span><span class="price-value"
+                    id="price-val">...</span></div>
+            <button class="btn-page-primary" id="btn-pay">Оплатить</button>
+        </div>
+
+        <div class="glass-card" id="error-screen" style="display:none;">
+            <div class="error-title">Мы не смогли найти твое путешествие</div>
+            <p class="error-desc">Пожалуйста, нажми кнопку ниже и отправь нам сообщение, которое появится. Мы во всем
+                разберемся!</p>
+            <a href="#" id="btn-error-support" class="btn-page-primary"
+                style="display:block; color:white !important; text-decoration:none;">Написать в поддержку</a>
+        </div>
+    </div>
+
+
+    <!-- EXPERIMENTAL STYLE PAYMENT MODAL -->
+    <div id="stripe-overlay" class="modal-overlay">
+        <div class="widget-container">
+            <!-- Header -->
+            <div class="widget-header">
+                <div class="widget-title">Оплата</div>
+                <div class="close-modal-btn" onclick="closePay()">✕</div>
+            </div>
+
+            <!-- Body -->
+            <div class="widget-body">
+                <!-- Local Loader -->
+                <div id="stripe-loader" class="loader-overlay-local" style="display:none;">
+                    <div class="vibey-loader"></div>
+                    <div style="font-weight:600; color:#1d1d1f; margin-bottom:8px">Загружаем магию...</div>
+                    <div style="font-size:14px; color:#86868b">Секундочку, всё готовим</div>
+                </div>
+
+                <!-- Input -->
+                <div style="margin-bottom:24px; position: relative;">
+                    <!-- Wallet Container (Apple/Google Pay) -->
+                    <div id="wallet-container" style="display:none; margin-bottom: 24px;">
+                        <div id="wallet-element" style="height: 48px;"></div>
+                        <div style="display:flex; align-items:center; margin: 20px 0;">
+                            <div style="flex:1; height:1px; background:#e5e5ea;"></div>
+                            <div style="padding:0 10px; font-size:13px; color:#86868b; font-weight:500;">ИЛИ КАРТОЙ
+                            </div>
+                            <div style="flex:1; height:1px; background:#e5e5ea;"></div>
+                        </div>
+                    </div>
+
+                    <span class="form-label">БАНКОВСКАЯ КАРТА</span>
+                    <div id="card-element" class="stripe-box" style="min-height: 48px;"></div>
+                    <div id="payment-message" style="color: #ff3b30; font-size: 13px; margin-top: 8px; display: none;">
+                    </div>
+                </div>
+
+                <!-- Summary Info -->
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span>К оплате сейчас</span>
+                        <span class="summary-val" id="modal-pay-val">...</span>
+                    </div>
+                </div>
+
+                <!-- Pay Button -->
+                <button id="btn-pay-confirm" class="btn-modal-pay" onclick="confirmPayment()">Оплатить</button>
+
+                <!-- Footer Badge -->
+                <div class="secure-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span style="font-size:11px; color:#666; font-weight:500;">Платежи защищены Stripe</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS OVERLAY (Same as Main) -->
+    <div id="success-overlay" class="loader-overlay" style="display:none;">
+        <span style="font-size:60px; margin-bottom:16px;">🥐</span>
+        <h2 style="font-size:24px; color:white; margin-bottom:8px;">Готово!</h2>
+        <p style="color:#888; font-size:16px;">Оплата принята. Увидимся в туре!</p>
+    </div>
+
+    <script>
+        const API_URL = "https://hook.eu2.make.com/91jzirouvc1nnjjjec49l6fxplng6mbw";
+
+        // Keys
+        const KEY_ONE_DAY = "pk_live_51SE6PPDcw9kAY89HfWvBpSfQqQ4BvbF5D9cEOkQ1DC5YNK5HARwuhhWZzTEQA6WCoATixBmkEJ8eTbpVUyw96wK0001cNUyYD6";
+        const KEY_TWO_DAY = "pk_live_51QZA0yP0YuqgKgjw407FXR13mJwf39jkzsU3LU5PFMxpw1D1qsn0nTKmWSdtc4vCLAzHZuFcQ2SQAvcYNe8OSQiA00Qn5abpJQ";
+
+        let stripe = null;
+        let elements = null;
+        let cardElement = null;
+        let paymentRequest = null;
+        let prButton = null;
+
+        let clientSecret = null;
+        let currentEmail = '';
+        let currentAmount = 0; // In major units (e.g. 50)
+        let currentTourName = "Тур";
+
+        async function initApp() {
+            try {
+                // Moved Stripe(KEY) to AFTER webhook response
+
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('order_id');
+                if (!id) throw new Error("No Order ID");
+
+                const resp = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'get_payment_data',
+                        order_id: id,
+                        rest_payment: true,
+                        // Context Metadata
+                        browser_userAgent: navigator.userAgent,
+                        browser_language: navigator.language,
+                        screen_resolution: `${window.screen.width}x${window.screen.height}`,
+                        page_url: window.location.href,
+                        metadata: { order_id: id }
+                    })
+                });
+
+                if (!resp.ok) throw new Error(`Net Error: ${resp.status}`);
+
+                let rawText = await resp.text();
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (e) {
+                    throw new Error("Invalid Server Response (Not JSON)");
+                }
+
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch (e) { }
+                }
+
+                // CHECK COMPANY TYPE -> SELECT KEY
+                let selectedKey = KEY_ONE_DAY; // Default
+                if (data.company && data.company === "Многодневный") {
+                    selectedKey = KEY_TWO_DAY;
+                    console.log("Using Multi-Day Stripe Key");
+                } else {
+                    console.log("Using One-Day Stripe Key");
+                }
+
+                // INIT STRIPE NOW
+                stripe = Stripe(selectedKey);
+
+                // Check for secret
+                const secret = data?.clientSecret || data?.client_secret;
+                if (!data || !secret) {
+                    console.log("Data received:", data);
+                    throw new Error("Invalid Data: Missing clientSecret");
+                }
+
+                clientSecret = secret;
+                if (data.customer_email) currentEmail = data.customer_email;
+                if (data.amount) currentAmount = data.amount;
+                if (data.tour_name) currentTourName = data.tour_name;
+
+                render(data);
+
+            } catch (e) {
+                console.error("App Error:", e);
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('content').style.display = 'flex';
+                document.getElementById('payment-card').style.display = 'none';
+                document.getElementById('error-screen').style.display = 'flex';
+
+                // Show specific error on screen for debugging
+                const errorDesc = document.querySelector('.error-desc');
+                if (errorDesc) {
+                    errorDesc.innerHTML = `Что-то пошло не так.<br><span style="font-size:12px; opacity:0.7">${e.message || e}</span><br><br>Пожалуйста, нажми кнопку ниже и отправь нам сообщение. Мы во всем разберемся!`;
+                }
+
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('order_id') || 'неизвестен';
+                const msg = encodeURIComponent(`Привет! У меня ошибка при оплате остатка (ID: ${id}). Текст ошибки: ${e.message}`);
+                document.getElementById('btn-error-support').href = `https://t.me/koverfriend?text=${msg}`;
+            }
+        }
+
+        function render(data) {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('content').style.display = 'flex';
+            document.getElementById('payment-card').style.display = 'flex';
+
+            // NAME
+            let rawName = data.tour_name || "Тур";
+            let cleanName = rawName.replace(/^[^a-zA-Zа-яА-Я0-9]+/, "").trim();
+            document.getElementById('tour-name').innerText = cleanName;
+
+            // PRICE
+            const amount = data.amount || 0;
+            const currency = (data.currency || "CZK").toUpperCase();
+            const symbol = currency === 'CZK' ? 'KČ' : currency;
+            const priceStr = `${amount.toLocaleString('ru-RU')} ${symbol}`;
+
+            document.getElementById('price-val').innerHTML = priceStr;
+            document.getElementById('modal-pay-val').innerText = priceStr; // Sync with Modal
+
+            // Button Action
+            document.getElementById('btn-pay').onclick = showStripe;
+            document.getElementById('btn-pay-confirm').innerText = `Оплатить ${priceStr}`;
+        }
+
+        function showStripe() {
+            document.getElementById('stripe-overlay').classList.add('open');
+            const loader = document.getElementById('stripe-loader');
+
+            // 1. Force Loader Visible
+            loader.style.display = 'flex';
+            // Small delay to ensure transition works if it was hidden
+            setTimeout(() => { loader.style.opacity = '1'; }, 10);
+
+            // 2. Schedule Hide (1.5s)
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; }, 300);
+            }, 1500);
+
+            if (!elements) {
+                // LIGHT THEME (Matches Experimental Widget)
+                elements = stripe.elements({
+                    clientSecret: clientSecret,
+                    appearance: {
+                        theme: 'stripe',
+                        variables: {
+                            fontFamily: 'Inter, system-ui, sans-serif',
+                            fontSizeBase: '16px',
+                            colorPrimary: '#007aff',
+                            colorText: '#1d1d1f',
+                            borderRadius: '12px',
+                            colorDanger: '#ff3b30'
+                        }
+                    }
+                });
+
+                cardElement = elements.create('card', {
+                    hidePostalCode: true,
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#1d1d1f',
+                            '::placeholder': { color: '#888' },
+                            iconColor: '#007aff'
+                        }
+                    }
+                });
+                cardElement.mount('#card-element');
+
+                // --- APPLE PAY / GOOGLE PAY LOGIC ---
+                const amountSubunits = Math.round(currentAmount * 100);
+
+                paymentRequest = stripe.paymentRequest({
+                    country: 'CZ',
+                    currency: 'czk',
+                    total: {
+                        label: currentTourName,
+                        amount: amountSubunits
+                    },
+                    requestPayerName: true,
+                    requestPayerEmail: true
+                });
+
+                paymentRequest.canMakePayment().then(function (result) {
+                    if (result) {
+                        prButton = elements.create('paymentRequestButton', {
+                            paymentRequest: paymentRequest,
+                            style: {
+                                paymentRequestButton: {
+                                    theme: 'dark', // Apple Pay button usually dark or light-outline
+                                    height: '48px',
+                                    type: 'buy' // 'pay' or 'book' or 'buy'
+                                }
+                            }
+                        });
+                        prButton.mount('#wallet-element');
+                        document.getElementById('wallet-container').style.display = 'block';
+                    }
+                });
+
+                paymentRequest.on('paymentmethod', async (ev) => {
+                    // Confirm payment intent with the wallet payment method
+                    const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(
+                        clientSecret,
+                        { payment_method: ev.paymentMethod.id },
+                        { handleActions: false }
+                    );
+
+                    if (confirmError) {
+                        ev.complete('fail');
+                        document.getElementById('payment-message').innerText = confirmError.message;
+                        document.getElementById('payment-message').style.display = 'block';
+                    } else {
+                        ev.complete('success');
+                        // handle Next Action manually if needed (likely 3DS)
+                        if (paymentIntent.status === "requires_action") {
+                            const { error } = await stripe.confirmCardPayment(clientSecret);
+                            if (error) {
+                                document.getElementById('payment-message').innerText = error.message;
+                                document.getElementById('payment-message').style.display = 'block';
+                            } else {
+                                onSuccess();
+                            }
+                        } else {
+                            onSuccess();
+                        }
+                    }
+                });
+            }
+        }
+
+        async function confirmPayment() {
+            const btn = document.getElementById('btn-pay-confirm');
+            const msg = document.getElementById('payment-message');
+            const loader = document.getElementById('stripe-loader');
+
+            loader.style.display = 'flex'; // Show local loader
+            loader.style.opacity = '1'; // Ensure it's visible again
+            msg.style.display = 'none';
+
+            const { error } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                    billing_details: { email: currentEmail }
+                },
+                receipt_email: currentEmail || undefined
+            });
+
+            loader.style.display = 'none'; // Hide loader
+
+            if (error) {
+                msg.innerText = error.message;
+                msg.style.display = 'block';
+            } else {
+                onSuccess();
+            }
+        }
+
+        function onSuccess() {
+            document.getElementById('stripe-overlay').classList.remove('open');
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('success-overlay').style.display = 'flex';
+        }
+
+        window.closePay = function () {
+            document.getElementById('stripe-overlay').classList.remove('open');
+        }
+
+        initApp();
+    </script>
+</body>
+
+</html>

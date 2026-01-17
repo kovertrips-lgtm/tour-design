@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Start Season Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #0F172A;
+            --color-primary: #38BDF8;
+            /* Sky blue */
+            --color-accent: #F97316;
+            /* Orange drive */
+            --color-text: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            overflow-x: hidden;
+            /* Prevent bounce scrolling on mobile if desired, or let it be natural */
+        }
+
+        /* Hero Container */
+        .hero {
+            position: relative;
+            height: 100vh;
+            /* Fallback */
+            height: 100dvh;
+            /* Mobile browser adjustment */
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Background Visuals */
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            z-index: -2;
+        }
+
+        .hero-image-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            mix-blend-mode: overlay;
+            z-index: -1;
+            background: url('https://images.unsplash.com/photo-1551524559-8af4e6624178?q=80&w=2526&auto=format&fit=crop') center/cover no-repeat;
+            filter: contrast(1.2) brightness(0.8) saturate(1.1);
+        }
+
+        /* Dynamic Overlay Lines */
+        .speed-line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            transform: skewX(-20deg);
+            pointer-events: none;
+        }
+
+        .line-1 {
+            width: 2px;
+            height: 120%;
+            top: -10%;
+            left: 20%;
+            animation: slide 2s infinite linear;
+        }
+
+        .line-2 {
+            width: 1px;
+            height: 120%;
+            top: -10%;
+            left: 80%;
+            animation: slide 3s infinite linear;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translateY(-100%) skewX(-20deg);
+            }
+
+            100% {
+                transform: translateY(100%) skewX(-20deg);
+            }
+        }
+
+        /* Content Wrapper */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: left;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        /* Typography */
+        .headline {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(3rem, 10vw, 7rem);
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            color: white;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s 0.2s forwards ease-out;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .headline span.highlight {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--color-primary);
+            display: block;
+        }
+
+        .headline span.filled {
+            color: var(--color-primary);
+            -webkit-text-stroke: 0;
+        }
+
+        .subheadline {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-weight: 400;
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s 0.4s forwards ease-out;
+            color: #E2E8F0;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem 2.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            color: var(--color-bg);
+            background: white;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s 0.6s forwards ease-out;
+            clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+            width: fit-content;
+            -webkit-appearance: none;
+            /* Mobile fix */
+        }
+
+        .cta-button:active {
+            transform: scale(0.98);
+            /* Touch feedback */
+        }
+
+        @media (hover: hover) {
+            .cta-button:hover {
+                background: var(--color-primary);
+                color: white;
+                transform: translateY(20px) scale(1.05);
+                /* keep translateY base */
+                padding-left: 3.5rem;
+            }
+        }
+
+        .cta-button span {
+            margin-right: 10px;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.7;
+            animation: bounce 2s infinite;
+            padding: 10px;
+            /* Touch target inc */
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            stroke: white;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* MOBILE OPTIMIZATIONS */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: auto;
+                /* Allow flexible height on mobile if content overflows, though 100dvh usually safe */
+            }
+
+            .hero-content {
+                padding: 1.5rem;
+                justify-content: flex-end;
+                /* Content near thumb */
+                padding-bottom: 20vh;
+                /* Space above bottom chrome/nav */
+            }
+
+            .headline {
+                font-size: 14vw;
+            }
+
+            .headline span.highlight {
+                -webkit-text-stroke: 1.5px var(--color-primary);
+                /* Thinner stroke for smaller text */
+            }
+
+            .subheadline {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+                max-width: 90%;
+            }
+
+            .cta-button {
+                width: 100%;
+                /* Full width interactive zone on mobile often feels better, but stick to design */
+                width: auto;
+                padding: 1.2rem 3rem;
+                /* Larger touch area */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-image-placeholder"></div>
+        <div class="speed-line line-1"></div>
+        <div class="speed-line line-2"></div>
+
+        <div class="hero-content">
+            <h1 class="headline">
+                <span class="highlight">СЕЗОН</span>
+                <span class="filled">СТАРТОВАЛ</span>
+            </h1>
+            <p class="subheadline">
+                Снег уже лёг. Борд готов. <br>
+                Погнали открывать склоны вместе.
+            </p>
+            <a href="#" class="cta-button">
+                <span>ВРЫВАЙСЯ</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M7 13L12 18L17 13M7 6L12 11L17 6" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </div>
+    </section>
+</body>
+
+</html>

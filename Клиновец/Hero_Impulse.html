@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Impulse Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #FFFFFF;
+            --accent-color: #CCFF00;
+            /* Acid lime */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Oswald', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh;
+            /* Mobile fit */
+            width: 100vw;
+        }
+
+        .impulse-hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            padding: 5vw;
+            position: relative;
+        }
+
+        /* Big Typography */
+        h1 {
+            font-size: 15vw;
+            line-height: 0.8;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: -2px;
+            white-space: nowrap;
+        }
+
+        .line-1 {
+            margin-left: -2vw;
+            color: transparent;
+            -webkit-text-stroke: 2px white;
+        }
+
+        .line-2 {
+            color: var(--text-color);
+            margin-left: 5vw;
+        }
+
+        .line-3 {
+            color: var(--accent-color);
+            margin-left: 20vw;
+        }
+
+        /* Minimal info info */
+        .bottom-bar {
+            position: absolute;
+            bottom: 5vh;
+            right: 5vw;
+            display: flex;
+            align-items: flex-end;
+            gap: 40px;
+        }
+
+        .impulse-text {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.2rem;
+            max-width: 200px;
+            line-height: 1.4;
+            color: #888;
+        }
+
+        .impulse-btn {
+            background: var(--accent-color);
+            color: black;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 90% 100%, 0 100%);
+            display: inline-block;
+        }
+
+        .impulse-btn:active {
+            transform: scale(0.95);
+            background: white;
+        }
+
+        @media (hover: hover) {
+            .impulse-btn:hover {
+                background: white;
+                transform: translate(-5px, -5px);
+                box-shadow: 5px 5px 0px var(--accent-color);
+            }
+        }
+
+        /* Abstract Visual Element */
+        .visual-element {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(204, 255, 0, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            filter: blur(50px);
+        }
+
+        /* MOBILE OPTIMIZATIONS */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20vw;
+            }
+
+            .line-1 {
+                margin-left: 0;
+                -webkit-text-stroke: 1px white;
+            }
+
+            .line-2 {
+                margin-left: 0;
+            }
+
+            .line-3 {
+                margin-left: 10vw;
+            }
+
+            .bottom-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                left: 5vw;
+                right: auto;
+                bottom: 8vh;
+                /* Lift up from gesture bar */
+                gap: 20px;
+            }
+
+            .impulse-text {
+                font-size: 1rem;
+                max-width: 250px;
+            }
+
+            .impulse-btn {
+                width: 100%;
+                /* Full width easy tap */
+                text-align: center;
+                font-size: 1.2rem;
+                padding: 15px 30px;
+            }
+
+            .visual-element {
+                width: 80vw;
+                height: 80vw;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="impulse-hero">
+        <div class="visual-element"></div>
+        <h1>
+            <div class="line-1">ДУМАЙ</div>
+            <div class="line-2">МЕНЬШЕ.</div>
+            <div class="line-3">ЖИВИ.</div>
+        </h1>
+
+        <div class="bottom-bar">
+            <div class="impulse-text">
+                Следующий трип в горы через 24 часа. Места есть.
+            </div>
+            <a href="#" class="impulse-btn">Я В ДЕЛЕ</a>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Community Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Nunito:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #FFFBF0;
+            /* Warm beige */
+            --color-text: #2D2A26;
+            --color-accent: #FF5A5F;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            min-height: 100dvh;
+            /* Mobile friendly */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .noise-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.05;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiMwMDAiLz48ZyBmaWxsPSIjZmZmIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvZz48L3N2Zz4=');
+        }
+
+        /* Left Side: Content */
+        .hero-content {
+            padding: 4rem;
+            z-index: 10;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #FFE066;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transform: rotate(-2deg);
+            margin-bottom: 2rem;
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            line-height: 1.1;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        .handwritten {
+            font-family: 'Caveat', cursive;
+            color: var(--color-accent);
+            font-size: 1.2em;
+            display: block;
+            margin-top: -10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 450px;
+            margin-bottom: 2.5rem;
+            color: #555;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .cta-btn {
+            background-color: #2D2A26;
+            color: white;
+            padding: 1.2rem 2.2rem;
+            /* Larger touch target */
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+
+        .cta-btn:active {
+            transform: scale(0.95);
+        }
+
+        @media (hover: hover) {
+            .cta-btn:hover {
+                transform: scale(1.05) rotate(1deg);
+            }
+        }
+
+        .cta-secondary {
+            color: #2D2A26;
+            text-decoration: underline;
+            font-weight: 700;
+            padding: 10px;
+        }
+
+        /* Right Side: Visuals */
+        .hero-visuals {
+            position: relative;
+            height: 100%;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-card {
+            position: absolute;
+            background: white;
+            padding: 10px;
+            padding-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            width: 280px;
+            height: 350px;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.2);
+        }
+
+        .p1 {
+            transform: rotate(-5deg) translate(-20px, -20px);
+            z-index: 1;
+        }
+
+        .p2 {
+            transform: rotate(5deg) translate(20px, 40px);
+            z-index: 2;
+        }
+
+        .p3 {
+            transform: rotate(-2deg) translate(100px, -100px) scale(0.8);
+            z-index: 0;
+            opacity: 0.8;
+        }
+
+        .photo-card:hover {
+            transform: scale(1.1) rotate(0deg);
+            z-index: 10;
+        }
+
+        /* MOBILE OPTIMIZATIONS */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                /* On mobile, we might want visuals ON TOP or reduced? 
+                   Let's keep visuals below but scale them down so they fit. */
+                grid-template-rows: auto auto;
+                /* Content then visuals */
+                text-align: center;
+                padding: 1rem;
+                padding-top: 4rem;
+                gap: 1rem;
+                min-height: auto;
+                padding-bottom: 4rem;
+            }
+
+            .hero-content {
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            h1 {
+                font-size: 3rem;
+                /* Still big */
+            }
+
+            .badge {
+                transform: rotate(0deg);
+                font-size: 0.8rem;
+            }
+
+            /* Visuals adjustment for mobile */
+            .hero-visuals {
+                min-height: 350px;
+                /* Reduced height constraint */
+                width: 100%;
+                overflow: visible;
+                /* Let them pop out */
+                margin-top: 2rem;
+            }
+
+            .photo-card {
+                width: 180px;
+                height: 240px;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                /* Stack buttons on mobile */
+                gap: 1rem;
+                width: 100%;
+            }
+
+            .cta-btn {
+                width: 100%;
+                /* Full width button */
+            }
+
+            /* Tweak card positions to be tighter */
+            .p1 {
+                transform: rotate(-8deg) translate(-30px, 10px);
+            }
+
+            .p2 {
+                transform: rotate(6deg) translate(30px, 20px);
+            }
+
+            .p3 {
+                transform: rotate(0deg) translate(0px, -60px) scale(0.8);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge">🔥 Следующий выезд: 12 Января</span>
+            <h1>
+                Поездка — это не место.<br>
+                <span class="handwritten">Это люди.</span>
+            </h1>
+            <p>
+                Мы уже всё забронировали и продумали маршрут.
+                Тебе осталось только закинуть вещи в рюкзак и познакомиться со своими.
+            </p>
+            <div class="cta-group">
+                <a href="#" class="cta-btn">Влететь в чат</a>
+                <a href="#" class="cta-secondary">Посмотреть кто едет</a>
+            </div>
+        </div>
+
+        <div class="hero-visuals">
+            <div class="photo-card p3">
+                <img src="https://images.unsplash.com/photo-1517404215738-15263e9f9178?q=80&w=2670&auto=format&fit=crop"
+                    alt="Campfire">
+            </div>
+            <div class="photo-card p1">
+                <img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?q=80&w=2670&auto=format&fit=crop"
+                    alt="Group at sunset">
+            </div>
+            <div class="photo-card p2">
+                <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=2560&auto=format&fit=crop"
+                    alt="Friends laughing">
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

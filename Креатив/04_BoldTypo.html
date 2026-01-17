@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KOVER: Bold</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #111;
+            --fg: #FFF;
+            --accent: #E3FF00;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'Anton', sans-serif;
+            margin: 0;
+            height: 100dvh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .timer-header {
+            font-family: 'Roboto Mono', monospace;
+            padding: 20px;
+            color: var(--accent);
+            text-align: right;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .main-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 25vw;
+            line-height: 0.8;
+            text-transform: uppercase;
+            text-align: center;
+            white-space: nowrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .word {
+            display: block;
+            opacity: 0;
+            transform: translateY(100px);
+            animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .word:nth-child(2) {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--fg);
+            animation-delay: 0.2s;
+        }
+
+        .img-overlay {
+            position: absolute;
+            width: 40vw;
+            height: 50vh;
+            background: url('https://images.unsplash.com/photo-1516246843873-9d123e37f1c0?q=80&w=2000&auto=format&fit=crop') center/cover;
+            z-index: 1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            mix-blend-mode: exclusion;
+            opacity: 0;
+            animation: imgPop 0.5s 0.8s forwards;
+        }
+
+        .action-area {
+            padding: 20px;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            background: var(--fg);
+            color: var(--bg);
+            text-align: center;
+            padding: 25px;
+            font-size: 2rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        .btn-block:active {
+            background: var(--accent);
+        }
+
+        @keyframes reveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes imgPop {
+            to {
+                opacity: 0.8;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 30vw;
+            }
+
+            .img-overlay {
+                width: 70vw;
+                height: 40vh;
+            }
+
+            .timer-header {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="timer-header">
+        TIME LEFT: <span id="bold-timer">14:00:00</span>
+    </div>
+
+    <div class="main-stage">
+        <div class="img-overlay"></div>
+        <h1>
+            <span class="word">DON'T</span>
+            <span class="word">WAIT.</span>
+        </h1>
+    </div>
+
+    <div class="action-area">
+        <a href="#" class="btn-block">BOOK NOW</a>
+    </div>
+
+    <script>
+        const bt = document.getElementById('bold-timer');
+        let sec = 14 * 3600;
+        setInterval(() => {
+            sec--;
+            let h = Math.floor(sec / 3600);
+            let m = Math.floor((sec % 3600) / 60);
+            let s = sec % 60;
+            bt.innerText = `${h}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+        }, 1000); // Actually make it countdown fast for "bold" effect?
+        // Let's make it real time
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,342 @@
+<style>
+    /* --- ШРИФТЫ И ПЕРЕМЕННЫЕ --- */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap');
+
+    :root {
+        --hero-accent: #29B6F6;
+        /* Cyan */
+        --hero-lime: #BDFF00;
+        /* Neon Lime */
+        --hero-white: #FFFFFF;
+        --hero-dark: #000000;
+        --hero-glass: rgba(22, 22, 24, 0.75);
+        /* Darker glass for contrast on snow */
+        --hero-glass-border: rgba(255, 255, 255, 0.15);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* --- ГЛАВНЫЙ КОНТЕЙНЕР --- */
+    .hero-wrapper {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        /* Fallback height */
+        min-height: 100svh;
+        background-image: url('https://static.tildacdn.com/tild3737-6234-4464-a139-353161333739/484521354_1123878833.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: 'Montserrat', sans-serif;
+        color: var(--hero-white);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .hero-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Легкое затемнение фона, чтобы выделить карточку */
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.4) 100%);
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    /* --- ХЕДЕР --- */
+    .hero-header {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 40px;
+    }
+
+    .hero-logo img {
+        height: 40px;
+        width: auto;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+        transition: transform 0.3s;
+    }
+
+    .hero-logo:hover img {
+        transform: scale(1.05);
+    }
+
+    .hero-socials {
+        display: flex;
+        gap: 12px;
+    }
+
+    .social-icon {
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .social-icon:hover {
+        background: var(--hero-white);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .social-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .social-icon svg path {
+        fill: #fff;
+        transition: 0.3s;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    }
+
+    .social-icon:hover svg path {
+        fill: #000;
+        filter: none;
+    }
+
+    /* --- КОНТЕНТ (Glass Card) --- */
+    .hero-content-wrapper {
+        position: relative;
+        z-index: 5;
+        padding: 0 40px 60px 40px;
+        display: flex;
+        align-items: flex-end;
+        /* Карточка внизу */
+        justify-content: flex-start;
+        /* Слева */
+    }
+
+    .hero-glass-card {
+        background: var(--hero-glass);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid var(--hero-glass-border);
+        padding: 40px;
+        border-radius: 32px;
+        max-width: 700px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: fadeInUp 1s ease 0.2s backwards;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        color: #ffffff !important;
+    }
+
+    .hero-meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .hero-date-badge {
+        background-color: var(--hero-accent);
+        /* Cyan */
+        color: white;
+        font-weight: 800;
+        font-size: 13px;
+        text-transform: uppercase;
+        padding: 8px 16px;
+        border-radius: 100px;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 4px 15px rgba(41, 182, 246, 0.4);
+    }
+
+    .hero-tag {
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 7px 14px;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .hero-title {
+        font-size: 52px;
+        font-weight: 900;
+        line-height: 1.0;
+        text-transform: uppercase;
+        color: #ffffff !important;
+        margin: 0;
+        letter-spacing: -1px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+        max-width: 95%;
+    }
+
+    .hero-btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--hero-lime);
+        /* Lime Button */
+        color: #000000 !important;
+        font-size: 16px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        text-decoration: none;
+        padding: 22px 38px;
+        border-radius: 18px;
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        cursor: pointer;
+        align-self: flex-start;
+        box-shadow: 0 10px 30px rgba(189, 255, 0, 0.3);
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 20px 50px rgba(189, 255, 0, 0.5);
+        background-color: #ceff42;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+    @media (max-width: 768px) {
+        .hero-wrapper {
+            height: auto;
+            min-height: 100svh;
+        }
+
+        .hero-header {
+            padding: 20px;
+        }
+
+        .hero-content-wrapper {
+            padding: 0 16px 40px 16px;
+            justify-content: center;
+        }
+
+        .hero-glass-card {
+            padding: 28px;
+            border-radius: 28px;
+            width: 100%;
+            gap: 20px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            background: rgba(22, 22, 24, 0.8);
+            /* Darker on mobile */
+        }
+
+        .hero-title {
+            font-size: 34px;
+            line-height: 1.05;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+        }
+
+        .hero-btn {
+            width: 100%;
+            padding: 20px;
+        }
+    }
+
+    /* Гарантия видимости для Тильды */
+    .t-btn-floating,
+    .t-m-sticky,
+    .t706__carticon {
+        z-index: 999999 !important;
+    }
+</style>
+
+<div class="hero-wrapper">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-header">
+        <a href="/" class="hero-logo">
+            <img src="https://static.tildacdn.com/tild6534-3663-4838-b563-336463663732/Kover_travel_logo.svg"
+                alt="Kover Travel">
+        </a>
+        <div class="hero-socials">
+            <a href="https://www.instagram.com/kover_travel?igsh=MW0ycjllaHU5ZjBqaQ==" target="_blank"
+                class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+                        fill="white" />
+                </svg>
+            </a>
+            <a href="https://t.me/koverevents" target="_blank" class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l-.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"
+                        fill="white" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-content-wrapper">
+        <div class="hero-glass-card">
+            <div class="hero-meta">
+                <div class="hero-date-badge">10 Января • Суббота</div>
+                <div class="hero-tag">Ski & Snowboard</div>
+            </div>
+
+            <h1 class="hero-title">Врываемся в&nbsp;сезон на&nbsp;Клиновце</h1>
+
+            <p class="hero-subtitle">
+                Трансфер, комьюнити, глинтвейн и горы. Мы всё организовали — тебе осталось только занять место в
+                автобусе и кайфовать.
+            </p>
+
+            <button type="button" onclick="openBookingModal(); return false;" class="hero-btn">Забронировать
+                место</button>
+        </div>
+    </div>
+</div>

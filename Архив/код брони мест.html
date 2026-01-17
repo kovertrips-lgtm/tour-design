@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Код бронирования мест (Archive)</title>
+    <style>
+        /* CSS Related to Seats */
+        .b-switch-wrap {
+            cursor: pointer;
+        }
+
+        .b-switch {
+            position: relative;
+            width: 52px;
+            height: 32px;
+            background: #e9e9ea;
+            border-radius: 32px;
+            transition: 0.3s;
+        }
+
+        .b-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: 0.3s cubic-bezier(0.3, 1.5, 0.7, 1);
+        }
+
+        .b-switch-wrap.active .b-switch {
+            background: var(--color-success);
+        }
+
+        .b-switch-wrap.active .b-switch::after {
+            transform: translateX(20px);
+        }
+
+        .b-map-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease;
+            opacity: 0;
+            margin-top: 10px;
+        }
+
+        .b-map-container.open {
+            max-height: 800px;
+            opacity: 1;
+        }
+
+        .b-map-inner {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .b-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 44px);
+            gap: 10px;
+        }
+
+        .b-seat {
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 2px 0 #e5e5ea;
+            user-select: none;
+        }
+
+        .b-seat.selected {
+            background: var(--color-success);
+            color: #fff;
+            border-color: var(--color-success);
+            box-shadow: 0 3px 0 #248a3d;
+        }
+
+        .b-aisle {
+            width: 44px;
+            pointer-events: none;
+        }
+
+        .b-seat-hint {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--color-error);
+            font-weight: 500;
+            height: 16px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .b-seat-hint.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HTML Snippet -->
+    <div class="b-row" id="seat-toggle-row" style="cursor:pointer">
+        <div>
+            <div class="b-label">Выбрать места</div>
+            <div class="b-sub">Доплата +100 Kč</div>
+        </div>
+        <div class="b-switch-wrap" id="seat-switch-wrap">
+            <div class="b-switch"></div>
+        </div>
+    </div>
+    <div class="b-map-container" id="map-container">
+        <div class="b-map-inner">
+            <div class="b-grid" id="b-grid"></div>
+            <div class="b-seat-hint" id="seat-hint"></div>
+        </div>
+    </div>
+
+    <!-- JS Snippet -->
+    <script>
+        const ROWS_TEMPLATE = [1, 1, 0, 1, 1];
+        const START_ROW = 3;
+        const ROW_COUNT = 5;
+        let state = { count: 1, selectedSeats: [], isMapActive: false };
+
+        function toggleMap() {
+            state.isMapActive = !state.isMapActive;
+            const cont = document.getElementById('map-container');
+            const wrap = document.getElementById('seat-switch-wrap');
+
+            if (state.isMapActive) {
+                cont.classList.add('open');
+                wrap.classList.add('active');
+                renderGrid();
+            } else {
+                cont.classList.remove('open');
+                wrap.classList.remove('active');
+            }
+            // updateUI(); call meant here
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('b-grid');
+            grid.innerHTML = '';
+            const letters = ['A', 'B', 'X', 'C', 'D'];
+            for (let i = 0; i < ROW_COUNT; i++) {
+                const r = START_ROW + i;
+                ROWS_TEMPLATE.forEach((type, idx) => {
+                    if (type === 0) { grid.innerHTML += '<div class="b-aisle"></div>'; return; }
+                    const id = r + letters[idx];
+                    const isSel = state.selectedSeats.includes(id);
+                    grid.innerHTML += `<div class="b-seat ${isSel ? 'selected' : ''}">${id}</div>`;
+                });
+            }
+        }
+
+        function selectSeat(id) {
+            const idx = state.selectedSeats.indexOf(id);
+            const hint = document.getElementById('seat-hint');
+            if (idx > -1) {
+                state.selectedSeats.splice(idx, 1);
+                hint.classList.remove('show');
+            } else {
+                if (state.selectedSeats.length < state.count) {
+                    state.selectedSeats.push(id);
+                    hint.classList.remove('show');
+                }
+                else {
+                    const word = getNoun(state.count, 'место', 'места', 'мест');
+                    hint.innerText = `Максимум ${state.count} ${word}`;
+                    hint.classList.add('show');
+                    setTimeout(() => hint.classList.remove('show'), 2000);
+                }
+            }
+            renderGrid();
+            // updateUI(); call meant here
+        }
+
+        function getNoun(number, one, two, five) {
+            let n = Math.abs(number);
+            n %= 100;
+            if (n >= 5 && n <= 20) { return five; }
+            n %= 10;
+            if (n === 1) { return one; }
+            if (n >= 2 && n <= 4) { return two; }
+            return five;
+        }
+    </script>
+</body>
+
+</html>
