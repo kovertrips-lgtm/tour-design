@@ -109,23 +109,9 @@
     </div>
 
     <script>
-        // Global Error Handler for Mobile Debugging
-        window.onerror = function (msg, url, lineNo, columnNo, error) {
-            const consoleDiv = document.getElementById('debug-console');
-            if (consoleDiv) {
-                consoleDiv.style.display = 'block';
-                consoleDiv.innerHTML += `<div>Error: ${msg} <br>URL: ${url} <br>Line: ${lineNo}</div><hr>`;
-            }
-            console.error('Global Error:', msg, url, lineNo, error);
-            return false;
-        };
-
-        // Stub for widget calls if they exist in imported files
-        window.openWidget = function () { console.log('Widget Open Triggered'); alert('Widget Triggered'); }
-    </script>
-
-    <script>
         const desktopFiles = [
+            'Widget_Config.html',
+            'Widget_Core.html',
             '01_Hero.html',
             '02_Program.html',
             '03_Hallstatt.html',
@@ -138,6 +124,8 @@
         ];
 
         const mobileFiles = [
+            'Widget_Config.html',
+            'Widget_Core.html',
             'Mobile_Version/01_Hero_Mobile.html',
             'Mobile_Version/02_Program_Mobile.html',
             'Mobile_Version/04_Sledding_Mobile.html',
