@@ -483,6 +483,7 @@
             outline: none;
             transition: 0.2s;
             -webkit-appearance: none;
+            appearance: none;
             background: #fff;
         }
 
@@ -898,7 +899,7 @@
         let iti;
 
         // --- INIT ---
-        document.addEventListener('DOMContentLoaded', () => {
+        function initWidgetCore() {
             // 1. Try to load config from window (in case it was loaded later)
             if (window.KOVER_WIDGET_CONFIG) {
                 CONFIG = { ...CONFIG, ...window.KOVER_WIDGET_CONFIG };
@@ -938,7 +939,13 @@
             }
 
             updateSummary();
-            stripe = Stripe(CONFIG.stripeKey);
+            // Check if Stripe is loaded
+            if (typeof Stripe !== 'undefined') {
+                stripe = Stripe(CONFIG.stripeKey);
+            } else {
+                console.error('Stripe JS not loaded yet');
+            }
+
 
             // Hash Trigger Check
             checkHash();
@@ -981,7 +988,14 @@
                     }
                 }
             }
-        });
+        }
+
+        // Execute Init
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initWidgetCore);
+        } else {
+            initWidgetCore();
+        }
 
         // --- STORAGE HELPERS ---
         function saveStateToStorage() {
