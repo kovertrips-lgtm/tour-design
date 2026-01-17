@@ -176,19 +176,32 @@
 
                     // 3. Exec Scripts (Crucial for Mobile Sledding/Program)
                     // We must execute them in order.
-                    const scripts = doc.querySelectorAll('script');
-                    scripts.forEach(oldScript => {
+                    // 3. Exec Scripts SEQUENTIALLY
+                    // We must wait for each script to finish executing before moving to the next
+                    // This is critical for Config -> Widget Core dependency
+                    const scripts = Array.from(doc.querySelectorAll('script'));
+                    for (const oldScript of scripts) {
                         const newScript = document.createElement('script');
-                        // Copy attributes (src, type, etc.)
+
+                        // Copy attributes
                         Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
 
-                        // Copy content
+                        // If it has inline content
                         if (oldScript.innerHTML) {
                             newScript.innerHTML = oldScript.innerHTML;
+                            section.appendChild(newScript);
                         }
-
-                        section.appendChild(newScript);
-                    });
+                        // If it has src, we need to wait for it to load
+                        else if (oldScript.src) {
+                            await new Promise((resolve, reject) => {
+                                newScript.onload = resolve;
+                                newScript.onerror = reject;
+                                section.appendChild(newScript);
+                            });
+                        } else {
+                            section.appendChild(newScript);
+                        }
+                    }
 
                 } catch (e) {
                     console.error('Failed to load', file, e);
