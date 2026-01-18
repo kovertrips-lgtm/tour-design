@@ -1743,24 +1743,52 @@
         }
 
         .m-article-text {
-            font-size: 16px;
-            line-height: 1.6;
+            font-size: 17px;
+            /* Increased font size */
+            line-height: 1.7;
             color: #d0d0d0;
             margin-bottom: 24px;
         }
 
         .m-article-text b {
             color: white;
+            font-weight: 700;
+        }
+
+        .m-article-ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 24px 0;
+        }
+
+        .m-article-ul li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            font-size: 17px;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        .m-article-ul li::before {
+            content: "•";
+            color: #29B6F6;
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+            top: -2px;
         }
 
         .m-article-h {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 20px;
+            /* Slightly larger headers */
+            font-weight: 800;
             color: white;
-            margin: 32px 0 12px;
+            margin: 40px 0 16px;
+            /* More space before headers */
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         /* Video Card Styles (Reused) */
