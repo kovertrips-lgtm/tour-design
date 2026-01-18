@@ -5,10 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* --- БАЗОВЫЕ СТИЛИ из Reviews.html --- */
         .m-reviews-section {
-            background: #111;
+            background: #F4F5F7;
+            /* Changed to Light Gray as in Reviews.html */
             padding: 40px 0;
             overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
         }
 
         .m-reviews-header {
@@ -19,13 +22,13 @@
         .m-reviews-title {
             font-size: 28px;
             font-weight: 800;
-            color: white;
+            color: #1A1A1A;
             margin: 0;
         }
 
         .m-reviews-subtitle {
             font-size: 14px;
-            color: #888;
+            color: #666;
             margin-top: 8px;
         }
 
@@ -35,47 +38,54 @@
             gap: 16px;
             overflow-x: auto;
             padding: 0 20px 40px;
-            /* Space for scrollbar/shadow */
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
 
         .m-reviews-scroll::-webkit-scrollbar {
             display: none;
         }
 
+        /* === КАРТОЧКА ВИДЕО (как review-card--video) === */
         .m-review-card {
             min-width: 280px;
             width: 280px;
             height: 400px;
-            background: #222;
+            /* Fixed Height */
+            background: #000;
             border-radius: 20px;
             position: relative;
             overflow: hidden;
             flex-shrink: 0;
             scroll-snap-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
         }
 
+        .m-review-video,
         .m-review-video-placeholder {
             width: 100%;
             height: 100%;
-            background: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #555;
-            font-size: 14px;
+            object-fit: cover;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
         }
 
-        /* Overlay Gradient */
         .m-review-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
             pointer-events: none;
+            z-index: 3;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -94,19 +104,20 @@
             height: 32px;
             border-radius: 50%;
             background: #BA68C8;
-            /* Random color */
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             font-size: 14px;
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .m-review-name {
             font-weight: 700;
             font-size: 15px;
             color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .m-review-quote {
@@ -118,24 +129,26 @@
             line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
-        /* Play Icon Centered */
+        /* Play Icon Centered (New Style) */
         .m-review-play {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(4px);
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            z-index: 4;
             pointer-events: none;
+            transition: all 0.3s;
         }
     </style>
 </head>
