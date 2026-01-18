@@ -565,6 +565,90 @@
             opacity: 0;
             transform: scale(1.1);
         }
+
+        /* === PREMIUM VIDEO CARD STYLE (From Reviews.html) === */
+        .m-card-video {
+            width: 100%;
+            max-width: 320px;
+            /* Limit width like a card */
+            height: 480px;
+            /* Fixed height ~ Vertical 9:16-ish */
+            margin: 0 auto 24px;
+            /* Center it */
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .m-video-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .m-video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 3;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+
+        .m-video-caption {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .m-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .m-card-video.playing .m-play-btn,
+        .m-card-video.playing .m-video-overlay,
+        .m-card-video.playing .m-video-poster {
+            opacity: 0;
+        }
+
+        .m-play-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-left: 4px;
+            /* Optical centering */
+        }
     </style>
 </head>
 
@@ -674,25 +758,26 @@
                             <b>Это возвращает в детство, но с масштабом Альп.</b>
                         </p>
 
-                        <!-- Embedded Video Player -->
-                        <div class="m-video-responsive"
-                            style="cursor: pointer; position: relative; width: 100%; height: 50vh; border-radius: 12px; margin-bottom: 24px; overflow: hidden; background: #000; display: flex; justify-content: center;"
-                            onclick="toggleVideo(this)">
-                            <video
+                        <!-- Premium Video Card Container -->
+                        <div class="m-card-video" onclick="toggleVideo(this)">
+                            <video class="m-video-cover"
                                 src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
-                                poster="https://kovertrip.b-cdn.net/Двухдневка в Альпы/sani4.jpg" playsinline
-                                webkit-playsinline preload="metadata"
-                                style="width: auto; height: 100%; max-width: 100%; object-fit: contain;">
+                                playsinline webkit-playsinline loop muted preload="metadata">
                             </video>
-                            <div class="play-overlay"
-                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); transition: opacity 0.3s; pointer-events: none;">
-                                <div class="play-icon"
-                                    style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.5);">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8 5V19L19 12L8 5Z" fill="white" />
-                                    </svg>
-                                </div>
+
+                            <!-- Poster Layer (Explicit for instant load) -->
+                            <div class="m-video-cover m-video-poster"
+                                style="background-image: url('https://kovertrip.b-cdn.net/Двухдневка в Альпы/sani4.jpg'); background-size: cover; background-position: center; z-index: 2;">
+                            </div>
+
+                            <div class="m-video-overlay">
+                                <div class="m-video-caption">Wildkogel Arena · 14 км</div>
+                            </div>
+
+                            <div class="m-play-btn">
+                                <svg class="m-play-icon" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg>
                             </div>
                         </div>
 
@@ -980,16 +1065,22 @@
 
         function toggleVideo(el) {
             const video = el.querySelector('video');
-            const overlay = el.querySelector('.play-overlay');
+
             if (video.paused) {
-                video.muted = false; // Unmute on interaction
+                // Pause others
+                document.querySelectorAll('video').forEach(v => {
+                    if (v !== video) {
+                        v.pause();
+                        v.closest('.m-card-video')?.classList.remove('playing');
+                    }
+                });
+
+                video.muted = false;
                 video.play();
                 el.classList.add('playing');
-                if (overlay) overlay.style.opacity = '0'; // Hide button on play
             } else {
                 video.pause();
                 el.classList.remove('playing');
-                if (overlay) overlay.style.opacity = '1'; // Show button on pause
             }
         }
     </script>
