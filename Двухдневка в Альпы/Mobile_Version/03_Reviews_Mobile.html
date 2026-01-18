@@ -90,6 +90,7 @@
             flex-direction: column;
             justify-content: flex-end;
             padding: 20px;
+            transition: opacity 0.3s;
         }
 
         .m-review-author {
@@ -164,11 +165,11 @@
         <div class="m-reviews-scroll">
 
             <!-- Review 1 -->
-            <div class="m-review-card" onclick="playReview(this, '65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2')">
-                <div class="m-review-video-placeholder"
-                    style="background: url('https://video.bunnycdn.com/library/581522/videos/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/thumbnail.jpg') center/cover;">
-                </div>
-                <div class="m-review-play">▶</div>
+            <div class="m-review-card m-review-card--video" onclick="toggleVideo(this)">
+                <video class="m-review-video"
+                    src="https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/play_720p.mp4"
+                    poster="https://video.bunnycdn.com/library/581522/videos/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/thumbnail.jpg"
+                    playsinline loop muted preload="metadata"></video>
                 <div class="m-review-overlay">
                     <div class="m-review-author">
                         <div class="m-review-avatar">А</div>
@@ -177,14 +178,15 @@
                     <div class="m-review-quote">"Спонтанно сорвались и это было лучшее решение! Организация на высоте."
                     </div>
                 </div>
+                <div class="m-review-play">▶</div>
             </div>
 
             <!-- Review 2 -->
-            <div class="m-review-card" onclick="playReview(this, '1f30615c-3b0a-449f-93cb-f9a64dbe4abc')">
-                <div class="m-review-video-placeholder"
-                    style="background: url('https://video.bunnycdn.com/library/581522/videos/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/thumbnail.jpg') center/cover;">
-                </div>
-                <div class="m-review-play">▶</div>
+            <div class="m-review-card m-review-card--video" onclick="toggleVideo(this)">
+                <video class="m-review-video"
+                    src="https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/play_720p.mp4"
+                    poster="https://video.bunnycdn.com/library/581522/videos/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/thumbnail.jpg"
+                    playsinline loop muted preload="metadata"></video>
                 <div class="m-review-overlay">
                     <div class="m-review-author">
                         <div class="m-review-avatar" style="background:#29B6F6;">М</div>
@@ -192,14 +194,15 @@
                     </div>
                     <div class="m-review-quote">"Сани — просто пушка! Не ожидал такого драйва. Всем советую."</div>
                 </div>
+                <div class="m-review-play">▶</div>
             </div>
 
             <!-- Review 3 -->
-            <div class="m-review-card" onclick="playReview(this, '3ee8bc4d-418e-4428-be72-264c4190a3e8')">
-                <div class="m-review-video-placeholder"
-                    style="background: url('https://video.bunnycdn.com/library/581522/videos/3ee8bc4d-418e-4428-be72-264c4190a3e8/thumbnail.jpg') center/cover;">
-                </div>
-                <div class="m-review-play">▶</div>
+            <div class="m-review-card m-review-card--video" onclick="toggleVideo(this)">
+                <video class="m-review-video"
+                    src="https://vz-244f7910-31a.b-cdn.net/3ee8bc4d-418e-4428-be72-264c4190a3e8/play_720p.mp4"
+                    poster="https://video.bunnycdn.com/library/581522/videos/3ee8bc4d-418e-4428-be72-264c4190a3e8/thumbnail.jpg"
+                    playsinline loop muted preload="metadata"></video>
                 <div class="m-review-overlay">
                     <div class="m-review-author">
                         <div class="m-review-avatar" style="background:#FF6B35;">К</div>
@@ -207,38 +210,51 @@
                     </div>
                     <div class="m-review-quote">"Отель шикарный, бассейн на улице зимой — это любовь!"</div>
                 </div>
+                <div class="m-review-play">▶</div>
             </div>
 
         </div>
     </div>
 
     <script>
-        function playReview(card, guid) {
-            // Prevent multiple clicks
-            if (card.querySelector('iframe')) return;
+        function toggleVideo(el) {
+            const video = el.querySelector('video');
+            const playBtn = el.querySelector('.m-review-play');
+            const overlay = el.querySelector('.m-review-overlay');
 
-            // 1. Create Iframe
-            // Using standard MediaDelivery iframe
-            const iframe = document.createElement('iframe');
-            iframe.src = `https://iframe.mediadelivery.net/embed/581522/${guid}?autoplay=true&muted=false`;
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
-            iframe.style.position = 'absolute';
-            iframe.style.top = '0';
-            iframe.style.left = '0';
-            iframe.allow = "accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;";
+            if (!video) return;
 
-            // 2. Hide Overlay Elements
-            const playBtn = card.querySelector('.m-review-play');
-            const overlay = card.querySelector('.m-review-overlay');
-            const poster = card.querySelector('.m-review-video-placeholder');
+            if (video.paused) {
+                pauseAllMedia();
+                video.muted = false; // Unmute on interaction
+                video.play();
 
-            if (playBtn) playBtn.style.display = 'none';
-            if (overlay) overlay.style.display = 'none';
-            // Don't remove poster immediately to avoid black flash
+                // Hide overlay elements
+                if (playBtn) playBtn.style.opacity = '0';
+                if (overlay) overlay.style.opacity = '0';
 
-            // 3. Append Iframe
-            card.prepend(iframe);
+            } else {
+                video.pause();
+
+                // Show overlay elements
+                if (playBtn) playBtn.style.opacity = '1';
+                if (overlay) overlay.style.opacity = '1';
+            }
+        }
+
+        function pauseAllMedia() {
+            document.querySelectorAll('video').forEach(v => {
+                v.pause();
+                const wrapper = v.closest('.m-review-card');
+                if (wrapper) {
+                    const playBtn = wrapper.querySelector('.m-review-play');
+                    const overlay = wrapper.querySelector('.m-review-overlay');
+                    if (playBtn) playBtn.style.opacity = '1';
+                    if (overlay) overlay.style.opacity = '1';
+                }
+            });
         }
     </script>
+</body>
+
+</html>
