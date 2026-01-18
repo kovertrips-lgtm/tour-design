@@ -55,22 +55,34 @@
             pointer-events: none;
         }
 
-        /* Clothing Icon Top Right */
+        /* Thrown Emojis */
         .clothing-icons {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 6px;
-            opacity: 0.6;
+            top: 10px;
+            right: 15px;
+            width: 70px;
+            height: 60px;
+            pointer-events: none;
         }
 
-        .clothing-icons svg {
-            width: 24px;
-            height: 24px;
-            stroke: #fff;
-            fill: none;
-            stroke-width: 1.5;
+        .emoji-icon {
+            position: absolute;
+            font-size: 38px;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+        }
+
+        .e-coat {
+            right: 25px;
+            top: 0;
+            transform: rotate(-15deg);
+            z-index: 1;
+        }
+
+        .e-hat {
+            right: 0;
+            bottom: 0;
+            transform: rotate(20deg);
+            z-index: 2;
         }
 
 
@@ -217,18 +229,8 @@
         <!-- Clothing -->
         <div class="m-info-card">
             <div class="clothing-icons">
-                <!-- Hat Icon -->
-                <svg viewBox="0 0 24 24">
-                    <path d="M2 13a7 7 0 0 1 7-7h6a7 7 0 0 1 7 7v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7z" />
-                    <circle cx="12" cy="4" r="2" />
-                </svg>
-                <!-- Jacket/Shirt Icon -->
-                <svg viewBox="0 0 24 24">
-                    <path
-                        d="M20.38 3.4a2 2 0 0 0-1.79-1.11c-.55 0-1.05.26-1.36.63L12 9.22 6.78 2.92a1.99 1.99 0 0 0-1.36-.63C4.34 2.29 3.5 3.13 3.65 4.18L5 13h14l1.35-8.82c.15-1.07-.66-1.92-1.97-1.78z" />
-                    <path d="M12 10V22" />
-                    <path d="M5 13v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" />
-                </svg>
+                <span class="emoji-icon e-coat">🧥</span>
+                <span class="emoji-icon e-hat">🧢</span>
             </div>
             <div class="m-info-h">
                 <span>Что надеть?</span>

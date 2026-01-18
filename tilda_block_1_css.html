@@ -2879,22 +2879,34 @@
             pointer-events: none;
         }
 
-        /* Clothing Icon Top Right */
+        /* Thrown Emojis */
         .clothing-icons {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 6px;
-            opacity: 0.6;
+            top: 10px;
+            right: 15px;
+            width: 70px;
+            height: 60px;
+            pointer-events: none;
         }
 
-        .clothing-icons svg {
-            width: 24px;
-            height: 24px;
-            stroke: #fff;
-            fill: none;
-            stroke-width: 1.5;
+        .emoji-icon {
+            position: absolute;
+            font-size: 38px;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+        }
+
+        .e-coat {
+            right: 25px;
+            top: 0;
+            transform: rotate(-15deg);
+            z-index: 1;
+        }
+
+        .e-hat {
+            right: 0;
+            bottom: 0;
+            transform: rotate(20deg);
+            z-index: 2;
         }
 
 
