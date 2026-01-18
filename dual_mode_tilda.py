@@ -11,6 +11,7 @@ DESKTOP_FILES = [
     "Двухдневка в Альпы/06_RedBull.html",
     "Двухдневка в Альпы/07_Salzburg.html",
     "Двухдневка в Альпы/08_Timeline.html",
+    "Двухдневка в Альпы/Mobile_Version/03_Reviews_Mobile.html",
     "Двухдневка в Альпы/09_OrgDetails.html"
 ]
 
@@ -82,6 +83,28 @@ wrapper_css = """
    @media (min-width: 901px) {
        body {
            background-color: #fff !important;
+       }
+       
+       /* DESKTOP REVIEW GRID OVERRIDE */
+       .m-reviews-section {
+           background: #fff !important; /* Match desktop white theme */
+       }
+       .m-reviews-scroll {
+           display: flex !important;
+           flex-wrap: wrap !important;
+           justify-content: center !important;
+           overflow: visible !important;
+           padding-bottom: 0 !important;
+           gap: 30px !important;
+           max-width: 1200px !important;
+           margin: 0 auto !important;
+       }
+       .m-review-card {
+           width: 300px !important;
+           flex: none !important;
+           margin-bottom: 30px !important;
+           box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+           border: 1px solid #eee !important;
        }
    }
 """

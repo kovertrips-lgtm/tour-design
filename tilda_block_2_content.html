@@ -117,7 +117,7 @@
 <div class="hall-section">
     <div class="hall-container">
         <div class="hall-img-col">
-            <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall2.jpg"
+            <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
                 alt="Hallstatt" class="hall-img" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
         </div>
         <div class="hall-text-col">
@@ -433,6 +433,111 @@
     </div>
 </div>
 
+<!-- DESKTOP SOURCE: Двухдневка в Альпы/Mobile_Version/03_Reviews_Mobile.html -->
+
+
+
+    <div class="m-reviews-section">
+        <div class="m-reviews-header">
+            <h2 class="m-reviews-title">Живые отзывы</h2>
+            <p class="m-reviews-subtitle">Истории тех, кто уже съездил</p>
+        </div>
+
+        <div class="m-reviews-scroll">
+
+            <!-- Review 1 -->
+            <div class="m-review-card" onclick="toggleReviewVideo(this)">
+                <video class="m-review-video"
+                    src="https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/play_720p.mp4"
+                    playsinline loop muted preload="metadata"></video>
+
+                <!-- Explicit IMG Poster -->
+                <img class="m-review-poster-img"
+                    src="https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/thumbnail.jpg"
+                    alt="Review Cover 1">
+
+                <!-- Overlay Removed -->
+                <div class="m-review-play">
+                    <svg class="m-play-icon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Review 2 -->
+            <div class="m-review-card" onclick="toggleReviewVideo(this)">
+                <video class="m-review-video"
+                    src="https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/play_720p.mp4"
+                    playsinline loop muted preload="metadata"></video>
+
+                <img class="m-review-poster-img"
+                    src="https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/thumbnail.jpg"
+                    alt="Review Cover 2">
+
+                <div class="m-review-play">
+                    <svg class="m-play-icon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Review 3 -->
+            <div class="m-review-card" onclick="toggleReviewVideo(this)">
+                <video class="m-review-video"
+                    src="https://vz-244f7910-31a.b-cdn.net/3ee8bc4d-418e-4428-be72-264c4190a3e8/play_720p.mp4"
+                    playsinline loop muted preload="metadata"></video>
+
+                <img class="m-review-poster-img"
+                    src="https://vz-244f7910-31a.b-cdn.net/3ee8bc4d-418e-4428-be72-264c4190a3e8/thumbnail.jpg"
+                    alt="Review Cover 3">
+
+                <div class="m-review-play">
+                    <svg class="m-play-icon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleReviewVideo(el) {
+            const video = el.querySelector('video');
+            if (!video) return;
+
+            if (video.paused) {
+                // Pause all other videos
+                document.querySelectorAll('video').forEach(v => {
+                    if (v !== video) {
+                        v.pause();
+                        v.closest('.m-review-card')?.classList.remove('playing');
+                    }
+                });
+
+                video.muted = false; // Unmute
+                var promise = video.play();
+
+                if (promise !== undefined) {
+                    promise.then(_ => {
+                        // Play started
+                        el.classList.add('playing');
+                    }).catch(error => {
+                        // Auto-play was prevented
+                        console.log("Play failed", error);
+                    });
+                } else {
+                    el.classList.add('playing');
+                }
+
+            } else {
+                video.pause();
+                el.classList.remove('playing');
+            }
+        }
+    </script>
+
+
 <!-- DESKTOP SOURCE: Двухдневка в Альпы/09_OrgDetails.html -->
 
 
@@ -479,6 +584,21 @@
                 С НАМИ!</button>
         </div>
     </div>
+
+    <button onclick="openWidget()" class="d-float-cta" id="d-sticky-cta">
+        ЗАНЯТЬ МЕСТО
+    </button>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('d-sticky-cta');
+            if (window.scrollY > 800) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+    </script>
 </div>
 </div><!-- END DESKTOP -->
 <div class="mobile-view">
