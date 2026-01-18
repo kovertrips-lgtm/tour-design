@@ -2398,13 +2398,16 @@
     /* Mobile How It Works Section */
     .m-how-section {
         background-color: #111;
-        padding: 40px 20px;
+        padding: 40px 0;
+        /* Full width for scrollers */
         font-family: 'Montserrat', sans-serif;
         color: #fff;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: hidden;
     }
 
     .m-how-header {
+        padding: 0 20px;
         margin-bottom: 30px;
     }
 
@@ -2421,124 +2424,109 @@
         line-height: 1.5;
     }
 
-    /* Steps */
-    .m-steps-grid {
+    /* VISUAL STEPS SCROLLER */
+    .m-steps-scroll {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding: 0 20px 40px;
+        /* Padding for shadow */
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+
+    .m-steps-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .m-step-card {
+        flex: 0 0 260px;
+        height: 320px;
+        background: #1a1a1a;
+        border-radius: 20px;
+        scroll-snap-align: center;
+        padding: 24px;
         display: flex;
         flex-direction: column;
-        gap: 30px;
-        margin-bottom: 40px;
-    }
-
-    .m-step {
+        justify-content: space-between;
         position: relative;
-        padding-left: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .m-step-head {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 8px;
+    /* Step Number Background */
+    .m-step-bg-num {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        font-size: 120px;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.03);
+        line-height: 1;
+        pointer-events: none;
     }
 
-    .m-step-num {
-        background: rgba(189, 255, 0, 0.1);
-        color: #BDFF00;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
+    /* Visual Icon Area */
+    .m-step-visual {
+        flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 800;
-        font-size: 14px;
-        flex-shrink: 0;
-    }
-
-    .m-step-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #fff;
-    }
-
-    .m-step-desc {
-        color: #888;
-        font-size: 14px;
-        line-height: 1.5;
-        padding-left: 44px;
-        /* Align with title start */
-    }
-
-    /* Included / Excluded Columns */
-    .m-inc-section {
-        background: #1a1a1a;
-        border-radius: 16px;
-        padding: 24px;
         margin-bottom: 20px;
     }
 
-    .m-list-header {
-        font-size: 16px;
-        font-weight: 700;
-        text-transform: uppercase;
-        margin-bottom: 16px;
-        letter-spacing: 1px;
+    .m-visual-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: rgba(41, 182, 246, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
 
-    .m-list-header.inc {
+    .m-step-card:nth-child(2) .m-visual-circle {
+        background: rgba(189, 255, 0, 0.1);
+    }
+
+    .m-step-card:nth-child(3) .m-visual-circle {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .m-visual-icon {
+        width: 48px;
+        height: 48px;
+        stroke-width: 1.5;
+        stroke: #29B6F6;
+        fill: none;
+    }
+
+    .m-step-card:nth-child(2) .m-visual-icon {
+        stroke: #BDFF00;
+    }
+
+    .m-step-card:nth-child(3) .m-visual-icon {
+        stroke: #fff;
+    }
+
+
+    /* Content */
+    .m-step-info h3 {
+        font-size: 20px;
+        font-weight: 800;
         color: #fff;
+        margin: 0 0 8px 0;
     }
 
-    .m-list-header.exc {
-        color: #888;
-        margin-top: 10px;
-    }
-
-    .m-list {
-        list-style: none;
-        padding: 0;
+    .m-step-info p {
+        font-size: 14px;
+        color: #aaa;
+        line-height: 1.5;
         margin: 0;
     }
 
-    .m-li {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 16px;
-        font-size: 14px;
-        color: #ccc;
-        line-height: 1.4;
-    }
-
-    .m-li:last-child {
-        margin-bottom: 0;
-    }
-
-    .m-icon-check {
-        color: #00C853;
-        width: 18px;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-
-    .m-icon-cross {
-        color: #FF5252;
-        width: 18px;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-
-    .m-li strong {
-        color: #fff;
-        font-weight: 600;
-    }
-
-    .m-li-sub {
-        display: block;
-        font-size: 12px;
-        color: #666;
-        margin-top: 2px;
-    }
+    /* Connecting Line (Pseudo-element for desktop, but here mostly individual cards) */
 
 
         /* --- БАЗОВЫЕ СТИЛИ --- */

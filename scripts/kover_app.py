@@ -3,311 +3,338 @@ import os
 import sys
 import threading
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox, Canvas, Scrollbar, Frame, Label, Button, Toplevel
-from PIL import Image, ImageTk, ImageOps
+from tkinter import filedialog, messagebox, Canvas, Frame, Button, Label, Scrollbar
 
-# --- CONFIG ---
-# We will use system defaults for colors to avoid visibility issues
-CACHE_DIR = os.path.join(os.path.expanduser("~"), ".kover_cache")
-if not os.path.exists(CACHE_DIR):
-    os.makedirs(CACHE_DIR)
+# Check for PIL
+try:
+    from PIL import Image, ImageTk, ImageOps
+except ImportError:
+    tk.messagebox.showerror("Error", "Pillow (PIL) library is missing.\nPlease run: pip install pillow")
+    sys.exit(1)
 
-class PhotoCullApp:
+# --- COLORS & STYLES ---
+BG_MAIN = "#1E1E1E"       # Dark Slate
+BG_PANEL = "#252526"      # Slightly lighter
+ACCENT = "#0A84FF"        # iOS Blue
+SUCCESS = "#30D158"       # iOS Green
+TEXT_MAIN = "#FFFFFF"
+TEXT_SUB = "#AAAAAA"
+
+class KoverAppV2:
     def __init__(self, root):
         self.root = root
-        self.root.title("Kover Photo Cull (Safe Mode)")
-        self.root.geometry("1000x800")
+        self.root.title("Kover Photo Cull V2")
+        self.root.geometry("1100x800")
+        self.root.configure(bg=BG_MAIN)
         
         # State
-        self.current_folder = ""
-        self.all_files = [] 
-        self.selection = [] 
-        self.photo_cache = {} 
-        self.thumb_queue = []
+        self.current_dir = None
+        self.image_files = [] # list of full paths
+        self.selected_files = set() # set of full paths
+        self.thumbnails = {} # path -> PhotoImage
+        self.thumb_queue = [] # list of (path, label_widget)
         self.running = True
 
-        # --- TOP TOOLBAR ---
-        toolbar = Frame(self.root, height=50, bg="#f0f0f0")
-        toolbar.pack(fill=tk.X, side=tk.TOP)
-        
-        Button(toolbar, text="📂 Open Folder (Finder)", command=self.ask_folder_native).pack(side=tk.LEFT, padx=10, pady=10)
-        self.lbl_path = Label(toolbar, text="No folder selected", bg="#f0f0f0")
-        self.lbl_path.pack(side=tk.LEFT, padx=10)
-        
-        Button(toolbar, text="Check Logs", command=self.show_logs).pack(side=tk.RIGHT, padx=10)
+        # --- UI LAYOUT ---
+        # 1. Header Toolbar
+        self.header = Frame(self.root, bg=BG_PANEL, height=60)
+        self.header.pack(fill="x", side="top")
+        self.header.pack_propagate(False)
 
-        # --- MAIN SPLIT ---
-        # Using PanedWindow can be tricky with styles, let's use simple Frames packed side-by-side
-        self.main_container = Frame(self.root)
-        self.main_container.pack(fill=tk.BOTH, expand=True)
+        self.btn_open = Button(self.header, text="📂 Open Folder", command=self.select_folder, 
+                               font=("System", 14), highlightbackground=BG_PANEL)
+        self.btn_open.pack(side="left", padx=20, pady=10)
 
-        # LEFT SIDEBAR (Tree)
-        self.left_frame = Frame(self.main_container, width=250, bg="#e0e0e0")
-        self.left_frame.pack(side=tk.LEFT, fill=tk.Y)
-        self.left_frame.pack_propagate(False) # Force width
-        
-        Label(self.left_frame, text="Browse Locations", bg="#e0e0e0", font=("Arial", 12, "bold")).pack(pady=10)
+        self.lbl_status = Label(self.header, text="No folder selected", bg=BG_PANEL, fg=TEXT_SUB, font=("System", 12))
+        self.lbl_status.pack(side="left", padx=10)
 
-        # Treeview with Scrollbar
-        tree_frame = Frame(self.left_frame)
-        tree_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-        
-        sb = Scrollbar(tree_frame)
-        sb.pack(side=tk.RIGHT, fill=tk.Y)
-        
-        self.tree = ttk.Treeview(tree_frame, yscrollcommand=sb.set)
-        self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        sb.config(command=self.tree.yview)
-        
-        self.tree.bind('<<TreeviewOpen>>', self._on_tree_open)
-        self.tree.bind('<<TreeviewSelect>>', self._on_tree_select)
-        
-        # Selection & Review
-        self.info_frame = Frame(self.left_frame, bg="#e0e0e0", height=100)
-        self.info_frame.pack(fill=tk.X, side=tk.BOTTOM, padx=10, pady=10)
-        
-        self.lbl_sel_count = Label(self.info_frame, text="0 Selected", bg="#e0e0e0", font=("Arial", 14))
-        self.lbl_sel_count.pack()
-        
-        Button(self.info_frame, text="Review & Upload", command=self.open_review, width=20).pack(pady=5)
-        Button(self.info_frame, text="Clear Cache", command=self.clear_cache).pack(pady=2)
+        self.btn_review = Button(self.header, text="Review & Upload (0)", state="disabled", command=self.open_review_window,
+                                 font=("System", 14, "bold"), highlightbackground=BG_PANEL, fg=ACCENT)
+        self.btn_review.pack(side="right", padx=20)
 
+        # 2. Main Canvas (Gallery)
+        self.canvas_frame = Frame(self.root, bg=BG_MAIN)
+        self.canvas_frame.pack(fill="both", expand=True)
 
-        # RIGHT CONTENT (Grid)
-        self.right_frame = Frame(self.main_container, bg="white")
-        self.right_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.v_scroll = Scrollbar(self.canvas_frame, orient="vertical")
+        self.canvas = Canvas(self.canvas_frame, bg=BG_MAIN, highlightthickness=0, yscrollcommand=self.v_scroll.set)
+        self.v_scroll.config(command=self.canvas.yview)
         
-        self.canvas = Canvas(self.right_frame, bg="white")
-        self.v_scroll = Scrollbar(self.right_frame, orient="vertical", command=self.canvas.yview)
-        
-        self.grid_frame = Frame(self.canvas, bg="white")
-        self.canvas_window = self.canvas.create_window((0, 0), window=self.grid_frame, anchor="nw")
-        
-        self.canvas.configure(yscrollcommand=self.v_scroll.set)
-        
-        self.v_scroll.pack(side=tk.RIGHT, fill=tk.Y)
-        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        
+        self.v_scroll.pack(side="right", fill="y")
+        self.canvas.pack(side="left", fill="both", expand=True)
+
+        self.grid_container = Frame(self.canvas, bg=BG_MAIN)
+        self.canvas_window = self.canvas.create_window((0, 0), window=self.grid_container, anchor="nw")
+
+        # Events
+        self.grid_container.bind("<Configure>", self._on_frame_configure)
         self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
-        self.grid_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
-        self.right_frame.bind("<Configure>", self._on_resize)
+        self.root.bind("<Configure>", self._on_resize)
+        
+        # 3. Start Background Threads
+        self.thread = threading.Thread(target=self._thumb_loader, daemon=True)
+        self.thread.start()
 
-        # --- INIT LOGIC ---
-        self.populate_tree_roots()
-        threading.Thread(target=self.worker_thumbnails, daemon=True).start()
+        # Initial Prompt
+        self.select_folder()
 
-    # --- TREE NAVIGATION ---
-    def populate_tree_roots(self):
-        # 1. Volumes
-        try:
-            if os.path.exists("/Volumes"):
-                node = self.tree.insert("", "end", text="/Volumes", values=["/Volumes"], open=False)
-                self.tree.insert(node, "end", text="dummy")
-        except: pass
+    def _on_frame_configure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
-        # 2. Home
-        try:
-            home = os.path.expanduser("~")
-            node = self.tree.insert("", "end", text="🏠 Home", values=[home], open=True)
-            self.populate_node(node, home)
-        except: pass
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(int(-1 * event.delta), "units")
+        
+    def _on_resize(self, event):
+        # Resize canvas window to match canvas width (for flow layout if we used pack, but we use grid)
+        # Just ensure container is at least canvas width
+        w = event.width - 20 # scrollbar buffer
+        self.canvas.itemconfig(self.canvas_window, width=w)
 
-    def populate_node(self, parent_id, path):
-        self.tree.delete(*self.tree.get_children(parent_id))
-        try:
-            items = os.listdir(path)
-            items.sort()
-            for item in items:
-                if item.startswith('.'): continue
-                full_path = os.path.join(path, item)
-                if os.path.isdir(full_path):
-                    oid = self.tree.insert(parent_id, "end", text=item, values=[full_path])
-                    self.tree.insert(oid, "end", text="dummy") # Lazy load
-        except PermissionError:
-            pass
+    # --- LOGIC ---
 
-    def _on_tree_open(self, event):
-        sel = self.tree.selection()
-        if not sel: return
-        item_id = sel[0]
-        # Check if dummy
-        children = self.tree.get_children(item_id)
-        if len(children) == 1 and self.tree.item(children[0], "text") == "dummy":
-            vals = self.tree.item(item_id, "values")
-            if vals:
-                self.populate_node(item_id, vals[0])
-
-    def _on_tree_select(self, event):
-        sel = self.tree.selection()
-        if not sel: return
-        vals = self.tree.item(sel[0], "values")
-        if vals:
-            self.load_folder(vals[0])
-
-    # --- FOLDER LOADING ---
-    def ask_folder_native(self):
+    def select_folder(self):
+        # Using Native OS Dialog - This is the key fix for "can't select"
         path = filedialog.askdirectory()
         if path:
-            self.load_folder(path)
+            self.load_images(path)
 
-    def load_folder(self, path):
-        self.current_folder = path
-        self.lbl_path.config(text=path)
+    def load_images(self, path):
+        self.current_dir = path
+        self.lbl_status.config(text=f"📂 {os.path.basename(path)}")
         
         # Clear UI
-        for w in self.grid_frame.winfo_children(): w.destroy()
+        for widget in self.grid_container.winfo_children():
+            widget.destroy()
+        
+        self.image_files = []
+        self.thumbnails = {}
         self.thumb_queue = []
-        
+        self.selected_files = set()
+        self.update_review_btn()
+
+        # Scan
+        valid_exts = {".jpg", ".jpeg", ".png", ".webp", ".heic"}
         try:
-            files = os.listdir(path)
-            self.all_files = [
-                os.path.join(path, f) for f in files 
-                if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.heic'))
-            ]
-            self.all_files.sort()
-            self.render_grid()
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
+            files = sorted([os.path.join(path, f) for f in os.listdir(path) 
+                            if os.path.splitext(f.lower())[1] in valid_exts and not f.startswith(".")])
+            self.image_files = files
+            
+            if not files:
+                Label(self.grid_container, text="No images found.", bg=BG_MAIN, fg=TEXT_SUB, font=("System", 18)).pack(pady=50)
+                return
+            
+            self._render_grid()
+            
+        except OSError as e:
+            messagebox.showerror("Error", f"Access Denied: {e}")
 
-    def render_grid(self):
-        if not self.all_files:
-            Label(self.grid_frame, text="No images found", bg="white").pack(pady=20)
-            return
-
-        w = self.canvas.winfo_width()
-        cols = max(3, w // 220)
+    def _render_grid(self):
+        # Simple Flow Layout using Grid
+        # Calculate columns
+        win_width = self.root.winfo_width()
+        if win_width < 200: win_width = 1000
         
-        for i, fp in enumerate(self.all_files):
-            r, c = divmod(i, cols)
+        col_count = max(3, win_width // 220)
+        
+        for i, fpath in enumerate(self.image_files):
+            r, c = divmod(i, col_count)
             
-            f = Frame(self.grid_frame, width=204, height=204, bg="#ddd")
-            f.grid(row=r, column=c, padx=8, pady=8)
-            f.pack_propagate(False)
+            # Card Frame
+            card = Frame(self.grid_container, bg="#333", width=200, height=200)
+            card.grid(row=r, column=c, padx=5, pady=5)
+            card.pack_propagate(False)
             
-            l = Label(f, text="...", bg="#eee")
-            l.place(x=2, y=2, width=200, height=200)
+            # Image Label
+            lbl = Label(card, bg="#222", text="Loading...")
+            lbl.place(relx=0.5, rely=0.5, anchor="center", width=190, height=190)
             
-            if fp in self.selection:
-                f.config(bg="green")
+            # Bind Click
+            # Use closure defaults to capture current fpath/card
+            lbl.bind("<Button-1>", lambda e, p=fpath, w=card: self.toggle_select(p, w))
+            card.bind("<Button-1>", lambda e, p=fpath, w=card: self.toggle_select(p, w))
             
-            l.bind("<Button-1>", lambda e, p=fp, w=f: self.toggle(p, w))
-            f.bind("<Button-1>", lambda e, p=fp, w=f: self.toggle(p, w))
-            
-            self.thumb_queue.append((fp, l))
+            self.thumb_queue.append((fpath, lbl))
 
-    def toggle(self, path, widget):
-        if path in self.selection:
-            self.selection.remove(path)
-            widget.config(bg="#ddd")
-        else:
-            self.selection.append(path)
-            widget.config(bg="green")
-        self.lbl_sel_count.config(text=f"{len(self.selection)} Selected")
-
-    # --- THUMBNAILS ---
-    def worker_thumbnails(self):
+    def _thumb_loader(self):
         while self.running:
             if not self.thumb_queue:
                 import time
-                time.sleep(0.1)
+                time.sleep(0.05)
                 continue
             
-            path, lbl = self.thumb_queue.pop(0)
+            # Process one
+            fpath, lbl = self.thumb_queue.pop(0) # FIFO
+            
+            # Skip if widget died
             try:
                 if not lbl.winfo_exists(): continue
-                img = self.get_thumb(path)
-                self.root.after(0, lambda l=lbl, i=img: l.config(image=i) if l.winfo_exists() else None)
-                # Keep ref
-                self.root.after(0, lambda l=lbl, i=img: setattr(l, 'img_ref', i) if l.winfo_exists() else None)
-            except: pass
+            except: continue
+            
+            # Generate or Cache
+            thumb = self._get_thumbnail(fpath)
+            
+            # Update Main Thread
+            if thumb:
+                def update(l=lbl, t=thumb):
+                    if l.winfo_exists():
+                        l.config(text="", image=t)
+                        l.image = t # keep ref
+                try:
+                    self.root.after(0, update)
+                except: pass
 
-    def get_thumb(self, path):
-        if path in self.photo_cache: return self.photo_cache[path]
-        
-        cname = str(hash(path)) + ".jpg"
-        cpath = os.path.join(CACHE_DIR, cname)
-        
+    def _get_thumbnail(self, path):
+        # In-memory cache first
+        if path in self.thumbnails:
+            return self.thumbnails[path]
+            
         try:
-            if os.path.exists(cpath):
-                img = Image.open(cpath)
-            else:
-                img = Image.open(path)
-                img.thumbnail((200, 200))
-                if img.mode != 'RGB': img = img.convert('RGB')
-                img.save(cpath, "JPEG", quality=70)
+            # Load and Resize
+            img = Image.open(path)
+            img.thumbnail((190, 190))
             
-            tkimg = ImageTk.PhotoImage(img)
-            self.photo_cache[path] = tkimg
-            return tkimg
-        except: return None
+            # Center Crop to Square (simulate object-fit: cover)
+            w, h = img.size
+            size = 190
+            
+            # Only crop if it's larger
+            # Simple approach: just use the thumbnail as is, black bars if aspect differs
+            # For "Application" like feel, let's just make it a PhotoImage
+            
+            tk_img = ImageTk.PhotoImage(img)
+            # self.thumbnails[path] = tk_img # Cache in memory? Might eat RAM. 
+            # Use LRU logic? For now, we rely on OS file cache for speed on re-read,
+            # or we can cache tiny thumbnails.
+            
+            return tk_img
+        except Exception as e:
+            print(f"Thumb error: {e}")
+            return None
 
-    # --- MISC ---
-    def _on_mousewheel(self, e):
-        self.canvas.yview_scroll(int(-1*e.delta), "units")
+    def toggle_select(self, path, card_widget):
+        if path in self.selected_files:
+            self.selected_files.remove(path)
+            card_widget.configure(bg="#333") # Default border
+        else:
+            self.selected_files.add(path)
+            card_widget.configure(bg=SUCCESS) # Green border
+            
+        self.update_review_btn()
+
+    def update_review_btn(self):
+        count = len(self.selected_files)
+        self.btn_review.config(text=f"Review & Upload ({count})", 
+                               state="normal" if count > 0 else "disabled")
+
+    # --- REVIEW WINDOW ---
+    def open_review_window(self):
+        ReviewWindow(self.root, list(self.selected_files), self.on_upload_finished)
+
+    def on_upload_finished(self, uploaded_files):
+        # Clear selection of uploaded files
+        for p in uploaded_files:
+            if p in self.selected_files:
+                self.selected_files.remove(p)
         
-    def _on_resize(self, e):
-        self.canvas.itemconfig(self.canvas_window, width=e.width)
+        # Redraw grid borders
+        # (A bit inefficient to scan all, but safe)
+        # Actually easier to just reload current folder to refresh state
+        self.load_images(self.current_dir)
 
-    def show_logs(self):
-        messagebox.showinfo("Logs", "Logs are disabled in this mode to prevent FS issues. If app is running, logging is working.")
 
-    def clear_cache(self):
-        import shutil
-        shutil.rmtree(CACHE_DIR, ignore_errors=True)
-        os.makedirs(CACHE_DIR)
-        self.photo_cache.clear()
-
-    def open_review(self):
-        if not self.selection: return
-        ReviewWin(self.root, self.selection, self.finish_review)
-
-    def finish_review(self, sel):
-        self.selection = sel
-        self.lbl_sel_count.config(text=f"{len(sel)} Selected")
-        self.render_grid()
-
-class ReviewWin:
-    def __init__(self, parent, selection, cb):
-        self.selection = selection[:]
-        self.cb = cb
-        self.win = Toplevel(parent)
+class ReviewWindow:
+    def __init__(self, parent, files, callback):
+        self.files = sorted(files)
+        self.callback = callback
+        self.win = tk.Toplevel(parent)
+        self.win.title(f"Review {len(files)} Photos")
         self.win.geometry("800x600")
-        self.win.title("Review Selection")
-        
-        # Toolbar
-        tb = Frame(self.win)
-        tb.pack(fill=tk.X)
-        Button(tb, text="Remove Selected", command=self.rem).pack(side=tk.LEFT)
-        Button(tb, text="UPLOAD to Bunny", command=self.up, bg="blue", fg="white").pack(side=tk.RIGHT)
-        
-        self.lb = tk.Listbox(self.win)
-        self.lb.pack(fill=tk.BOTH, expand=True)
-        
-        for p in self.selection:
-            self.lb.insert(tk.END, os.path.basename(p))
-            
-    def rem(self):
-        idx = self.lb.curselection()
-        if idx:
-            del self.selection[idx[0]]
-            self.lb.delete(idx[0])
+        self.win.configure(bg=BG_MAIN)
 
-    def up(self):
-        # Stub upload
-        from tkinter import simpledialog
-        name = simpledialog.askstring("Upload", "Folder Name:")
-        if name:
-             threading.Thread(target=self.do_up, args=(name,)).start()
+        # Toolbar
+        self.tb = Frame(self.win, bg=BG_PANEL, height=50)
+        self.tb.pack(fill="x", side="top")
         
-    def do_up(self, name):
-         import urllib.request
-         # Real upload logic copy-paste... simplified for brevity, assuming functionality works as prior
-         # Just notifying
-         messagebox.showinfo("Upload", f"Simulated upload of {len(self.selection)} files to {name}")
-         self.win.destroy()
-         self.cb([])
+        Button(self.tb, text="Cancel", command=self.win.destroy).pack(side="left", padx=10, pady=10)
+        
+        self.btn_up = Button(self.tb, text="🚀 Upload to Bunny", command=self.start_upload, 
+                             bg=ACCENT, fg="black", font=("System", 12, "bold"))
+        self.btn_up.pack(side="right", padx=10, pady=10)
+
+        # List
+        self.listbox = tk.Listbox(self.win, bg="#333", fg="white", font=("System", 14), selectbackground=ACCENT)
+        self.listbox.pack(fill="both", expand=True, padx=20, pady=20)
+        
+        for f in self.files:
+            self.listbox.insert("end", os.path.basename(f))
+
+    def start_upload(self):
+        from tkinter import simpledialog
+        folder_name = simpledialog.askstring("Upload", "Enter Trip/Event Name (e.g. Alps_2024):", parent=self.win)
+        
+        if not folder_name: return
+        
+        # Disable button
+        self.btn_up.config(state="disabled", text="Uploading...")
+        
+        # Thread it
+        threading.Thread(target=self._upload_thread, args=(folder_name,)).start()
+
+    def _upload_thread(self, folder_name):
+        import urllib.request, urllib.parse
+        
+        BUNNY_API = "362d59db-046b-4538-821bf3d1d197-7ea2-42f4"
+        STORAGE_NAME = "kovertripweb"
+        
+        success_list = []
+        errors = 0
+        
+        total = len(self.files)
+        
+        for i, local_path in enumerate(self.files):
+            try:
+                fname = os.path.basename(local_path)
+                ext = os.path.splitext(fname)[1]
+                
+                # Sanitize
+                clean_folder = "".join(c for c in folder_name if c.isalnum() or c in (' ', '_', '-')).strip()
+                clean_folder = clean_folder.replace(" ", "_")
+                
+                new_name = f"{clean_folder}_{i+1}{ext}"
+                
+                # Path: Двухдневка в Альпы/AutoSync/{Name}/{file}
+                # Using Quote for URL safety
+                remote_path_raw = f"Двухдневка в Альпы/AutoSync/{clean_folder}/{new_name}"
+                remote_path_enc = "/".join([urllib.parse.quote(seg) for seg in remote_path_raw.split('/')])
+                
+                url = f"https://storage.bunnycdn.com/{STORAGE_NAME}/{remote_path_enc}"
+                
+                # Read Data & Upload
+                with open(local_path, "rb") as f:
+                    data = f.read()
+                
+                req = urllib.request.Request(url, data=data, method="PUT")
+                req.add_header("AccessKey", BUNNY_API)
+                req.add_header("Content-Type", "application/octet-stream")
+                
+                urllib.request.urlopen(req)
+                success_list.append(local_path)
+                print(f"Uploaded: {new_name}")
+                
+            except Exception as e:
+                print(f"Failed {local_path}: {e}")
+                errors += 1
+        
+        # Finish
+        self.win.after(0, lambda: self._finish(success_list, errors))
+
+    def _finish(self, success_list, errors):
+        messagebox.showinfo("Upload Complete", f"Successfully uploaded: {len(success_list)}\nErrors: {errors}")
+        self.callback(success_list)
+        self.win.destroy()
+
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = PhotoCullApp(root)
+    app = KoverAppV2(root)
     root.mainloop()

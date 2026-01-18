@@ -2,13 +2,16 @@
     /* Mobile How It Works Section */
     .m-how-section {
         background-color: #111;
-        padding: 40px 20px;
+        padding: 40px 0;
+        /* Full width for scrollers */
         font-family: 'Montserrat', sans-serif;
         color: #fff;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: hidden;
     }
 
     .m-how-header {
+        padding: 0 20px;
         margin-bottom: 30px;
     }
 
@@ -25,251 +28,174 @@
         line-height: 1.5;
     }
 
-    /* Steps */
-    .m-steps-grid {
+    /* VISUAL STEPS SCROLLER */
+    .m-steps-scroll {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding: 0 20px 40px;
+        /* Padding for shadow */
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+
+    .m-steps-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .m-step-card {
+        flex: 0 0 260px;
+        height: 320px;
+        background: #1a1a1a;
+        border-radius: 20px;
+        scroll-snap-align: center;
+        padding: 24px;
         display: flex;
         flex-direction: column;
-        gap: 30px;
-        margin-bottom: 40px;
-    }
-
-    .m-step {
+        justify-content: space-between;
         position: relative;
-        padding-left: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .m-step-head {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 8px;
+    /* Step Number Background */
+    .m-step-bg-num {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        font-size: 120px;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.03);
+        line-height: 1;
+        pointer-events: none;
     }
 
-    .m-step-num {
-        background: rgba(189, 255, 0, 0.1);
-        color: #BDFF00;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
+    /* Visual Icon Area */
+    .m-step-visual {
+        flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 800;
-        font-size: 14px;
-        flex-shrink: 0;
-    }
-
-    .m-step-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #fff;
-    }
-
-    .m-step-desc {
-        color: #888;
-        font-size: 14px;
-        line-height: 1.5;
-        padding-left: 44px;
-        /* Align with title start */
-    }
-
-    /* Included / Excluded Columns */
-    .m-inc-section {
-        background: #1a1a1a;
-        border-radius: 16px;
-        padding: 24px;
         margin-bottom: 20px;
     }
 
-    .m-list-header {
-        font-size: 16px;
-        font-weight: 700;
-        text-transform: uppercase;
-        margin-bottom: 16px;
-        letter-spacing: 1px;
+    .m-visual-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: rgba(41, 182, 246, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
 
-    .m-list-header.inc {
+    .m-step-card:nth-child(2) .m-visual-circle {
+        background: rgba(189, 255, 0, 0.1);
+    }
+
+    .m-step-card:nth-child(3) .m-visual-circle {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .m-visual-icon {
+        width: 48px;
+        height: 48px;
+        stroke-width: 1.5;
+        stroke: #29B6F6;
+        fill: none;
+    }
+
+    .m-step-card:nth-child(2) .m-visual-icon {
+        stroke: #BDFF00;
+    }
+
+    .m-step-card:nth-child(3) .m-visual-icon {
+        stroke: #fff;
+    }
+
+
+    /* Content */
+    .m-step-info h3 {
+        font-size: 20px;
+        font-weight: 800;
         color: #fff;
+        margin: 0 0 8px 0;
     }
 
-    .m-list-header.exc {
-        color: #888;
-        margin-top: 10px;
-    }
-
-    .m-list {
-        list-style: none;
-        padding: 0;
+    .m-step-info p {
+        font-size: 14px;
+        color: #aaa;
+        line-height: 1.5;
         margin: 0;
     }
 
-    .m-li {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 16px;
-        font-size: 14px;
-        color: #ccc;
-        line-height: 1.4;
-    }
-
-    .m-li:last-child {
-        margin-bottom: 0;
-    }
-
-    .m-icon-check {
-        color: #00C853;
-        width: 18px;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-
-    .m-icon-cross {
-        color: #FF5252;
-        width: 18px;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-
-    .m-li strong {
-        color: #fff;
-        font-weight: 600;
-    }
-
-    .m-li-sub {
-        display: block;
-        font-size: 12px;
-        color: #666;
-        margin-top: 2px;
-    }
+    /* Connecting Line (Pseudo-element for desktop, but here mostly individual cards) */
 </style>
 
 <div class="m-how-section">
 
-    <!-- Header -->
-    <div class="m-how-header">
-        <h2 class="m-how-title">Всё включено</h2>
-        <p class="m-how-sub">Прозрачные условия. Никаких скрытых доплат за "базовый комфорт".</p>
-    </div>
-
-    <!-- Included List -->
-    <div class="m-inc-section">
-        <div class="m-list-header inc">Входит в цену</div>
-        <ul class="m-list">
-            <li class="m-li">
-                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <div>
-                    <strong>Трансфер туда-обратно</strong>
-                    <span class="m-li-sub">Комфортный лайнер, Wi-Fi, розетки</span>
-                </div>
-            </li>
-            <li class="m-li">
-                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <div>
-                    <strong>Отель & Завтрак</strong>
-                    <span class="m-li-sub">Размещение в отеле 4* со SPA и бассейном</span>
-                </div>
-            </li>
-            <li class="m-li">
-                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <div>
-                    <strong>Личный фотограф</strong>
-                    <span class="m-li-sub">Съемка в Гальштате и на маршруте</span>
-                </div>
-            </li>
-            <li class="m-li">
-                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <div>
-                    <strong>Сопровождение 24/7</strong>
-                    <span class="m-li-sub">Команда Kover Travel всегда рядом</span>
-                </div>
-            </li>
-            <li class="m-li">
-                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <div>
-                    <strong>Угощения в дороге</strong>
-                    <span class="m-li-sub">Пирожки, напитки и welcome-drink</span>
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Excluded List -->
-    <div class="m-inc-section" style="background:transparent; border:1px solid rgba(255,255,255,0.1);">
-        <div class="m-list-header exc">Дополнительно</div>
-        <ul class="m-list">
-            <li class="m-li">
-                <svg class="m-icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-                <div>Аренда саней (~15€)</div>
-            </li>
-            <li class="m-li">
-                <svg class="m-icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-                <div>Подъемник (Скипасс ~35€)</div>
-            </li>
-            <li class="m-li">
-                <svg class="m-icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-                <div>Ужин и личные расходы</div>
-            </li>
-        </ul>
-    </div>
-
-    <div style="height:30px;"></div>
-
-    <!-- How it Works Steps -->
     <div class="m-how-header">
         <h2 class="m-how-title">Как это работает</h2>
+        <p class="m-how-sub">Максимально простой процесс. Никакой бюрократии.</p>
     </div>
 
-    <div class="m-steps-grid">
-        <div class="m-step">
-            <div class="m-step-head">
-                <div class="m-step-num">1</div>
-                <div class="m-step-title">Бронь</div>
+    <div class="m-steps-scroll">
+
+        <!-- STEP 1 -->
+        <div class="m-step-card">
+            <div class="m-step-bg-num">1</div>
+            <div class="m-step-visual">
+                <div class="m-visual-circle">
+                    <svg class="m-visual-icon" viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                </div>
             </div>
-            <div class="m-step-desc">
-                Внеси часть суммы или полную оплату. Место закрепится за тобой мгновенно.
+            <div class="m-step-info">
+                <h3>Забронируй</h3>
+                <p>Оплати тур картой (Apple Pay / Google Pay). Место закрепится за тобой мгновенно.</p>
             </div>
         </div>
 
-        <div class="m-step">
-            <div class="m-step-head">
-                <div class="m-step-num">2</div>
-                <div class="m-step-title">Чат</div>
+        <!-- STEP 2 -->
+        <div class="m-step-card">
+            <div class="m-step-bg-num">2</div>
+            <div class="m-step-visual">
+                <div class="m-visual-circle">
+                    <svg class="m-visual-icon" viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
             </div>
-            <div class="m-step-desc">
-                Сразу после оплаты ты попадешь в Telegram-чат участников с организаторами и инфой.
+            <div class="m-step-info">
+                <h3>Залетай в чат</h3>
+                <p>После оплаты тебя перекинет в Telegram-чат. Там — тусовка, знакомства и организаторы.</p>
             </div>
         </div>
 
-        <div class="m-step">
-            <div class="m-step-head">
-                <div class="m-step-num">3</div>
-                <div class="m-step-title">Старт</div>
+        <!-- STEP 3 -->
+        <div class="m-step-card">
+            <div class="m-step-bg-num">3</div>
+            <div class="m-step-visual">
+                <div class="m-visual-circle">
+                    <!-- Bus Icon -->
+                    <svg class="m-visual-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+                        <circle cx="7" cy="17" r="2" />
+                        <circle cx="17" cy="17" r="2" />
+                        <path d="M5 17h2v-6h10v6h2" />
+                    </svg>
+                </div>
             </div>
-            <div class="m-step-desc">
-                Приходи в субботу ночью (02:45) к автобусу. Дальше мы всё сделаем сами.
+            <div class="m-step-info">
+                <h3>Стартуем</h3>
+                <p>В ночь с пятницы на субботу приходи к автобусу. Загружаемся и мчим в Альпы!</p>
             </div>
         </div>
+
     </div>
 
 </div>
