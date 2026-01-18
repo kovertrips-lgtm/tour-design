@@ -598,7 +598,7 @@
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_1.jpg">
                         <img
-                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_2.jpg">
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_4.jpg">
                         <img
@@ -654,6 +654,10 @@
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani1.jpg">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani3.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani2.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani5.jpg">
                     </div>
                     <div class="content">
                         <p class="m-article-text">
@@ -672,16 +676,16 @@
 
                         <!-- Embedded Video Player -->
                         <div class="m-video-responsive"
-                            style="cursor: pointer; position: relative; width: 100%; aspect-ratio: 9/16; padding-bottom: 177.78%; height: 0; border-radius: 12px; margin-bottom: 24px; overflow: hidden; background: #000;"
+                            style="cursor: pointer; position: relative; width: 100%; height: 50vh; border-radius: 12px; margin-bottom: 24px; overflow: hidden; background: #000; display: flex; justify-content: center;"
                             onclick="toggleVideo(this)">
                             <video
                                 src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
                                 poster="https://kovertrip.b-cdn.net/Двухдневка в Альпы/sani4.jpg" playsinline
                                 webkit-playsinline preload="metadata"
-                                style="width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; top:0; left:0;">
+                                style="width: auto; height: 100%; max-width: 100%; object-fit: contain;">
                             </video>
                             <div class="play-overlay"
-                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); transition: opacity 0.3s;">
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); transition: opacity 0.3s; pointer-events: none;">
                                 <div class="play-icon"
                                     style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.5);">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -974,14 +978,18 @@
             videos.forEach(v => v.pause());
         }
 
-        function toggleVideo(container) {
-            const video = container.querySelector('video');
+        function toggleVideo(el) {
+            const video = el.querySelector('video');
+            const overlay = el.querySelector('.play-overlay');
             if (video.paused) {
+                video.muted = false; // Unmute on interaction
                 video.play();
-                container.classList.add('playing');
+                el.classList.add('playing');
+                if (overlay) overlay.style.opacity = '0'; // Hide button on play
             } else {
                 video.pause();
-                container.classList.remove('playing');
+                el.classList.remove('playing');
+                if (overlay) overlay.style.opacity = '1'; // Show button on pause
             }
         }
     </script>
