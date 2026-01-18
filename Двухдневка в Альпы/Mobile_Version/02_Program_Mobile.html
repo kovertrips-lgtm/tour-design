@@ -202,7 +202,7 @@
         .m-popup-sheet {
             background: #1A1A1A;
             width: 100%;
-            height: 90vh;
+            height: 92vh;
             /* Takes up most of screen */
             border-radius: 24px 24px 0 0;
             transform: translateY(100%);
@@ -295,28 +295,168 @@
         }
 
         .m-popup-content {
-            padding: 0 24px 40px;
+            padding: 0 24px 100px;
+            /* Extra padding for bottom scroll */
             margin-top: -20px;
             position: relative;
             z-index: 5;
             background: #1A1A1A;
             /* To cover bottom of image if rounded */
             border-radius: 24px 24px 0 0;
+            min-height: 500px;
         }
 
         .m-popup-title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             color: white;
-            margin: 30px 0 16px 0;
+            margin: 30px 0 8px 0;
             line-height: 1.05;
         }
 
-        .m-popup-text {
+        .m-popup-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        /* -- Mini Article Styles -- */
+        .m-article-text {
             font-size: 16px;
             line-height: 1.6;
-            color: #ccc;
+            color: #d0d0d0;
             margin-bottom: 24px;
+        }
+
+        .m-article-h {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin: 24px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .m-article-tag {
+            background: #333;
+            color: #ccc;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Booking / Reviews */
+        .m-booking-block {
+            background: #252525;
+            border-radius: 16px;
+            padding: 16px;
+            margin: 20px 0;
+            border: 1px solid #333;
+        }
+
+        .m-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .m-star {
+            color: #FFD700;
+        }
+
+        .m-rating-val {
+            background: #003580;
+            /* Booking blue style */
+            color: white;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px 6px 6px 0;
+            font-size: 14px;
+        }
+
+        .m-quote-card {
+            background: #222;
+            border-left: 4px solid #29B6F6;
+            padding: 16px;
+            font-style: italic;
+            color: #bbb;
+            margin: 16px 0;
+            border-radius: 0 12px 12px 0;
+            font-size: 15px;
+        }
+
+        .m-g-review {
+            display: flex;
+            gap: 12px;
+            background: #222;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .m-g-avatar {
+            width: 40px;
+            height: 40px;
+            background: #666;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .m-g-name {
+            font-weight: 700;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .m-g-stars {
+            color: #FFD700;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .m-g-text {
+            font-size: 13px;
+            color: #aaa;
+            line-height: 1.4;
+        }
+
+        .m-popup-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: #29B6F6;
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .m-popup-link.booking {
+            background: #003580;
+            /* Booking.com color */
+        }
+
+        .m-popup-link.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Close Button Overlay */
@@ -349,7 +489,61 @@
             font-weight: 700;
             font-size: 16px;
             text-transform: uppercase;
-            margin-top: auto;
+            margin-top: 30px;
+        }
+
+        /* Video Player Styles */
+        .m-video-responsive {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+            margin-top: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .m-video-responsive video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            object-fit: cover;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .play-icon {
+            width: 50px;
+            height: 50px;
+            background: #BDFF00;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .m-video-responsive.playing .play-overlay {
+            opacity: 0;
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -374,32 +568,48 @@
                     <span class="m-story-tag">Австрия</span>
                     <h3 class="m-story-title">Гальштат</h3>
                     <p class="m-story-desc">Самая красивая деревня Австрии без толп туристов.</p>
-                    <div class="m-story-btn">Смотреть фото &rarr;</div>
+                    <div class="m-story-btn">Смотреть программу &rarr;</div>
                 </div>
                 <!-- Data for Popup -->
                 <div class="popup-data" id="data-hallstatt" style="display:none;">
+                    <div class="title">Магия Гальштата</div>
+                    <div class="subtitle">ЮНЕСКО · История · Фотосессия</div>
                     <div class="images">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_1.jpg">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_2.jpg">
                         <img
-                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_3.jpg">
-                        <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_4.jpg">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_5.jpg">
-                        <img
-                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_6.jpg">
-                        <img
-                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_7.jpg">
-                        <img
-                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_8.jpg">
                     </div>
-                    <div class="title">Магия Гальштата</div>
-                    <div class="text">Мы приедем сюда утром, пока город еще спит и нет толп туристов. Это идеальное
-                        время для прогулки вдоль озера, кормления лебедей и открыточных фотографий. Вы
-                        увидите старинные домики, прилепленные к скалам, и насладитесь тишиной горного озера.</div>
+                    <div class="content">
+                        <p class="m-article-text">
+                            Представьте место, где время остановилось. Домики 16-го века, прижатые к скалам, отражаются
+                            в зеркальной глади озера. Это Гальштат.
+                            <br><br>
+                            Мы приезжаем сюда утром, пока город еще спит и нет толп туристов из автобусов. Это "золотой
+                            час" для прогулок.
+                        </p>
+
+                        <div class="m-article-h">📸 Профессиональный Фотограф</div>
+                        <p class="m-article-text">
+                            Вам не нужно беспокоиться о селфи. С нами едет профессиональный фотограф, который сделает
+                            вам те самые "открыточные" кадры на знаменитой смотровой площадке и секретных пирсах.
+                        </p>
+
+                        <div class="m-article-h">🧠 Увлекательная Экскурсия</div>
+                        <p class="m-article-text">
+                            Узнаем, почему соль здесь была дороже золота, увидим "Костницу" (если не боитесь!) и
+                            прогуляемся по самой старой улице.
+                        </p>
+
+                        <div class="m-quote-card">
+                            "Гальштат утром — это совершенно другая планета. Тишина, туман над озером и лебеди. Это
+                            стоит того, чтобы проснуться пораньше!"
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -414,24 +624,68 @@
                     <div class="m-story-btn" style="background:#BDFF00; color:black;">Погнать &rarr;</div>
                 </div>
                 <div class="popup-data" id="data-sledding" style="display:none;">
+                    <div class="title">14 КМ Адреналина</div>
+                    <div class="subtitle">Wildkogel Arena · Ночное катание</div>
                     <div class="images">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sledding_night.png">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani1.jpg">
                         <img
-                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani2.jpg">
-                        <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani3.jpg">
-                        <img
-                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg">
-                        <img
-                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani5.jpg">
                     </div>
-                    <div class="title">14 КМ Адреналина</div>
-                    <div class="text">Представьте: ночь, освещенная трасса длинной 14 километров, и вы летите на санях!
-                        Подъем занимает около 20 минут, а спуск — до 50 минут чистого драйва. Трасса огорожена и
-                        безопасна, специальные навыки не нужны.</div>
+                    <div class="content">
+                        <p class="m-article-text">
+                            Забудьте детские горки во дворе. Это <b>Wildkogel Arena</b> — 14 километров подготовленной
+                            трассы с перепадом высот 1300 метров.
+                        </p>
+
+                        <div class="m-article-h">🚀 Как это происходит?</div>
+                        <p class="m-article-text">
+                            Мы поднимаемся на подъемнике на высоту 2200м. Вокруг — альпийский закат. Берем спортивные
+                            сани и начинаем спуск. Он длится от 30 до 50 минут! Трасса освещена, так что едем в сумерках
+                            — это добавляет драйва.
+                        </p>
+
+                        <div class="m-article-h">⭐️ Отзывы</div>
+
+                        <div class="m-g-review">
+                            <div class="m-g-avatar">A</div>
+                            <div>
+                                <div class="m-g-name">Alexey K.</div>
+                                <div class="m-g-stars">★★★★★</div>
+                                <div class="m-g-text">"Это было лучшее впечатление за всю поездку! Думал будет страшно,
+                                    но санки легко управляются. Эмоции через край!"</div>
+                            </div>
+                        </div>
+
+                        <div class="m-g-review">
+                            <div class="m-g-avatar" style="background:#BDFF00; color:black;">M</div>
+                            <div>
+                                <div class="m-g-name">Maria S.</div>
+                                <div class="m-g-stars">★★★★★</div>
+                                <div class="m-g-text">"Длинная трасса, едешь и едешь! Очень красивые виды на ночную
+                                    долину."</div>
+                            </div>
+                        </div>
+
+                        <!-- Embedded Video Player -->
+                        <div class="m-video-responsive" style="cursor: pointer;" onclick="toggleVideo(this)">
+                            <video
+                                src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
+                                poster="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
+                                playsinline webkit-playsinline preload="metadata" style="object-fit: cover;">
+                            </video>
+                            <div class="play-overlay">
+                                <div class="play-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8 5V19L19 12L8 5Z" fill="black" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -446,6 +700,8 @@
                     <div class="m-story-btn">Посмотреть номера &rarr;</div>
                 </div>
                 <div class="popup-data" id="data-hotel" style="display:none;">
+                    <div class="title">Альпийский Комфорт</div>
+                    <div class="subtitle">Hotel Römerhof 4* · Fusch</div>
                     <div class="images">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg">
@@ -453,11 +709,43 @@
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/332735359.jpg">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/514073860.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/514073855.jpg">
                     </div>
-                    <div class="title">Альпийский Комфорт</div>
-                    <div class="text">Мы живем в отеле Römerhof 4*. После катания вас ждет теплый бассейн и банный
-                        комплекс. Утром — роскошный завтрак "шведский стол". Номера просторные, в альпийском стиле, с
-                        очень удобными кроватями.</div>
+                    <div class="content">
+
+                        <div class="m-booking-block">
+                            <div class="m-rating-row">
+                                <div class="m-rating-val">8.9</div>
+                                <span style="font-weight:bold; color:white;">Потрясающе</span>
+                                <span style="color:#888; font-size:12px;">300+ отзывов</span>
+                            </div>
+                            <p style="font-size:13px; color:#aaa; margin:0;">Рейтинг на Booking.com</p>
+                        </div>
+
+                        <p class="m-article-text">
+                            Мы живем в отеле <b>Hotel Römerhof</b> — это уютный, тёплый, домашний отель в альпийском
+                            стиле.
+                        </p>
+
+                        <div class="m-article-h">🛏 Номера</div>
+                        <p class="m-article-text">
+                            Простые, но стильные номера с отделкой из натурального дерева. Главное — здесь отличные
+                            кровати, на которых вы мгновенно уснете после активного дня.
+                        </p>
+
+                        <div class="m-article-h">🧖‍♀️ SPA & Relax</div>
+                        <p class="m-article-text">
+                            Лагуна с теплой водой, финская сауна, травяная баня и инфракрасная кабина. И самое крутое —
+                            <b>подогреваемый открытый бассейн</b>, где можно плавать даже зимой, глядя на заснеженные
+                            горы!
+                        </p>
+
+                        <a href="https://www.booking.com/hotel/at/romerhof-fusch.ru.html" target="_blank"
+                            class="m-popup-link booking">
+                            Посмотреть на Booking.com
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -472,15 +760,33 @@
                     <div class="m-story-btn" style="background:#FF6B35;">Узнать детали &rarr;</div>
                 </div>
                 <div class="popup-data" id="data-redbull" style="display:none;">
+                    <div class="title">Легендарный Hangar-7</div>
+                    <div class="subtitle">Авиация · F1 · Искусство</div>
                     <div class="images">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/bull1.jpg">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/redbull_hangar.png">
                     </div>
-                    <div class="title">Легендарный Hangar-7</div>
-                    <div class="text">Это не просто музей, а произведение искусства. Здесь собрана уникальная коллекция
-                        самолетов Flying Bulls и гоночных болидов Формулы-1. Вход бесплатный, а атмосфера — космическая.
+                    <div class="content">
+                        <p class="m-article-text">
+                            Даже если вы не фанат гонок, это место вас впечатлит. Hangar-7 — это архитектурный шедевр из
+                            1200 тонн стали и 380 тонн стекла.
+                        </p>
+
+                        <div class="m-article-h">🏎 Коллекция</div>
+                        <p class="m-article-text">
+                            Здесь стоит настоящая техника: болиды Формулы-1 команды Red Bull Racing (да, те самые, на
+                            которых побеждал Феттель и Ферстаппен) и исторические самолеты <b>The Flying Bulls</b>.
+                            <br><br>
+                            Это не пыльный музей — вся техника в рабочем состоянии и готова взлететь или выехать на трек
+                            в любой момент.
+                        </p>
+
+                        <div class="m-quote-card">
+                            "Это место встречи авиации, искусства и кулинарии. Здесь всё пропитано духом победы и
+                            скорости."
+                        </div>
                     </div>
                 </div>
             </div>
@@ -496,13 +802,29 @@
                     <div class="m-story-btn">Подробнее &rarr;</div>
                 </div>
                 <div class="popup-data" id="data-salzburg" style="display:none;">
+                    <div class="title">Классика и Стиль</div>
+                    <div class="subtitle">UNESCO · Моцарт · Кофе</div>
                     <div class="images">
                         <img
                             src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_city.png">
                     </div>
-                    <div class="title">Классика и Стиль</div>
-                    <div class="text">Мы прогуляемся по парку Мирабель, заглянем на старую площадь и обязательно выпьем
-                        кофе. У вас будет свободное время для шопинга или подъема к крепости.</div>
+                    <div class="content">
+                        <p class="m-article-text">
+                            Город барокко, музыки и гор. Мы прогуляемся по историческому центру, увидим дом, где родился
+                            Моцарт, и заглянем в знаменитые сады Мирабель.
+                        </p>
+
+                        <div class="m-article-h">☕️ Где вкусно поесть?</div>
+                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                            <span class="m-article-tag">Café Tomaselli</span>
+                            <span class="m-article-tag">Fürst (конфеты)</span>
+                            <span class="m-article-tag">Stiegl (пивная)</span>
+                        </div>
+                        <p class="m-article-text">
+                            Обязательно попробуйте оригинальные конфеты <i>Mozartkugel</i> в кондитерской Fürst (в синей
+                            обертке, а не в красной, как в супермаркетах!) или выпейте меланж в старейшем кафе Австрии.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -531,7 +853,9 @@
                         <div class="m-sheet-handle"></div>
                     </div>
                     <h3 id="popup-title" class="m-popup-title">Title</h3>
-                    <p id="popup-text" class="m-popup-text">Text description...</p>
+                    <div id="popup-subtitle" class="m-popup-subtitle">Subtitle</div>
+                    <div id="popup-text"></div> <!-- HTML Container -->
+
                     <button onclick="closePopup()" class="m-sticky-close">Закрыть</button>
                 </div>
             </div>
@@ -545,9 +869,13 @@
 
             // 1. Get Text Data
             const title = dataDiv.querySelector('.title').innerText;
-            const text = dataDiv.querySelector('.text').innerText;
+            const subtitle = dataDiv.querySelector('.subtitle') ? dataDiv.querySelector('.subtitle').innerText : '';
+            // Get InnerHTML for the content to support rich text
+            const content = dataDiv.querySelector('.content').innerHTML;
+
             document.getElementById('popup-title').innerText = title;
-            document.getElementById('popup-text').innerText = text;
+            document.getElementById('popup-subtitle').innerText = subtitle;
+            document.getElementById('popup-text').innerHTML = content;
 
             // 2. Build Gallery
             const images = dataDiv.querySelectorAll('.images img');
@@ -594,6 +922,21 @@
         function closePopup() {
             document.getElementById('m-popup').classList.remove('active');
             document.body.style.overflow = '';
+
+            // Stop any playing video when closing popup
+            const videos = document.querySelectorAll('video');
+            videos.forEach(v => v.pause());
+        }
+
+        function toggleVideo(container) {
+            const video = container.querySelector('video');
+            if (video.paused) {
+                video.play();
+                container.classList.add('playing');
+            } else {
+                video.pause();
+                container.classList.remove('playing');
+            }
         }
     </script>
 

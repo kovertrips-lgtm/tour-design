@@ -6,87 +6,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         .m-hotel-section {
-            background: #fff;
+            background: #111;
             padding: 40px 20px;
-            color: #111;
+            color: #fff;
+            position: relative;
         }
 
         .m-hotel-header {
             margin-bottom: 24px;
         }
 
+        .m-hotel-tag {
+            background: #003580;
+            color: white;
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
         .m-hotel-title {
-            font-size: 26px;
+            font-size: 32px;
             font-weight: 800;
-            margin: 0 0 8px;
+            margin: 0 0 12px;
+            line-height: 1.1;
         }
 
         .m-hotel-desc {
-            font-size: 15px;
-            color: #555;
-            line-height: 1.5;
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 24px;
         }
 
         /* Grid for hotel images - 1 main + 2 small */
         .m-hotel-gallery {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            grid-template-rows: 200px 140px;
             gap: 10px;
-            margin-bottom: 24px;
-            border-radius: 16px;
+            margin-bottom: 30px;
+            border-radius: 20px;
             overflow: hidden;
         }
 
         .m-gal-item {
-            height: 140px;
             background-size: cover;
             background-position: center;
+            position: relative;
         }
 
         .m-gal-item.main {
             grid-column: span 2;
-            height: 220px;
+        }
+
+        /* Room Preview Label */
+        .m-room-label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            color: white;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
         }
 
         /* Features List */
         .m-hotel-features {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
 
         .m-h-feat {
             display: flex;
             align-items: center;
             gap: 16px;
-            background: #F9F9F9;
-            padding: 16px;
+            background: #222;
+            padding: 20px;
             border-radius: 16px;
+            border: 1px solid #333;
         }
 
         .m-h-icon {
             font-size: 24px;
-            width: 40px;
-            height: 40px;
-            background: #fff;
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #29B6F6, #003580);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             flex-shrink: 0;
+            color: white;
+            box-shadow: 0 4px 15px rgba(41, 182, 246, 0.3);
         }
 
         .m-h-text h4 {
             margin: 0 0 4px;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
+            color: white;
         }
 
         .m-h-text p {
             margin: 0;
-            font-size: 13px;
-            color: #666;
+            font-size: 14px;
+            color: #999;
             line-height: 1.3;
         }
 
@@ -100,45 +132,49 @@
 
     <div class="m-hotel-section">
         <div class="m-hotel-header">
-            <h2 class="m-hotel-title">Hotel Römerhof</h2>
+            <span class="m-hotel-tag">Booking.com 8.9 ★</span>
+            <h2 class="m-hotel-title">Альпийский Комфорт</h2>
             <p class="m-hotel-desc">
-                После насыщенного дня мы заселимся в уютный альпийский отель. Здесь есть всё для идеального
-                восстановления.
+                Hotel Römerhof — это тёплый, семейный отель, где каждая деталь дышит уютом. После санок вы сможете
+                согреться в сауне или поплавать в бассейне.
             </p>
         </div>
 
         <div class="m-hotel-gallery">
             <div class="m-gal-item main"
                 style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/332735359.jpg');">
+                <div class="m-room-label">SPA & Бассейн</div>
             </div>
             <div class="m-gal-item"
                 style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg');">
+                <div class="m-room-label">Уютные номера</div>
             </div>
             <div class="m-gal-item"
                 style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/514073860.jpg');">
+                <div class="m-room-label">Завтраки</div>
             </div>
         </div>
 
         <div class="m-hotel-features">
             <div class="m-h-feat">
-                <div class="m-h-icon">&#128166;</div>
+                <div class="m-h-icon">💧</div>
                 <div class="m-h-text">
                     <h4>SPA зона</h4>
-                    <p>Бассейн, сауна и релакс-зона включены в стоимость.</p>
+                    <p>Подогреваемый бассейн, финская сауна и лагуна.</p>
                 </div>
             </div>
             <div class="m-h-feat">
-                <div class="m-h-icon">&#129374;</div>
+                <div class="m-h-icon">🥐</div>
                 <div class="m-h-text">
-                    <h4>Завтрак</h4>
-                    <p>Шведский стол с фермерскими продуктами.</p>
+                    <h4>Вкусный Завтрак</h4>
+                    <p>Шведский стол с фермерскими сырами и свежей выпечкой.</p>
                 </div>
             </div>
             <div class="m-h-feat">
-                <div class="m-h-icon">&#128716;</div>
+                <div class="m-h-icon">🛏</div>
                 <div class="m-h-text">
                     <h4>Комфорт</h4>
-                    <p>Просторные номера с видом на горы и мягкими кроватями.</p>
+                    <p>Просторные номера с мягкими кроватями и wi-fi.</p>
                 </div>
             </div>
         </div>

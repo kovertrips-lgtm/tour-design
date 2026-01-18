@@ -1,6 +1,7 @@
 
 import os
 import urllib.request
+import urllib.parse
 import sys
 import random
 
@@ -10,18 +11,13 @@ STORAGE_ZONE_NAME = "kovertripweb"
 BASE_URL = "https://storage.bunnycdn.com"
 
 def upload_file(local_path, remote_path):
-    url = f"{BASE_URL}/{STORAGE_ZONE_NAME}/{remote_path}"
-    # Percent-encode the URL path to handle Spaces and Cyrillic safely
-    # We split by '/' to encode each segment but keep slashes
-    url_parts = url.split('/')
-    # Everything after domain (parts[3:]) needs encoding
-    # specifically the remote_path part which is at the end
-    # Simpler approach: quote the remote_path part
+    # Properly encode the path. 
+    # bunnycdn requires the path to be URL encoded, but NOT the slashes that separate directories
+    # We split by slash, encode each component, then join safely.
+    path_components = remote_path.split('/')
+    encoded_components = [urllib.parse.quote(comp) for comp in path_components]
+    safe_remote_path = "/".join(encoded_components)
     
-    # Actually, simpler: just use urllib.request with headers
-    # But we need to handle special chars in URL. 
-    # Let's map remote_path manually
-    safe_remote_path = urllib.parse.quote(remote_path)
     url = f"{BASE_URL}/{STORAGE_ZONE_NAME}/{safe_remote_path}"
 
     headers = {
@@ -51,16 +47,17 @@ def smart_scout_and_upload(source_folder, bunny_folder_name, limit=10):
     
     # Walk through folder recursively
     for root, dirs, files in os.walk(source_folder):
-        print(f"📂 Looking via {root}...")
+        # print(f"📂 Looking via {root}...")
         for file in files:
-            print(f"   📄 File: {file}") # DEBUG PRINT
             if file.lower().endswith(('.jpg', '.jpeg', '.png', '.heic')):
                 full_path = os.path.join(root, file)
                 try:
+                    # Check size to filter (and to ensure file is locally accessible)
                     size = os.path.getsize(full_path)
                     candidates.append((full_path, size))
                 except OSError:
                     print(f"   ⚠️ Cannot read size (cloud file?): {file}")
+                    print("      👉 Action Required: Please right-click folder in Finder and select 'Make Available Offline'")
 
     if not candidates:
         print("❌ No valid images found.")
@@ -92,7 +89,10 @@ def smart_scout_and_upload(source_folder, bunny_folder_name, limit=10):
         
         if upload_file(path, remote_path):
             # Construct public URL
-            public_url = f"https://kovertrip.b-cdn.net/Двухдневка в Альпы/AutoSync/{bunny_folder_name}/{new_name}"
+            # Also encode for the browser
+            public_path_components = remote_path.split('/')
+            encoded_public_path = "/".join([urllib.parse.quote(comp) for comp in public_path_components])
+            public_url = f"https://kovertrip.b-cdn.net/{encoded_public_path}"
             uploaded_files.append(public_url)
     
     print("\n✅ Upload Complete!")
@@ -101,5 +101,9 @@ def smart_scout_and_upload(source_folder, bunny_folder_name, limit=10):
         print(url)
 
 if __name__ == "__main__":
-    src = "/Users/dmitry/Library/CloudStorage/GoogleDrive-kover.trips@gmail.com/Мой диск/KOVER Media Content/Автобусные туры/Гальштат + Зальцбург"
+    if len(sys.argv) > 1:
+        src = sys.argv[1]
+    else:
+        src = "/Users/dmitry/Library/CloudStorage/GoogleDrive-kover.trips@gmail.com/Мой диск/KOVER Media Content/Автобусные туры/Гальштат + Зальцбург"
+    
     smart_scout_and_upload(src, "hallstatt_best", 10)

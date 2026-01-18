@@ -16,13 +16,6 @@
     <!-- 02 PROGRAM -->
     <div id="program-placeholder"></div>
 
-    <!-- 04 SLEDDING -->
-    <!-- 04 SLEDDING -->
-    <div id="sledding-placeholder"></div>
-
-    <!-- 05 HOTEL -->
-    <div id="hotel-placeholder"></div>
-
     <!-- 09 ORG DETAILS -->
     <div id="org-placeholder"></div>
 
@@ -41,6 +34,19 @@
                 const styleContent = doc.querySelector('style')?.outerHTML || '';
 
                 document.getElementById(id).innerHTML = styleContent + bodyContent;
+
+                // Execute scripts if any (needed for popup logic)
+                const scripts = doc.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    document.getElementById(id).appendChild(newScript);
+                });
+
             } catch (e) {
                 console.error('Error loading ' + url, e);
             }
@@ -48,8 +54,6 @@
 
         loadPart('hero-placeholder', '01_Hero_Mobile.html');
         loadPart('program-placeholder', '02_Program_Mobile.html');
-        loadPart('sledding-placeholder', '04_Sledding_Mobile.html');
-        loadPart('hotel-placeholder', '05_Hotel_Mobile.html');
         loadPart('org-placeholder', '09_OrgDetails_Mobile.html');
     </script>
 

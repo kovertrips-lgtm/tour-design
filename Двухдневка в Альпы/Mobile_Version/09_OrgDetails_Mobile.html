@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         .m-org-section {
-            background: #F4F5F7;
-            padding: 40px 20px 80px;
+            background: #111;
+            padding: 40px 20px 100px;
             /* Extra bottom padding for floating btn */
-            color: #111;
+            color: #fff;
+            position: relative;
         }
 
         .m-org-header {
@@ -18,40 +19,59 @@
         }
 
         .m-org-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 800;
             margin: 0;
+            letter-spacing: -0.5px;
         }
 
         /* Cards */
         .m-info-card {
-            background: white;
+            background: #222;
             padding: 24px;
             border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-            margin-bottom: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .m-info-card.accent {
-            border: 2px solid #29B6F6;
+            background: linear-gradient(135deg, #222 0%, #2a2a2a 100%);
+            border: 1px solid #29B6F6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle glow for accent card */
+        .m-info-card.accent::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(41, 182, 246, 0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .m-info-h {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: white;
         }
 
         .m-price-tag {
             background: #29B6F6;
             color: white;
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 50px;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 800;
+            box-shadow: 0 4px 10px rgba(41, 182, 246, 0.3);
         }
 
         .m-list {
@@ -61,22 +81,22 @@
         }
 
         .m-list li {
-            margin-bottom: 12px;
-            padding-left: 24px;
+            margin-bottom: 14px;
+            padding-left: 28px;
             position: relative;
             font-size: 15px;
-            color: #444;
-            line-height: 1.4;
+            color: #ccc;
+            line-height: 1.5;
         }
 
         .m-list li::before {
             content: '';
             position: absolute;
             left: 0;
-            top: 6px;
-            width: 8px;
-            height: 8px;
-            background: #29B6F6;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            background: #444;
             border-radius: 50%;
         }
 
@@ -85,23 +105,23 @@
             content: '✓';
             color: #29B6F6;
             font-weight: 900;
-            font-size: 14px;
-            top: 0;
-            left: -4px;
+            font-size: 16px;
+            top: -1px;
+            left: -2px;
         }
 
         .m-info-text {
             font-size: 15px;
-            line-height: 1.5;
-            color: #555;
+            line-height: 1.6;
+            color: #bbb;
         }
 
         /* Floating Start Button */
         .m-float-cta {
             position: fixed;
             bottom: 24px;
-            left: 24px;
-            right: 24px;
+            left: 20px;
+            right: 20px;
             background: #29B6F6;
             color: white;
             padding: 18px;
@@ -110,15 +130,20 @@
             font-weight: 800;
             text-transform: uppercase;
             font-size: 16px;
-            box-shadow: 0 10px 30px rgba(41, 182, 246, 0.4);
+            box-shadow: 0 10px 40px rgba(41, 182, 246, 0.4);
             z-index: 100;
             text-align: center;
             cursor: pointer;
             backdrop-filter: blur(5px);
+            transition: transform 0.2s;
+        }
+
+        .m-float-cta:active {
+            transform: scale(0.96);
         }
 
         .m-float-spacer {
-            height: 60px;
+            height: 40px;
         }
     </style>
 </head>
@@ -167,8 +192,7 @@
             <p class="m-info-text">
                 Одевайтесь удобно и тепло! Идеально — лыжный костюм или непромокаемые штаны + куртка.
                 <br><br>
-                Обязательно: перчатки, шапка, шарф и удобная зимняя обувь. Вещи можно будет оставить в автобусе во время
-                прогулок.
+                Обязательно: перчатки, шапка, шарф и удобная зимняя обувь.
             </p>
         </div>
 
