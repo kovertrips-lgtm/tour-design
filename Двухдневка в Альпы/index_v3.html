@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Kover Alps - BENTO V3 Mobile</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f1012;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        #device-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            gap: 5px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.2s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-btn.active {
+            background: #29B6F6;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(41, 182, 246, 0.4);
+        }
+
+        .toggle-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Mobile simulator wrapper for desktop view */
+        .mobile-frame {
+            max-width: 480px;
+            margin: 40px auto;
+            border: 10px solid #333;
+            border-radius: 40px;
+            overflow: hidden;
+            background: #000;
+            min-height: 800px;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        #content-area {
+            width: 100%;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="content-area">
+        <div class="loading">Detecting device...</div>
+    </div>
+
+    <!-- Toggle Controls (Visible on Desktop) -->
+    <div id="device-toggle" class="desktop-only">
+        <button class="toggle-btn" id="btn-desktop" onclick="setMode('desktop')" title="Desktop View">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z" />
+            </svg>
+        </button>
+        <button class="toggle-btn" id="btn-mobile" onclick="setMode('mobile')" title="Mobile View">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
+            </svg>
+        </button>
+    </div>
+
+    <div id="debug-console"
+        style="display:none; position:fixed; bottom:0; left:0; right:0; height:100px; background:rgba(200,0,0,0.9); color:white; overflow:auto; z-index:99999; padding:10px; font-size:10px; font-family:monospace;">
+    </div>
+
+    <script>
+        const desktopFiles = [
+            'Widget_Config.html',
+            'Widget_Core.html',
+            '01_Hero.html',
+            '02_Program.html',
+            '03_Hallstatt.html',
+            '04_Sledding.html',
+            '05_Hotel.html',
+            '06_RedBull.html',
+            '07_Salzburg.html',
+            '08_Timeline.html',
+            '09_OrgDetails.html'
+        ];
+
+        const mobileFiles = [
+            'Widget_Config.html',
+            'Widget_Core.html',
+            'Mobile_Version/01_Hero_Mobile.html',
+            'Mobile_Version/02_Program_Mobile_V3.html',
+            'Mobile_Version/03_Reviews_Mobile.html',
+            'Mobile_Version/09_OrgDetails_Mobile.html'
+        ];
+
+        let currentMode = '';
+
+        async function loadStack(files, mode) {
+            const container = document.getElementById('content-area');
+            container.innerHTML = ''; // Clear previous
+
+            // Adjust container style
+            if (mode === 'mobile' && window.innerWidth > 600) {
+                container.classList.add('mobile-frame');
+            } else {
+                container.classList.remove('mobile-frame');
+            }
+
+            for (const file of files) {
+                try {
+                    // Create a dedicated section for each file
+                    const section = document.createElement('div');
+                    section.className = 'imported-section';
+                    section.setAttribute('data-source', file);
+                    container.appendChild(section);
+
+                    // Cache busting
+                    const response = await fetch(file + '?v=' + new Date().getTime());
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const text = await response.text();
+
+                    // Parse
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+
+                    // 1. Inject Styles
+                    const styles = doc.querySelectorAll('style, link[rel="stylesheet"]');
+                    styles.forEach(s => section.appendChild(s.cloneNode(true)));
+
+                    // 2. Inject Body Content (excluding scripts to avoid duplication/inert tags)
+                    Array.from(doc.body.childNodes).forEach(node => {
+                        if (node.tagName !== 'SCRIPT') {
+                            section.appendChild(node.cloneNode(true));
+                        }
+                    });
+
+                    // 3. Exec Scripts (Crucial for Mobile Sledding/Program)
+                    // We must execute them in order.
+                    // 3. Exec Scripts SEQUENTIALLY
+                    // We must wait for each script to finish executing before moving to the next
+                    // This is critical for Config -> Widget Core dependency
+                    const scripts = Array.from(doc.querySelectorAll('script'));
+                    for (const oldScript of scripts) {
+                        const newScript = document.createElement('script');
+
+                        // Copy attributes
+                        Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+
+                        // If it has inline content
+                        if (oldScript.innerHTML) {
+                            newScript.innerHTML = oldScript.innerHTML;
+                            section.appendChild(newScript);
+                        }
+                        // If it has src, we need to wait for it to load
+                        else if (oldScript.src) {
+                            await new Promise((resolve, reject) => {
+                                newScript.onload = resolve;
+                                newScript.onerror = reject;
+                                section.appendChild(newScript);
+                            });
+                        } else {
+                            section.appendChild(newScript);
+                        }
+                    }
+
+                } catch (e) {
+                    console.error('Failed to load', file, e);
+                    const err = document.createElement('div');
+                    err.style.color = 'red';
+                    err.style.padding = '20px';
+                    err.innerText = 'Error loading ' + file + ': ' + e.message;
+                    container.appendChild(err);
+                }
+            }
+        }
+
+        function setMode(mode) {
+            if (currentMode === mode) return;
+            currentMode = mode;
+
+            // UI Update
+            document.getElementById('btn-desktop').classList.toggle('active', mode === 'desktop');
+            document.getElementById('btn-mobile').classList.toggle('active', mode === 'mobile');
+
+            // Load Content
+            if (mode === 'desktop') {
+                loadStack(desktopFiles, 'desktop');
+            } else {
+                loadStack(mobileFiles, 'mobile');
+            }
+        }
+
+        // Auto-detect on Load
+        function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const modeParam = urlParams.get('mode');
+
+            if (modeParam === 'mobile') {
+                setMode('mobile');
+            } else if (modeParam === 'desktop') {
+                setMode('desktop');
+            } else {
+                // Auto-detect
+                if (window.innerWidth < 768) {
+                    document.getElementById('device-toggle').style.display = 'none';
+                    setMode('mobile');
+                } else {
+                    setMode('desktop');
+                }
+            }
+        }
+
+        init();
+
+    </script>
+</body>
+
+</html>

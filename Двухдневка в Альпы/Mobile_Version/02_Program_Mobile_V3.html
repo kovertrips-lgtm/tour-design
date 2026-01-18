@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* BENTO GRID / V3 DESIGN (Inspired by Linear/Apple Bento) */
+        :root {
+            --bento-bg: #0C0C0C;
+            --bento-card-bg: #141414;
+            --bento-card-border: rgba(255, 255, 255, 0.08);
+            --bento-accent: #3b82f6;
+            /* Modern Blue */
+            --bento-text: #E5E5E5;
+            --bento-sub: #A3A3A3;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bento-bg);
+            color: var(--bento-text);
+            margin: 0;
+            padding: 0;
+        }
+
+        .m-v3-section {
+            padding: 24px 16px;
+            max-width: 600px;
+            /* Mobile safe width */
+            margin: 0 auto;
+        }
+
+        .m-v3-header {
+            margin-bottom: 30px;
+        }
+
+        .m-v3-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .m-v3-sub {
+            font-size: 15px;
+            color: var(--bento-sub);
+            font-weight: 500;
+        }
+
+        /* GRID LAYOUT */
+        .m-bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-auto-rows: minmax(180px, auto);
+            gap: 12px;
+        }
+
+        /* CELL TYPES */
+        .m-cell {
+            background: var(--bento-card-bg);
+            border: 1px solid var(--bento-card-border);
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .m-cell:active {
+            transform: scale(0.98);
+        }
+
+        .m-cell.wide {
+            grid-column: span 2;
+            height: 320px;
+        }
+
+        .m-cell.tall {
+            grid-row: span 2;
+            height: 380px;
+        }
+
+        .m-cell.square {
+            height: 180px;
+        }
+
+        /* CONTENT INSIDE CELL */
+        .m-cell-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            transition: transform 0.4s ease;
+        }
+
+        .m-cell:hover .m-cell-img {
+            transform: scale(1.05);
+        }
+
+        .m-cell-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
+            z-index: 2;
+        }
+
+        /* CONTENT ON TOP */
+        .m-cell-content {
+            position: relative;
+            z-index: 3;
+        }
+
+        .m-cell-tag {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 6px 10px;
+            border-radius: 100px;
+            display: inline-block;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .m-cell-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+            margin: 0 0 4px 0;
+        }
+
+        .m-cell-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+            max-width: 90%;
+        }
+
+        .m-cell-video-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 4;
+        }
+
+        /* TEXT ONLY CARD */
+        .m-cell.text-only {
+            background: #1A1A1A;
+            justify-content: flex-start;
+        }
+
+        .m-cell.text-only .m-cell-title {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .m-cell.text-only .m-cell-desc {
+            font-size: 15px;
+            color: #aaa;
+        }
+
+        /* LIST OF FEATURES */
+        .m-feat-list {
+            margin-top: 12px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .m-feat-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+
+        .m-feat-list li::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: var(--bento-accent);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="m-v3-section">
+        <div class="m-v3-header">
+            <h2 class="m-v3-title">The Alpine Tour.</h2>
+            <div class="m-v3-sub">Version 3.0 · Bento Grid Edition</div>
+        </div>
+
+        <div class="m-bento-grid">
+
+            <!-- CARD 1: HALLSTATT (Wide) -->
+            <div class="m-cell wide">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
+                    class="m-cell-img">
+                <div class="m-cell-overlay"></div>
+                <div class="m-cell-content">
+                    <span class="m-cell-tag">UNESCO</span>
+                    <h3 class="m-cell-title">Hallstatt at Dawn</h3>
+                    <p class="m-cell-desc">Exclusive early access before the crowds arrive. Private photoshoot included.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CARD 2: SLEDDING (Tall) -->
+            <div class="m-cell tall" onclick="toggleVideo(this)">
+                <video class="m-cell-img"
+                    src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
+                    poster="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
+                    playsinline webkit-playsinline loop muted preload="metadata" style="object-fit:cover;"></video>
+                <div class="m-cell-overlay"></div>
+                <div class="m-cell-video-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </div>
+                <div class="m-cell-content">
+                    <span class="m-cell-tag" style="background: #BDFF00; color: #000; border:none;">ACTION</span>
+                    <h3 class="m-cell-title">14 KM Sledding</h3>
+                    <p class="m-cell-desc">World's longest illuminated toboggan run.</p>
+                </div>
+            </div>
+
+            <!-- CARD 3: HOTEL (Square) -->
+            <div class="m-cell square">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/332735359.jpg"
+                    class="m-cell-img">
+                <div class="m-cell-overlay"></div>
+                <div class="m-cell-content">
+                    <h3 class="m-cell-title">Alpine Hotel 4*</h3>
+                    <p class="m-cell-desc">Pool & Sauna included</p>
+                </div>
+            </div>
+
+            <!-- CARD 4: SALZBURG (Square) -->
+            <div class="m-cell square">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_xmas.jpg"
+                    class="m-cell-img">
+                <div class="m-cell-overlay"></div>
+                <div class="m-cell-content">
+                    <h3 class="m-cell-title">Salzburg</h3>
+                    <p class="m-cell-desc">Christmas Markets</p>
+                </div>
+            </div>
+
+            <!-- CARD 5: INFO (Text Only) -->
+            <div class="m-cell wide text-only" style="height: auto; min-height: 200px;">
+                <div class="m-cell-content">
+                    <h3 class="m-cell-title">Why Kover?</h3>
+                    <ul class="m-feat-list">
+                        <li>Small groups, max 8-16 people</li>
+                        <li>No boring lectures, only fun facts</li>
+                        <li>Professional photographer included</li>
+                        <li>Premium transfer & hotels</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CARD 6: RED BULL (Wide) -->
+            <div class="m-cell wide">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/bull1.jpg"
+                    class="m-cell-img">
+                <div class="m-cell-overlay"></div>
+                <div class="m-cell-content">
+                    <span class="m-cell-tag" style="background:#ddd; color:#000;">TECH</span>
+                    <h3 class="m-cell-title">Hangar-7</h3>
+                    <p class="m-cell-desc">Red Bull Museum: F1 Cars, Jets & Art</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleVideo(card) {
+            const video = card.querySelector('video');
+            if (video.paused) {
+                video.play();
+                card.querySelector('.m-cell-video-btn').style.opacity = '0';
+            } else {
+                video.pause();
+                card.querySelector('.m-cell-video-btn').style.opacity = '1';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
