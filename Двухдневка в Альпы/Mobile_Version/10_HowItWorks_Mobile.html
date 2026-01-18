@@ -1,0 +1,275 @@
+<style>
+    /* Mobile How It Works Section */
+    .m-how-section {
+        background-color: #111;
+        padding: 40px 20px;
+        font-family: 'Montserrat', sans-serif;
+        color: #fff;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .m-how-header {
+        margin-bottom: 30px;
+    }
+
+    .m-how-title {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 10px 0;
+        color: #fff;
+    }
+
+    .m-how-sub {
+        font-size: 15px;
+        color: #aaa;
+        line-height: 1.5;
+    }
+
+    /* Steps */
+    .m-steps-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .m-step {
+        position: relative;
+        padding-left: 10px;
+    }
+
+    .m-step-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .m-step-num {
+        background: rgba(189, 255, 0, 0.1);
+        color: #BDFF00;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .m-step-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .m-step-desc {
+        color: #888;
+        font-size: 14px;
+        line-height: 1.5;
+        padding-left: 44px;
+        /* Align with title start */
+    }
+
+    /* Included / Excluded Columns */
+    .m-inc-section {
+        background: #1a1a1a;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+
+    .m-list-header {
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+    }
+
+    .m-list-header.inc {
+        color: #fff;
+    }
+
+    .m-list-header.exc {
+        color: #888;
+        margin-top: 10px;
+    }
+
+    .m-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .m-li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        color: #ccc;
+        line-height: 1.4;
+    }
+
+    .m-li:last-child {
+        margin-bottom: 0;
+    }
+
+    .m-icon-check {
+        color: #00C853;
+        width: 18px;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .m-icon-cross {
+        color: #FF5252;
+        width: 18px;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .m-li strong {
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .m-li-sub {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-top: 2px;
+    }
+</style>
+
+<div class="m-how-section">
+
+    <!-- Header -->
+    <div class="m-how-header">
+        <h2 class="m-how-title">Всё включено</h2>
+        <p class="m-how-sub">Прозрачные условия. Никаких скрытых доплат за "базовый комфорт".</p>
+    </div>
+
+    <!-- Included List -->
+    <div class="m-inc-section">
+        <div class="m-list-header inc">Входит в цену</div>
+        <ul class="m-list">
+            <li class="m-li">
+                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <div>
+                    <strong>Трансфер туда-обратно</strong>
+                    <span class="m-li-sub">Комфортный лайнер, Wi-Fi, розетки</span>
+                </div>
+            </li>
+            <li class="m-li">
+                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <div>
+                    <strong>Отель & Завтрак</strong>
+                    <span class="m-li-sub">Размещение в отеле 4* со SPA и бассейном</span>
+                </div>
+            </li>
+            <li class="m-li">
+                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <div>
+                    <strong>Личный фотограф</strong>
+                    <span class="m-li-sub">Съемка в Гальштате и на маршруте</span>
+                </div>
+            </li>
+            <li class="m-li">
+                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <div>
+                    <strong>Сопровождение 24/7</strong>
+                    <span class="m-li-sub">Команда Kover Travel всегда рядом</span>
+                </div>
+            </li>
+            <li class="m-li">
+                <svg class="m-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <div>
+                    <strong>Угощения в дороге</strong>
+                    <span class="m-li-sub">Пирожки, напитки и welcome-drink</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Excluded List -->
+    <div class="m-inc-section" style="background:transparent; border:1px solid rgba(255,255,255,0.1);">
+        <div class="m-list-header exc">Дополнительно</div>
+        <ul class="m-list">
+            <li class="m-li">
+                <svg class="m-icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <div>Аренда саней (~15€)</div>
+            </li>
+            <li class="m-li">
+                <svg class="m-icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <div>Подъемник (Скипасс ~35€)</div>
+            </li>
+            <li class="m-li">
+                <svg class="m-icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <div>Ужин и личные расходы</div>
+            </li>
+        </ul>
+    </div>
+
+    <div style="height:30px;"></div>
+
+    <!-- How it Works Steps -->
+    <div class="m-how-header">
+        <h2 class="m-how-title">Как это работает</h2>
+    </div>
+
+    <div class="m-steps-grid">
+        <div class="m-step">
+            <div class="m-step-head">
+                <div class="m-step-num">1</div>
+                <div class="m-step-title">Бронь</div>
+            </div>
+            <div class="m-step-desc">
+                Внеси часть суммы или полную оплату. Место закрепится за тобой мгновенно.
+            </div>
+        </div>
+
+        <div class="m-step">
+            <div class="m-step-head">
+                <div class="m-step-num">2</div>
+                <div class="m-step-title">Чат</div>
+            </div>
+            <div class="m-step-desc">
+                Сразу после оплаты ты попадешь в Telegram-чат участников с организаторами и инфой.
+            </div>
+        </div>
+
+        <div class="m-step">
+            <div class="m-step-head">
+                <div class="m-step-num">3</div>
+                <div class="m-step-title">Старт</div>
+            </div>
+            <div class="m-step-desc">
+                Приходи в субботу ночью (02:45) к автобусу. Дальше мы всё сделаем сами.
+            </div>
+        </div>
+    </div>
+
+</div>

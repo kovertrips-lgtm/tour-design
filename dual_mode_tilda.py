@@ -19,7 +19,9 @@ MOBILE_FILES = [
     "Двухдневка в Альпы/Mobile_Version/01_Hero_Mobile.html",
     "Двухдневка в Альпы/Mobile_Version/02_Program_Mobile.html",
     "Двухдневка в Альпы/Mobile_Version/07_Bus_Mobile.html",
+    "Двухдневка в Альпы/Mobile_Version/10_HowItWorks_Mobile.html",
     "Двухдневка в Альпы/Mobile_Version/03_Reviews_Mobile.html",
+    "Двухдневка в Альпы/Mobile_Version/11_Team_Mobile.html",
     "Двухдневка в Альпы/Mobile_Version/08_Timeline_Mobile.html",
     "Двухдневка в Альпы/Mobile_Version/09_OrgDetails_Mobile.html"
 ]

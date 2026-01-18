@@ -1,0 +1,186 @@
+<style>
+    /* Mobile Team Block */
+    .m-team-section {
+        background-color: #111;
+        padding: 40px 20px 0;
+        /* Important: 0 bottom padding for seamless Marquee */
+        font-family: 'Montserrat', sans-serif;
+        color: #fff;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+    }
+
+    .m-team-header {
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .m-team-title {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 16px 0;
+        color: #fff;
+        line-height: 1.1;
+    }
+
+    .m-tags-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .m-tag {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 6px 10px;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ccc;
+    }
+
+    .m-tag.accent {
+        background: #BDFF00;
+        color: #000;
+    }
+
+    .m-team-desc {
+        font-size: 15px;
+        color: #aaa;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .m-highlight {
+        color: #fff;
+        font-weight: 700;
+        border-bottom: 2px solid #29B6F6;
+    }
+
+    /* Marquee Animation */
+    .m-marquee-wrap {
+        width: 100vw;
+        margin-left: -20px;
+        /* Counteract parent padding */
+        overflow: hidden;
+        padding: 30px 0 60px;
+        position: relative;
+        background: #111;
+        /* Match bg */
+        /* Smooth fade sides */
+        mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    }
+
+    .m-marquee-track {
+        display: flex;
+        gap: 16px;
+        width: max-content;
+        animation: mScroll 20s linear infinite;
+        will-change: transform;
+    }
+
+    .m-team-card {
+        width: 180px;
+        height: 240px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        border: 4px solid #fff;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .m-team-card:nth-child(odd) {
+        transform: rotate(-3deg);
+        margin-top: 10px;
+        border-color: #29B6F6;
+    }
+
+    .m-team-card:nth-child(even) {
+        transform: rotate(3deg);
+        margin-bottom: 10px;
+        border-color: #BDFF00;
+    }
+
+    .m-team-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @keyframes mScroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+
+        /* Assuming content is duplicated */
+    }
+</style>
+
+<div class="m-team-section">
+    <div class="m-team-header">
+        <h2 class="m-team-title">Мы про жизнь, а не просто локации</h2>
+
+        <div class="m-tags-row">
+            <span class="m-tag accent">#koverfamily</span>
+            <span class="m-tag">#freedom</span>
+            <span class="m-tag">#emotions</span>
+        </div>
+
+        <div class="m-team-desc">
+            Мы — команда людей, у которых в крови движ. Kover Travel родился не в офисе, а в дороге.
+            <br><br>
+            Мы создаем трипы, где каждый день — это <span class="m-highlight">кайф и свобода</span>.
+            Всё по-настоящему: горы, скорость, смех и ощущение, что ты реально живёшь.
+        </div>
+    </div>
+
+    <!-- Marquee -->
+    <div class="m-marquee-wrap">
+        <div class="m-marquee-track">
+            <!-- Set 1 -->
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="m-team-img"></div>
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="m-team-img"></div>
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild6163-3438-4331-b161-326264363835/DSCF6813.jpg"
+                    class="m-team-img"></div>
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild3232-3335-4534-b632-643439383466/IMG_3606_1.jpg"
+                    class="m-team-img"></div>
+
+            <!-- Set 2 (Duplicate for loop) -->
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="m-team-img"></div>
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="m-team-img"></div>
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild6163-3438-4331-b161-326264363835/DSCF6813.jpg"
+                    class="m-team-img"></div>
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild3232-3335-4534-b632-643439383466/IMG_3606_1.jpg"
+                    class="m-team-img"></div>
+
+            <!-- Set 3 (To be safe on wide screens) -->
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="m-team-img"></div>
+            <div class="m-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="m-team-img"></div>
+        </div>
+    </div>
+
+</div>
