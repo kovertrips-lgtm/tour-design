@@ -2708,131 +2708,6 @@
         }
     
 
-    /* Mobile Team Block */
-    .m-team-section {
-        background-color: #111;
-        padding: 40px 20px 0;
-        /* Important: 0 bottom padding for seamless Marquee */
-        font-family: 'Montserrat', sans-serif;
-        color: #fff;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        overflow: hidden;
-    }
-
-    .m-team-header {
-        margin-bottom: 24px;
-        position: relative;
-        z-index: 2;
-    }
-
-    .m-team-title {
-        font-size: 28px;
-        font-weight: 800;
-        margin: 0 0 16px 0;
-        color: #fff;
-        line-height: 1.1;
-    }
-
-    .m-tags-row {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-    }
-
-    .m-tag {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        padding: 6px 10px;
-        border-radius: 50px;
-        background: rgba(255, 255, 255, 0.1);
-        color: #ccc;
-    }
-
-    .m-tag.accent {
-        background: #BDFF00;
-        color: #000;
-    }
-
-    .m-team-desc {
-        font-size: 15px;
-        color: #aaa;
-        line-height: 1.6;
-        margin-bottom: 30px;
-    }
-
-    .m-highlight {
-        color: #fff;
-        font-weight: 700;
-        border-bottom: 2px solid #29B6F6;
-    }
-
-    /* Marquee Animation */
-    .m-marquee-wrap {
-        width: 100vw;
-        margin-left: -20px;
-        /* Counteract parent padding */
-        overflow: hidden;
-        padding: 30px 0 60px;
-        position: relative;
-        background: #111;
-        /* Match bg */
-        /* Smooth fade sides */
-        mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-    }
-
-    .m-marquee-track {
-        display: flex;
-        gap: 16px;
-        width: max-content;
-        animation: mScroll 20s linear infinite;
-        will-change: transform;
-    }
-
-    .m-team-card {
-        width: 180px;
-        height: 240px;
-        flex-shrink: 0;
-        border-radius: 12px;
-        overflow: hidden;
-        position: relative;
-        border: 4px solid #fff;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .m-team-card:nth-child(odd) {
-        transform: rotate(-3deg);
-        margin-top: 10px;
-        border-color: #29B6F6;
-    }
-
-    .m-team-card:nth-child(even) {
-        transform: rotate(3deg);
-        margin-bottom: 10px;
-        border-color: #BDFF00;
-    }
-
-    .m-team-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    @keyframes mScroll {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
-
-        /* Assuming content is duplicated */
-    }
-
-
     .m-time-section {
         background-color: #111;
         /* Mobile Dark Theme */
@@ -2982,6 +2857,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
         }
 
         .m-info-card.accent {
@@ -3002,6 +2878,25 @@
             background: radial-gradient(circle, rgba(41, 182, 246, 0.1) 0%, transparent 70%);
             pointer-events: none;
         }
+
+        /* Clothing Icon Top Right */
+        .clothing-icons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 6px;
+            opacity: 0.6;
+        }
+
+        .clothing-icons svg {
+            width: 24px;
+            height: 24px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
 
         .m-info-h {
             font-size: 20px;
@@ -3102,6 +2997,131 @@
             height: 40px;
         }
     
+
+    /* Mobile Team Block */
+    .m-team-section {
+        background-color: #111;
+        padding: 40px 20px 0;
+        /* Important: 0 bottom padding for seamless Marquee */
+        font-family: 'Montserrat', sans-serif;
+        color: #fff;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+    }
+
+    .m-team-header {
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .m-team-title {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 16px 0;
+        color: #fff;
+        line-height: 1.1;
+    }
+
+    .m-tags-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .m-tag {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 6px 10px;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ccc;
+    }
+
+    .m-tag.accent {
+        background: #BDFF00;
+        color: #000;
+    }
+
+    .m-team-desc {
+        font-size: 15px;
+        color: #aaa;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .m-highlight {
+        color: #fff;
+        font-weight: 700;
+        border-bottom: 2px solid #29B6F6;
+    }
+
+    /* Marquee Animation */
+    .m-marquee-wrap {
+        width: 100vw;
+        margin-left: -20px;
+        /* Counteract parent padding */
+        overflow: hidden;
+        padding: 30px 0 60px;
+        position: relative;
+        background: #111;
+        /* Match bg */
+        /* Smooth fade sides */
+        mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    }
+
+    .m-marquee-track {
+        display: flex;
+        gap: 16px;
+        width: max-content;
+        animation: mScroll 20s linear infinite;
+        will-change: transform;
+    }
+
+    .m-team-card {
+        width: 180px;
+        height: 240px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        border: 4px solid #fff;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .m-team-card:nth-child(odd) {
+        transform: rotate(-3deg);
+        margin-top: 10px;
+        border-color: #29B6F6;
+    }
+
+    .m-team-card:nth-child(even) {
+        transform: rotate(3deg);
+        margin-bottom: 10px;
+        border-color: #BDFF00;
+    }
+
+    .m-team-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @keyframes mScroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+
+        /* Assuming content is duplicated */
+    }
+
 
         :root {
             --color-bg: #f2f2f7;
