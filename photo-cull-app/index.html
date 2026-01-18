@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kover Photo Culling</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="brand">📸 KoverCull</div>
+
+            <div class="control-group">
+                <button id="btn-open" class="btn primary">📂 Open Folder</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-label">CURRENT FOLDER</div>
+                <div id="current-path" class="stat-value" title="">No folder</div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-label">SELECTED</div>
+                <div id="selection-count" class="stat-value big">0</div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <button id="btn-review" class="btn secondary">Review Selection</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-area">
+            <!-- Grid View -->
+            <div id="view-grid" class="view active">
+                <div class="grid-container" id="grid">
+                    <!-- Cards go here -->
+                </div>
+                <!-- Sentinel for infinite scroll -->
+                <div id="sentinel"></div>
+            </div>
+
+            <!-- Review View -->
+            <div id="view-review" class="view">
+                <div class="review-header">
+                    <h2>Review & Sort</h2>
+                    <div class="actions">
+                        <button id="btn-back" class="btn small">Back to Grid</button>
+                        <input type="text" id="target-folder" placeholder="Bunny Folder Name" class="input-dark">
+                        <button id="btn-upload" class="btn success" disabled>Upload to Bunny</button>
+                    </div>
+                </div>
+                <div class="grid-container review-mode" id="review-grid">
+                    <!-- Drag sort items go here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="renderer.js"></script>
+</body>
+
+</html>
