@@ -634,250 +634,437 @@
 
 
 
-<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/02_Program_Mobile_Feed.html -->
+<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/02_Program_Mobile.html -->
 
 
 
     <div class="m-program-section">
         <div class="m-section-header">
-            <h2 class="m-h2">Детальная программа</h2>
+            <h2 class="m-h2">Программа тура</h2>
             <div class="m-sub">
-                Скролльте вниз, чтобы погрузиться в путешествие
+                <span class="m-sub-icon">&#128070;</span> Тапните, чтобы открыть детали
             </div>
         </div>
 
-        <div class="m-feed-container">
+        <div class="m-prog-scroll">
 
-            <!-- BLOCK 1: HALLSTATT -->
-            <div class="m-feed-block">
+            <!-- Card 1: Hallstatt -->
+            <div class="m-story-card" onclick="openPopup('hallstatt')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_1.jpg"
+                    class="m-story-img" alt="Hallstatt">
+                <div class="m-story-overlay">
+                    <span class="m-story-tag">Австрия</span>
+                    <h3 class="m-story-title">Гальштат</h3>
+                    <p class="m-story-desc">Увидим знаменитую открытку без толп туристов. Эксклюзив.</p>
+                    <div class="m-story-btn">Смотреть программу &rarr;</div>
+                </div>
+                <!-- Data for Popup -->
+                <div class="popup-data" id="data-hallstatt" style="display:none;">
+                    <div class="title">Магия Гальштата</div>
+                    <div class="subtitle">ЮНЕСКО · История · Фотосессия</div>
+                    <div class="images">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_2.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_4.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_5.jpg">
+                    </div>
+                    <div class="content">
+                        <p class="m-article-text">
+                            <b>Проблема Гальштата — толпы туристов.</b> Обычно здесь не протолкнуться.
+                            <br><br>
+                            <b>Наше решение:</b> Мы прибываем на рассвете. Весь город принадлежит тебе. Тишина, туман
+                            над
+                            озером и лебеди. Ты увидишь знаменитую "открытку", пока остальные только просыпаются.
+                        </p>
+
+                        <div class="m-article-h">📸 Твой личный фотограф</div>
+                        <p class="m-article-text">
+                            Не трать время на селфи. С нами едет профи, который знает лучшие (и секретные) ракурсы.
+                            Ты получишь идеальные кадры, где ты — главный герой на фоне истории.
+                            <br><i style="color:#888; font-size:12px;">(Обычно такая съемка стоит от 200€, у нас —
+                                включено).</i>
+                        </p>
+
+                        <div class="m-article-h">🧠 Без скучных лекций</div>
+                        <p class="m-article-text">
+                            Никаких "посмотрите налево, посмотрите направо". Только живые истории: почему соль была
+                            дороже золота и как люди жили здесь 7000 лет назад.
+                        </p>
+
+                        <div class="m-quote-card">
+                            "Гальштат утром — это совершенно другая планета. Тишина, туман над озером и лебеди. Это
+                            стоит того, чтобы проснуться пораньше!"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Sledding -->
+            <div class="m-story-card" onclick="openPopup('sledding')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
+                    class="m-story-img" alt="Sledding">
+                <div class="m-story-overlay">
+                    <span class="m-story-tag lime">Экшн</span>
+                    <h3 class="m-story-title">14 КМ Саней</h3>
+                    <p class="m-story-desc">14 км снежного драйва. Такого нет больше нигде в мире.</p>
+                    <div class="m-story-btn" style="background:#BDFF00; color:black;">Смотреть &rarr;</div>
+                </div>
+                <div class="popup-data" id="data-sledding" style="display:none;">
+                    <div class="title">14 КМ Адреналина</div>
+                    <div class="subtitle">Wildkogel Arena · Катание на закате</div>
+                    <div class="images">
+                        <!-- First image removed as requested -->
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani1.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani3.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani2.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani5.jpg">
+                    </div>
+                    <div class="content">
+                        <p class="m-article-text">
+                            <b>Новый взгляд на зимние развлечения.</b> Это не детская горка.
+                            <br>Это Wildkogel Arena — 14 километров чистого драйва. Спуск длится почти час!
+                        </p>
+
+                        <div class="m-article-h">&#128640; Почему это безопасно и круто?</div>
+                        <p class="m-article-text">
+                            Трасса подготовлена ратраками, как горнолыжный склон. Уклоны плавные, повороты широкие.
+                            <br><br>
+                            Мы стартуем с высоты 2200м. Вокруг — потрясающие виды Альп, а ты летишь по бесконечной
+                            снежной трассе.
+                            <b>Это возвращает в детство, но с масштабом Альп.</b>
+                        </p>
+
+                        <!-- Premium Video Card Container (Vertical Sledding) -->
+                        <div class="m-card-video" onclick="toggleVideo(this)">
+                            <video class="m-video-cover"
+                                src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
+                                playsinline webkit-playsinline loop muted preload="metadata">
+                            </video>
+
+                            <!-- Poster Layer -->
+                            <div class="m-video-cover m-video-poster"
+                                style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg'); background-size: cover; background-position: center; z-index: 2;">
+                            </div>
+
+                            <div class="m-video-overlay">
+                                <div class="m-video-caption">Wildkogel Arena · 14 км</div>
+                            </div>
+
+                            <div class="m-play-btn">
+                                <svg class="m-play-icon" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="m-article-h">&#11088; Отзывы</div>
+
+                        <div class="m-g-review">
+                            <div class="m-g-avatar">A</div>
+                            <div>
+                                <div class="m-g-name">Alexey K.</div>
+                                <div class="m-g-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+                                <div class="m-g-text">"Это было лучшее впечатление за всю поездку! Думал будет страшно,
+                                    но санки легко управляются. Эмоции через край!"</div>
+                            </div>
+                        </div>
+
+                        <div class="m-g-review">
+                            <div class="m-g-avatar" style="background:#BDFF00; color:black;">M</div>
+                            <div>
+                                <div class="m-g-name">Maria S.</div>
+                                <div class="m-g-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+                                <div class="m-g-text">"Длинная трасса, едешь и едешь! Очень красивые виды на долину."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Hotel -->
+            <div class="m-story-card" onclick="openPopup('hotel')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg"
+                    class="m-story-img" alt="Hotel">
+                <div class="m-story-overlay">
+                    <span class="m-story-tag">Релакс</span>
+                    <h3 class="m-story-title">Отель & SPA</h3>
+                    <p class="m-story-desc">Заслуженный релакс в теплом бассейне и саунах.</p>
+                    <div class="m-story-btn">Посмотреть номера &rarr;</div>
+                </div>
+                <div class="popup-data" id="data-hotel" style="display:none;">
+                    <div class="title">Альпийский Комфорт</div>
+                    <div class="subtitle">Hotel Römerhof 4* · Fusch</div>
+                    <div class="images">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/332735359.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/514073860.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/514073855.jpg">
+                    </div>
+                    <div class="content">
+
+                        <div class="m-booking-block">
+                            <div class="m-rating-row">
+                                <div class="m-rating-val">8.9</div>
+                                <span style="font-weight:bold; color:white;">Потрясающе</span>
+                                <span style="color:#888; font-size:12px;">300+ отзывов</span>
+                            </div>
+                            <p style="font-size:13px; color:#aaa; margin:0;">Рейтинг на Booking.com</p>
+                        </div>
+
+                        <p class="m-article-text">
+                            После дня в горах телу нужен отдых. Мы выбрали <b>Hotel Römerhof</b> не просто так — здесь
+                            лучшая SPA-зона в регионе.
+                        </p>
+
+                        <div class="m-article-h">❄️ Контраст ощущений</div>
+                        <p class="m-article-text">
+                            Представь: на улице -5°C, идет снег, а ты плаваешь в <b>горячем открытом бассейне
+                                (+32°C)</b>
+                            с видом на горы. Это ощущение полной перезагрузки.
+                        </p>
+
+                        <div class="m-article-h">🛏 Комфорт 4*</div>
+                        <p class="m-article-text">
+                            Максимум удобства. Просторные номера, кровати с ортопедическими матрасами и
+                            настоящий "фермерский" завтрак (шведский стол), ради которого хочется проснуться.
+                        </p>
+
+                        <a href="https://www.booking.com/hotel/at/romerhof-fusch.ru.html" target="_blank"
+                            class="m-popup-link booking">
+                            Посмотреть на Booking.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Red Bull -->
+            <div class="m-story-card" onclick="openPopup('redbull')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/bull1.jpg"
+                    class="m-story-img" alt="Red Bull Hangar">
+                <div class="m-story-overlay">
+                    <span class="m-story-tag orange">Музей</span>
+                    <h3 class="m-story-title">Hangar-7</h3>
+                    <p class="m-story-desc">Прикоснитесь к легендарным болидам F1 и самолетам.</p>
+                    <div class="m-story-btn" style="background:#FF6B35;">Узнать детали &rarr;</div>
+                </div>
+                <div class="popup-data" id="data-redbull" style="display:none;">
+                    <div class="title">Легендарный Hangar-7</div>
+                    <div class="subtitle">Авиация · F1 · Искусство</div>
+                    <div class="images">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/bull1.jpg">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/redbull_hangar.png">
+                    </div>
+                    <div class="content">
+                        <div class="m-booking-block" style="border-color:rgba(255,255,255,0.2);">
+                            <div class="m-rating-row">
+                                <div class="m-rating-val" style="background:#4285F4; border-radius:4px;">4.8</div>
+                                <span style="font-weight:bold; color:white;">Google Maps</span>
+                                <span style="color:#888; font-size:12px;">15,000+ отзывов</span>
+                            </div>
+                        </div>
+
+                        <p class="m-article-text">
+                            Даже если ты не фанат гонок, это место тебя впечатлит.
+                            Живой музей энергии и скорости.
+                        </p>
+
+                        <div class="m-article-h">🏎 Прикоснись к легенде</div>
+                        <p class="m-article-text">
+                            Болиды Формулы-1, стоящие здесь, выигрывали чемпионаты. Самолеты The Flying Bulls
+                            до сих пор участвуют в авиашоу.
+                            <br><br>
+                            Это место заряжает энергией достижения. Здесь понимаешь, что нет ничего невозможного.
+                            Идеальная локация для вдохновляющих фото/видео.
+                        </p>
+
+                        <div class="m-quote-card">
+                            "Это место встречи авиации, искусства и кулинарии. Здесь всё пропитано духом победы и
+                            скорости."
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Salzburg -->
+            <div class="m-story-card" onclick="openPopup('salzburg')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_city.png"
+                    class="m-story-img" alt="Salzburg">
+                <div class="m-story-overlay">
+                    <span class="m-story-tag">Город</span>
+                    <h3 class="m-story-title">Зальцбург</h3>
+                    <p class="m-story-desc">Эстетика старой Европы. Кофе, музыка и стиль.</p>
+                    <div class="m-story-btn">Подробнее &rarr;</div>
+                </div>
+                <div class="popup-data" id="data-salzburg" style="display:none;">
+                    <div class="title">Классика и Стиль</div>
+                    <div class="subtitle">UNESCO · Моцарт · Кофе</div>
+                    <div class="images">
+                        <img
+                            src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_city.png">
+                    </div>
+                    <div class="content">
+                        <p class="m-article-text">
+                            Мы не будем бегать по датам и памятникам. Это поездка про удовольствие.
+                        </p>
+
+                        <div class="m-article-h">☕️ Dolce Vita по-австрийски</div>
+                        <p class="m-article-text">
+                            Пройдемся по садам Мирабель и заглянем в старейшую кофейню <b>Tomaselli</b> (здесь любил
+                            бывать Моцарт).
+                            <br><br>
+                            Попробуем настоящий "Захер" или оригинальные конфеты <i>Mozartkugel</i> в синей обертке от
+                            Fürst.
+                            Это стильная финальная точка твоего путешествия перед возвращением домой.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="min-width: 1px;"></div>
+            <!-- Spacer -->
+        </div>
+
+        <!-- POPUP COMPONENT -->
+        <div id="m-popup" class="m-popup-overlay" onclick="closePopup()">
+            <div class="m-popup-sheet" onclick="event.stopPropagation()">
+                <!-- Close Button -->
+                <div class="m-close-round" onclick="closePopup()">&times;</div>
+
                 <!-- Gallery Slider -->
-                <div class="m-feed-gallery">
-                    <div class="m-feed-scroll">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
-                            class="m-feed-img">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_2.jpg"
-                            class="m-feed-img">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_4.jpg"
-                            class="m-feed-img">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_5.jpg"
-                            class="m-feed-img">
+                <div class="m-gallery-container">
+                    <div class="m-gallery-scroll" id="gallery-track">
+                        <!-- Images injected by JS -->
                     </div>
-                    <!-- Optional: Dots overlay if needed, or simple scroll is understandable -->
+                    <div class="m-photo-count" id="photo-counter">
+                        📷 1/5
+                    </div>
+                    <div class="m-gallery-dots" id="gallery-dots">
+                        <!-- Dots injected by JS -->
+                    </div>
                 </div>
 
-                <div class="m-feed-content">
-                    <span class="m-feed-tag blue">Австрия</span>
-                    <h3 class="m-feed-title">Магия Гальштата</h3>
-                    <div class="m-feed-subtitle">ЮНЕСКО · История · Фотосессия</div>
-
-                    <p class="m-article-text">
-                        Приезжаем на рассвете, пока город спит.
-                        <br>Вся красота — только для нас, без толп туристов.
-                    </p>
-
-                    <div class="m-article-h">&#128248; Профессиональные фото</div>
-                    <ul class="m-article-ul">
-                        <li>Личный фотограф в туре</li>
-                        <li>Знаем секретные ракурсы</li>
-                        <li>Идеальные кадры для соцсетей</li>
-                    </ul>
-
-                    <div class="m-article-h">&#129504; Интересные истории</div>
-                    <p class="m-article-text">
-                        Вместо скучных дат — живые факты. Узнаешь, почему соль стоила дороже золота и как тут жили 7000
-                        лет назад.
-                    </p>
-
-                    <div class="m-quote-card">
-                        "Гальштат утром — это другая планета. Тишина, туман и лебеди. Ради этого стоило проснуться!"
+                <div class="m-popup-content">
+                    <div class="m-sheet-header">
+                        <div class="m-sheet-handle"></div>
                     </div>
+                    <h3 id="popup-title" class="m-popup-title">Title</h3>
+                    <div id="popup-subtitle" class="m-popup-subtitle">Subtitle</div>
+                    <div id="popup-text"></div> <!-- HTML Container -->
+
+                    <button onclick="closePopup()" class="m-sticky-close">Закрыть</button>
                 </div>
             </div>
-            <!-- END BLOCK 1 -->
-
-            <!-- BLOCK 2: SLEDDING -->
-            <div class="m-feed-block">
-                <!-- Gallery: Just Main Hero Image? Or Gallery? Let's use gallery to show variety -->
-                <div class="m-feed-gallery">
-                    <div class="m-feed-scroll">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
-                            class="m-feed-img">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani1.jpg"
-                            class="m-feed-img">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani3.jpg"
-                            class="m-feed-img">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani5.jpg"
-                            class="m-feed-img">
-                    </div>
-                </div>
-
-                <div class="m-feed-content">
-                    <span class="m-feed-tag lime">Экшн</span>
-                    <h3 class="m-feed-title">14 КМ Адреналина</h3>
-                    <div class="m-feed-subtitle">Wildkogel Arena · Катание на закате</div>
-
-                    <p class="m-article-text">
-                        <b>Новый взгляд на зимние развлечения.</b> Это не детская горка.
-                        <br>Это Wildkogel Arena — 14 километров чистого драйва. Спуск длится почти час!
-                    </p>
-
-                    <div class="m-article-h">&#128640; Почему это безопасно и круто?</div>
-                    <p class="m-article-text">
-                        Трасса подготовлена ратраками, как горнолыжный склон. Уклоны плавные, повороты широкие.
-                        <br><br>
-                        Мы стартуем с высоты 2200м (поднимаемся на подъемнике). Вокруг — потрясающие виды Альп, а ты
-                        летишь по бесконечной
-                        снежной трассе.
-                        <b>Это возвращает в детство, но с масштабом Альп.</b>
-                    </p>
-
-                    <!-- VIDEO CARD INLINE -->
-                    <div class="m-card-video" onclick="toggleVideo(this)">
-                        <video class="m-video-cover"
-                            src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
-                            playsinline webkit-playsinline loop muted preload="metadata">
-                        </video>
-                        <div class="m-video-cover m-video-poster"
-                            style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg'); background-size: cover; background-position: center; z-index: 2;">
-                        </div>
-                        <div class="m-video-overlay">
-                            <div class="m-video-caption">Wildkogel Arena · 14 км</div>
-                        </div>
-                        <div class="m-play-btn">
-                            <svg class="m-play-icon" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="m-article-h">&#11088; Отзывы</div>
-                    <div class="m-g-review">
-                        <div class="m-g-avatar">A</div>
-                        <div>
-                            <div class="m-g-name">Alexey K.</div>
-                            <div class="m-g-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
-                            <div class="m-g-text">"Это было лучшее впечатление за всю поездку! Думал будет страшно, но
-                                санки легко управляются."</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- END BLOCK 2 -->
-
-            <!-- BLOCK 3: HOTEL -->
-            <div class="m-feed-block">
-                <div class="m-feed-gallery">
-                    <div class="m-feed-scroll">
-                        <!-- Updated Hotel Image -->
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hotel/hotel_1.jpg"
-                            class="m-feed-img" onerror="this.src='https://kovertrip.b-cdn.net/placeholder_hotel.jpg'">
-                    </div>
-                </div>
-                <div class="m-feed-content">
-                    <span class="m-feed-tag blue">Релакс</span>
-                    <h3 class="m-feed-title">Отель & SPA</h3>
-                    <div class="m-feed-subtitle">4 звезды · Бассейн · Сауна</div>
-
-                    <p class="m-article-text">
-                        Живем в альпийском отеле 4*, а не в хостеле.
-                        <br>Просторные 2-х местные номера.
-                    </p>
-
-                    <div class="m-article-h">&#129360; Чистый чилл</div>
-                    <ul class="m-article-ul">
-                        <li>Горячая сауна после гор</li>
-                        <li>Бассейн с видом</li>
-                        <li>Шведский стол на завтрак</li>
-                    </ul>
-
-                    <div class="m-g-review">
-                        <div class="m-g-avatar" style="background:#29B6F6;">O</div>
-                        <div>
-                            <div class="m-g-name">Olga</div>
-                            <div class="m-g-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
-                            <div class="m-g-text">"Спа зона — просто супер. После санок отогреться в сауне было
-                                идеально."</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BLOCK 4: SALZBURG (Added Back) -->
-            <div class="m-feed-block">
-                <div class="m-feed-gallery">
-                    <div class="m-feed-scroll">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_xmas.jpg"
-                            class="m-feed-img">
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/salzburg/salzburg_1.jpg"
-                            class="m-feed-img">
-                    </div>
-                </div>
-                <div class="m-feed-content">
-                    <span class="m-feed-tag blue">Атмосфера</span>
-                    <h3 class="m-feed-title">Зальцбург</h3>
-                    <div class="m-feed-subtitle">Родина Моцарта · Рождество</div>
-
-                    <p class="m-article-text">
-                        После гор — погружение в сказку старого города.
-                    </p>
-
-                    <div class="m-article-h">&#127873; Рождественская магия</div>
-                    <ul class="m-article-ul">
-                        <li>Самые красивые ярмарки Европы</li>
-                        <li>Глинтвейн и брецели на площади</li>
-                        <li>Прогулка по крепости Хоэнзальцбург</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- BLOCK 5: RED BULL -->
-            <div class="m-feed-block">
-                <div class="m-feed-gallery">
-                    <div class="m-feed-scroll">
-                        <!-- Updated Hangar Image -->
-                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hangar7/hangar_1.jpg"
-                            class="m-feed-img" onerror="this.src='https://kovertrip.b-cdn.net/placeholder_hangar.jpg'">
-                    </div>
-                </div>
-                <div class="m-feed-content">
-                    <span class="m-feed-tag lime">Технологии</span>
-                    <h3 class="m-feed-title">Hangar-7</h3>
-                    <div class="m-feed-subtitle">Музей Red Bull · Зальцбург</div>
-
-                    <p class="m-article-text">
-                        Шедевр из стекла и стали. Частная коллекция, где техника граничит с искусством.
-                    </p>
-
-                    <div class="m-article-h">&#128640; Главные экспонаты</div>
-                    <ul class="m-article-ul">
-                        <li>Болиды Формулы-1</li>
-                        <li>Военные истребители "Кобра"</li>
-                        <li>Капсула стратостата (прыжок из космоса)</li>
-                        <li>Гоночные вертолеты</li>
-                    </ul>
-                </div>
-            </div>
-
-        </div> <!-- End feed container -->
+        </div>
     </div>
 
-    <!-- Video Logic Script (Must be included since we don't have popups but have inline video) -->
     <script>
-        function toggleVideo(card) {
-            const video = card.querySelector('video');
+        function openPopup(id) {
+            const dataDiv = document.getElementById('data-' + id);
+            if (!dataDiv) return;
+
+            // 1. Get Text Data
+            const title = dataDiv.querySelector('.title').innerText;
+            const subtitle = dataDiv.querySelector('.subtitle') ? dataDiv.querySelector('.subtitle').innerText : '';
+            // Get InnerHTML for the content to support rich text
+            const content = dataDiv.querySelector('.content').innerHTML;
+
+            document.getElementById('popup-title').innerText = title;
+            document.getElementById('popup-subtitle').innerText = subtitle;
+            document.getElementById('popup-text').innerHTML = content;
+
+            // 2. Build Gallery
+            const images = dataDiv.querySelectorAll('.images img');
+            const track = document.getElementById('gallery-track');
+            const dotsContainer = document.getElementById('gallery-dots');
+
+            track.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            images.forEach((img, index) => {
+                // Add Image
+                const imgEl = document.createElement('img');
+                imgEl.src = img.src;
+                imgEl.className = 'm-gallery-img';
+                track.appendChild(imgEl);
+
+                // Add Dot (only if > 1 image)
+                if (images.length > 1) {
+                    const dot = document.createElement('div');
+                    dot.className = 'm-dot' + (index === 0 ? ' active' : '');
+                    dotsContainer.appendChild(dot);
+                }
+            });
+
+            // 3. Setup Scroll Listener for Dots
+            if (images.length > 1) {
+                track.onscroll = () => {
+                    const scrollLeft = track.scrollLeft;
+                    const width = track.offsetWidth;
+                    const index = Math.round(scrollLeft / width);
+
+                    // Update dots
+                    const dots = dotsContainer.querySelectorAll('.m-dot');
+                    dots.forEach(d => d.classList.remove('active'));
+                    if (dots[index]) dots[index].classList.add('active');
+
+                    // Update counter
+                    document.getElementById('photo-counter').innerText = `📷 ${index + 1}/${images.length}`;
+                };
+
+                // Init counter
+                document.getElementById('photo-counter').innerText = `📷 1/${images.length}`;
+                document.getElementById('photo-counter').style.display = 'flex';
+            } else {
+                document.getElementById('photo-counter').style.display = 'none';
+            }
+
+            // Show
+            document.getElementById('m-popup').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePopup() {
+            document.getElementById('m-popup').classList.remove('active');
+            document.body.style.overflow = '';
+
+            // Stop any playing video when closing popup
+            const videos = document.querySelectorAll('video');
+            videos.forEach(v => v.pause());
+        }
+
+        function toggleVideo(el) {
+            const video = el.querySelector('video');
+
             if (video.paused) {
-                // Pause all other videos
+                // Pause others
                 document.querySelectorAll('video').forEach(v => {
                     if (v !== video) {
                         v.pause();
-                        v.closest('.m-card-video').classList.remove('playing');
+                        v.closest('.m-card-video')?.classList.remove('playing');
                     }
                 });
+
+                video.muted = false;
                 video.play();
-                card.classList.add('playing');
+                el.classList.add('playing');
             } else {
                 video.pause();
-                card.classList.remove('playing');
+                el.classList.remove('playing');
             }
         }
     </script>
@@ -988,6 +1175,74 @@
         }
     </script>
 
+
+<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/08_Timeline_Mobile.html -->
+
+
+
+<div class="m-time-section">
+    <div class="m-time-header">
+        <h2 class="m-time-title">Тайминг</h2>
+        <div class="m-time-sub">План наших приключений</div>
+    </div>
+
+    <!-- DAY 1 -->
+    <div class="m-day-block">
+        <div class="m-day-header">
+            <span class="m-day-icon">&#128197;</span> Суббота, 28.02
+        </div>
+
+        <div class="m-t-item">
+            <div class="m-t-time">02:45</div>
+            <div class="m-t-desc"><strong>Встреча и старт</strong>Hlavní Nádraží, посадка в автобус.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">09:00</div>
+            <div class="m-t-desc"><strong>Гальштат</strong>Прибытие, пока город спит. Фотосессия.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">12:00</div>
+            <div class="m-t-desc"><strong>Выезд в горы</strong>Переезд к Wildkogel Arena.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">15:00</div>
+            <div class="m-t-desc"><strong>САНИ (14 км)</strong>Подъем на гору и легендарный спуск.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">19:00</div>
+            <div class="m-t-desc"><strong>Отель & Ужин</strong>Заселение, релакс и вкусная еда.</div>
+        </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="m-day-block">
+        <div class="m-day-header">
+            <span class="m-day-icon">&#128197;</span> Воскресенье, 01.03
+        </div>
+
+        <div class="m-t-item">
+            <div class="m-t-time">07:30</div>
+            <div class="m-t-desc"><strong>Завтрак</strong>Шведский стол в отеле.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">11:00</div>
+            <div class="m-t-desc"><strong>Hangar-7</strong>Музей Red Bull: болиды и самолеты.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">13:30</div>
+            <div class="m-t-desc"><strong>Зальцбург</strong>Прогулка по старому городу, кофе.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">18:00</div>
+            <div class="m-t-desc"><strong>Домой</strong>Выезд в Прагу.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">23:00</div>
+            <div class="m-t-desc"><strong>Прибытие</strong>Мы дома.</div>
+        </div>
+    </div>
+
+</div>
 
 <!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/09_OrgDetails_Mobile.html -->
 
