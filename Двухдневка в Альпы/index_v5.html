@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kover Alps - HYBRID V5 Mobile</title>
+</head>
+
+<body style="margin:0; padding:0;">
+    <div id="content-container"></div>
+    <script>
+        const mobileFiles = [
+            'Widget_Config.html',
+            'Widget_Core.html',
+            'Mobile_Version/Full_Page_V5_Hybrid.html'
+        ];
+
+        async function loadContent() {
+            const container = document.getElementById('content-container');
+            let allHtml = '';
+            try {
+                for (const file of mobileFiles) {
+                    const response = await fetch(file);
+                    if (!response.ok) throw new Error(response.status);
+                    allHtml += await response.text();
+                }
+                container.innerHTML = allHtml;
+                const scripts = container.getElementsByTagName('script');
+                for (let i = 0; i < scripts.length; i++) {
+                    const newScript = document.createElement('script');
+                    newScript.src = scripts[i].src || '';
+                    newScript.textContent = scripts[i].textContent;
+                    document.body.appendChild(newScript);
+                }
+            } catch (error) {
+                container.innerHTML = '<h1>Error</h1>' + error.message;
+            }
+        }
+        loadContent();
+    </script>
+</body>
+
+</html>

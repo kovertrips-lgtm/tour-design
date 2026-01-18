@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kover Alps - Hybrid V5 (Trend + Classic)</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Montserrat (Brand Classic) + JetBrains Mono (Utility Trend) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- HYBRID VARIABLES --- */
+        :root {
+            /* DEEP DARK BACKGROUND (Like V4 "Quiet Luxury" but slightly cooler to match Neon) */
+            --bg-root: #080808;
+            --bg-card: #141414;
+
+            /* ORIGINAL ACCENTS */
+            --accent-lime: #BDFF00;
+            /* KEEPING THE BRAND DNA */
+            --accent-cyan: #29B6F6;
+
+            /* TYPOGRAPHY */
+            --font-main: 'Montserrat', sans-serif;
+            --font-data: 'JetBrains Mono', monospace;
+
+            --radius-L: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-root);
+            color: #fff;
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        /* --- HERO SECTION (CLASSIC KOVER IMAGE + TREND VISUAL TOFU) --- */
+        .hero {
+            position: relative;
+            height: 90vh;
+            /* Restore some height */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            overflow: hidden;
+            border-bottom-right-radius: 40px;
+            /* Asymmetric rounding trend */
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.85);
+        }
+
+        .hero-gradient {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, var(--bg-root) 0%, transparent 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 40px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            font-family: var(--font-data);
+            font-size: 11px;
+            color: var(--accent-lime);
+            border: 1px solid rgba(189, 255, 0, 0.3);
+            background: rgba(189, 255, 0, 0.1);
+            padding: 6px 12px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: 48px;
+            line-height: 0.95;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .hero-title span {
+            color: transparent;
+            -webkit-text-stroke: 1px #fff;
+        }
+
+        /* --- CAROUSEL (CLASSIC MECHANIC, TREND STYLE) --- */
+        .section-title {
+            font-size: 28px;
+            margin: 40px 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .scoll-hint {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 0 20px 40px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card {
+            flex: 0 0 280px;
+            height: 420px;
+            position: relative;
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            scroll-snap-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%);
+            /* Slight trend mute */
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 24px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        }
+
+        .card-tag {
+            font-family: var(--font-data);
+            font-size: 10px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #aaa;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* --- RECEIPT SECTION ("Utility-Core" Trend) --- */
+        .receipt-area {
+            margin: 20px;
+            background: #fff;
+            /* High contrast paper */
+            color: #000;
+            padding: 24px;
+            font-family: var(--font-data);
+            position: relative;
+            /* "Torn paper" top effect using CSS clip-path */
+            clip-path: polygon(0% 10px, 5% 0px, 10% 10px, 15% 0px, 20% 10px, 25% 0px, 30% 10px, 35% 0px, 40% 10px, 45% 0px, 50% 10px, 55% 0px, 60% 10px, 65% 0px, 70% 10px, 75% 0px, 80% 10px, 85% 0px, 90% 10px, 95% 0px, 100% 10px,
+                    100% 100%, 0% 100%);
+            border-radius: 0 0 2px 2px;
+        }
+
+        .r-header {
+            border-bottom: 2px dashed #000;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .r-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .r-total {
+            border-top: 2px dashed #000;
+            padding-top: 16px;
+            margin-top: 20px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+        }
+
+        /* --- SHEET MODAL (V4 Tech) --- */
+        .sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .sheet-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sheet-modal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 85vh;
+            background: #121212;
+            /* Dark Modal for Hybrid */
+            color: #fff;
+            border-radius: 24px 24px 0 0;
+            transform: translateY(100%);
+            transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .sheet-overlay.active .sheet-modal {
+            transform: translateY(0);
+        }
+
+        .sm-img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+        }
+
+        .sm-content {
+            padding: 32px 24px 100px;
+        }
+
+        .sm-title {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .sm-text {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .sm-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- FLOATING CTA (Primary Brand Color) --- */
+        .cta-container {
+            position: fixed;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .cta-btn {
+            width: 100%;
+            height: 60px;
+            background: var(--accent-lime);
+            color: #000;
+            font-family: var(--font-main);
+            font-weight: 800;
+            font-size: 16px;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 12px;
+            /* Kover style radius */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(189, 255, 0, 0.2);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="hero-bg">
+            <img
+                src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hero_bg.png">
+            <div class="hero-gradient"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">28 Фев · 1 Мар</div>
+            <h1 class="hero-title">Выходные<br><span>В Альпах</span></h1>
+            <p style="color:#aaa; font-size:16px; max-width:80%;">Гальштат · Сани 14км · Red Bull</p>
+        </div>
+    </div>
+
+
+    <div class="section-title">
+        <span>Программа</span>
+        <span class="scoll-hint">Свайп →</span>
+    </div>
+
+    <!-- CAROUSEL (Keep horizontal scroll as per "First Main Version") -->
+    <div class="carousel">
+
+        <!-- Hallstatt -->
+        <div class="card" onclick="openSheet('hallstatt')">
+            <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
+                class="card-img">
+            <div class="card-overlay">
+                <span class="card-tag">ЮНЕСКО</span>
+                <h3 class="card-title">Гальштат</h3>
+                <div class="card-desc">Без толп туристов. Личный фотограф на рассвете.</div>
+            </div>
+        </div>
+
+        <!-- Sledding -->
+        <div class="card" onclick="openSheet('sledding')">
+            <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
+                class="card-img">
+            <div class="card-overlay">
+                <span class="card-tag" style="color:var(--accent-lime);">Action</span>
+                <h3 class="card-title">14 КМ Саней</h3>
+                <div class="card-desc">Самая длинная трасса в мире. 40 минут спуска.</div>
+            </div>
+        </div>
+
+        <!-- Hotel -->
+        <div class="card" onclick="openSheet('hotel')">
+            <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg"
+                class="card-img">
+            <div class="card-overlay">
+                <span class="card-tag">Relax</span>
+                <h3 class="card-title">Отель 4* & SPA</h3>
+                <div class="card-desc">Открытый бассейн +32° с видом на Альпы.</div>
+            </div>
+        </div>
+
+        <!-- Salzburg -->
+        <div class="card" onclick="openSheet('salzburg')">
+            <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_city.png"
+                class="card-img">
+            <div class="card-overlay">
+                <span class="card-tag">Culture</span>
+                <h3 class="card-title">Зальцбург</h3>
+                <div class="card-desc">Родина Моцарта, кофе и штрудель.</div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <h2 class="section-title">Включено</h2>
+
+    <!-- RECEIPT STYLE INCLUSIONS -->
+    <div class="receipt-area">
+        <div class="r-header">
+            <span>KOVER TRIP</span>
+            <span>#2024</span>
+        </div>
+        <div class="r-row">
+            <span>Трансфер (Автобус)</span>
+            <span>CHECK</span>
+        </div>
+        <div class="r-row">
+            <span>Отель 4* + Завтрак</span>
+            <span>CHECK</span>
+        </div>
+        <div class="r-row">
+            <span>SPA & Бассейн</span>
+            <span>CHECK</span>
+        </div>
+        <div class="r-row">
+            <span>Скипасс (Сани)</span>
+            <span>CHECK</span>
+        </div>
+        <div class="r-row">
+            <span>Личный Фотограф</span>
+            <span>CHECK</span>
+        </div>
+
+        <div class="r-total">
+            <span>TOTAL PRICE</span>
+            <span>€250.00</span>
+        </div>
+    </div>
+
+    <div style="height:100px;"></div>
+
+
+    <div class="cta-container">
+        <button class="cta-btn" onclick="openWidget()">Поехали! <span>→</span></button>
+    </div>
+
+
+    <!-- HIDDEN DATA & SHEET LOGIC -->
+    <div id="data-store" style="display:none;">
+        <div id="content-hallstatt">
+            <div class="s-title">Гальштат. Утро.</div>
+            <img class="s-img-src"
+                src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg">
+            <p class="sm-text">Прибываем пока все спят. Тишина и ЮНЕСКО. Фотограф включен, чтобы ты не отвлекался на
+                селфи.</p>
+        </div>
+
+        <div id="content-sledding">
+            <div class="s-title">14 КМ Драйва.</div>
+            <video class="s-video-src"
+                src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
+                poster="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"></video>
+            <p class="sm-text">Самая длинная освещенная трасса в мире. Поднимаемся на подъемнике, спускаемся на санях 40
+                минут.</p>
+        </div>
+
+        <div id="content-hotel">
+            <div class="s-title">Hotel Römerhof 4*.</div>
+            <img class="s-img-src"
+                src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg">
+            <p class="sm-text">Лучший SPA в регионе. Открытый бассейн +32 и вид на горы. Идеально после мороза.</p>
+            <a href="https://www.booking.com/hotel/at/romerhof-fusch.ru.html" target="_blank"
+                style="color:#29B6F6; text-decoration:none; border-bottom:1px solid #29B6F6;">Смотреть на
+                Booking.com</a>
+        </div>
+
+        <div id="content-salzburg">
+            <div class="s-title">Зальцбург.</div>
+            <img class="s-img-src"
+                src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_city.png">
+            <p class="sm-text">Прогулка по старому городу, сады Мирабель и вкусный кофе перед отъездом.</p>
+        </div>
+    </div>
+
+
+    <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()">
+        <div class="sheet-modal" onclick="event.stopPropagation()">
+            <div class="sm-close" onclick="closeSheet()">&times;</div>
+            <div id="sheet-media"></div>
+            <div class="sm-content">
+                <h2 class="sm-title" id="sheet-title">Title</h2>
+                <div id="sheet-body"></div>
+                <button class="cta-btn" onclick="closeSheet(); openWidget();">Забронировать</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openSheet(id) {
+            const data = document.getElementById('content-' + id);
+            if (!data) return;
+
+            // Extract content
+            const title = data.querySelector('.s-title').innerText;
+            const body = data.innerHTML; // Take everything inside
+
+            // Setup media
+            const mediaCont = document.getElementById('sheet-media');
+            mediaCont.innerHTML = '';
+
+            // Check for vid/img in source but don't move them, clone logic
+            const vid = data.querySelector('.s-video-src');
+            const img = data.querySelector('.s-img-src');
+
+            if (vid) {
+                const v = document.createElement('video');
+                v.className = 'sm-img';
+                v.src = vid.getAttribute('src');
+                v.poster = vid.getAttribute('poster');
+                v.controls = true; v.playsInline = true;
+                mediaCont.appendChild(v);
+            } else if (img) {
+                const i = document.createElement('img');
+                i.className = 'sm-img';
+                i.src = img.getAttribute('src');
+                mediaCont.appendChild(i);
+            }
+
+            // Text content (filtered)
+            const textContent = data.cloneNode(true);
+            const mediaInClone = textContent.querySelector('.s-img-src, .s-video-src');
+            if (mediaInClone) mediaInClone.remove(); // Remove media from text body
+
+            document.getElementById('sheet-title').innerText = textContent.querySelector('.s-title').innerText;
+            textContent.querySelector('.s-title').remove(); // Remove title from body
+            document.getElementById('sheet-body').innerHTML = textContent.innerHTML;
+
+            document.getElementById('sheet-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSheet() {
+            document.getElementById('sheet-media').innerHTML = '';
+            document.getElementById('sheet-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    </script>
+
+</body>
+
+</html>
