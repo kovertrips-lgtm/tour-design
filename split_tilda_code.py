@@ -128,28 +128,71 @@ wrapper_css = """
            position: fixed !important;
        }
 
-       /* POPUPS */
-       .popup-overlay {
-           align-items: center !important; /* Center modal */
+       /* POPUPS - DESKTOP MODAL */
+       .m-popup-overlay {
+           align-items: center !important;
            padding: 40px !important;
+           background: rgba(0,0,0,0.85) !important;
        }
-       .popup-content {
+
+       .m-popup-sheet {
+           width: 90% !important;
+           max-width: 1000px !important;
+           height: 80vh !important;
+           max-height: 800px !important;
            border-radius: 20px !important;
-           max-width: 800px !important;
-           height: auto !important;
-           max-height: 90vh !important;
-           display: flex;
-           flex-direction: row; /* Side-by-side content? Or just wider vertical? */
-           overflow: hidden;
+           transform: none !important; /* Disable slide up animation logic */
+           flex-direction: row !important; /* Side by side */
+           position: relative !important;
+           overflow: hidden !important;
        }
-       /* We keep popup content simple for now, maybe just wider */
+
+       /* Left: Gallery */
+       .m-gallery-container {
+           width: 45% !important;
+           height: 100% !important;
+           order: 1;
+       }
        
+       /* Right: Content */
+       .m-popup-content {
+           width: 55% !important;
+           height: 100% !important;
+           order: 2;
+           padding: 40px !important;
+           margin-top: 0 !important;
+           border-radius: 0 !important;
+           box-shadow: none !important;
+           overflow-y: auto !important; /* Scrollable text */
+       }
+
+       /* Hide Mobile Elements */
+       .m-sheet-header { display: none !important; }
+       .m-sticky-close { display: none !important; } /* We use the X button */
+
+       /* Ensure Close Button (X) is Visible */
+       .m-close-round {
+           display: flex !important;
+           position: absolute !important;
+           top: 20px !important;
+           right: 20px !important; /* Right of the MODAL, not screen */
+           z-index: 100 !important;
+           background: rgba(0,0,0,0.5) !important;
+           color: white !important;
+           width: 40px !important;
+           height: 40px !important;
+           border-radius: 50% !important;
+           align-items: center !important;
+           justify-content: center !important;
+           cursor: pointer !important;
+           font-size: 24px !important;
+       }
+
        /* Widget Modal */
        .widget-container {
-           max-width: 900px !important; /* Wider widget */
+           max-width: 450px !important; /* Keep widget narrow */
            height: 700px !important;
-           flex-direction: row !important; /* Side-by-side steps? No, logic is mobile. Keep it centered box */
-           max-width: 450px !important; /* actually keep widget narrow/phone-sized, standard practice */
+           margin: 0 auto !important;
        }
    }
 """
