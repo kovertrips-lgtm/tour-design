@@ -17,6 +17,7 @@ This document outlines the copywriting and marketing principles for the Kover An
 1.  **"Те самые" / "Та самая"** (e.g., "те самые открыточные виды", "тот самый вкус").
 2.  **"Это не просто..."** (e.g., "Это не просто музей, это храм...").
 3.  **"Забудьте о..."** (e.g., "Забудьте о планировании", "Забудьте всё, что вы знали...").
+4.  **"Никаких компромиссов"** (cliché).
     *   *Reason:* These are overused marketing clichés that lower trust and sound cheap.
 
 ## ✍️ Tone of Voice
