@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kover Alps - Bento Full Experience</title>
+
+    <!-- Google Fonts: Inter & Space Grotesk for that "Trend" look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Space+Grotesk:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --surface-hover: #1F1F1F;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #FFFFFF;
+            --text-muted: #999999;
+            --accent: #3B82F6;
+            --accent-gradient: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            --radius: 28px;
+            --radius-sm: 16px;
+            --pad: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        img,
+        video {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- LAYOUT UTILS --- */
+        .container {
+            padding: 0 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* --- UI COMPONENTS --- */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            height: 32px;
+            padding: 0 12px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chip.accent {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            border: none;
+            height: 56px;
+            width: 100%;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 24px;
+            overflow: hidden;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-bg::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to top, #0A0A0A 0%, transparent 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            line-height: 0.95;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .hero-title span {
+            color: transparent;
+            -webkit-text-stroke: 1px white;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .meta-item {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            flex: 1;
+        }
+
+        .meta-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .meta-val {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* --- PROGRAM: BENTO GRID --- */
+        .bento-header {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .section-sub {
+            color: var(--text-muted);
+        }
+
+        .bento-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .bento-card.tall {
+            grid-row: span 2;
+            min-height: 360px;
+        }
+
+        .bento-card.wide {
+            grid-column: span 2;
+            min-height: 280px;
+        }
+
+        .bento-card.square {
+            min-height: 180px;
+            aspect-ratio: 1/1;
+        }
+
+        .b-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease;
+            z-index: 1;
+        }
+
+        .bento-card:active .b-img {
+            transform: scale(1.05);
+        }
+
+        .b-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 10%, rgba(0, 0, 0, 0.2) 60%, transparent 100%);
+            z-index: 2;
+        }
+
+        .b-content {
+            position: relative;
+            z-index: 3;
+        }
+
+        .b-tag {
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .b-title {
+            font-size: 20px;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .b-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.3;
+        }
+
+        .video-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+        }
+
+        /* --- REVIEWS: TICKER STYLE --- */
+        .review-scroller {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 0 16px 20px;
+            /* Hide scrollbar visual */
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .review-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        .review-card {
+            min-width: 280px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            scroll-snap-align: center;
+        }
+
+        .r-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .r-avatar {
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #666;
+        }
+
+        .r-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .r-stars {
+            color: #FFD700;
+            font-size: 12px;
+        }
+
+        .r-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+
+        /* --- ORG DETAILS: MODERN LIST --- */
+        .details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            /* Thin lines */
+            background: var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .detail-item {
+            background: var(--surface);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .detail-item:active {
+            background: var(--surface-hover);
+        }
+
+        .d-icon {
+            font-size: 20px;
+            margin-right: 16px;
+        }
+
+        .d-content {
+            flex: 1;
+        }
+
+        .d-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .d-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .d-arrow {
+            color: #444;
+        }
+
+
+        /* --- FLOATING CTA --- */
+        .float-nav {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 500px;
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .fv-price {
+            padding-left: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fv-label {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .fv-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .fv-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-bg">
+            <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;">
+                <source src="https://kovertrip.b-cdn.net/hero_vid_compress.mp4" type="video/mp4">
+            </video>
+            <!-- Fallback Image if video fails or while loading -->
+            <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
+                style="position:absolute; top:0; left:0; z-index:-1;">
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="chip accent">2 Days / 1 Night</span>
+            </div>
+            <h1 class="hero-title">Alpine<br><span>Antigravity</span></h1>
+
+            <div class="hero-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Next Date</div>
+                    <div class="meta-val">Dec 20-21</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Price</div>
+                    <div class="meta-val">€250</div>
+                </div>
+            </div>
+
+            <button onclick="scrollToProgram()" class="btn-primary">
+                Explore the Vibe
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+
+    <div class="container section" id="program">
+        <div class="bento-header">
+            <h2 class="section-title">The Plan.</h2>
+            <div class="section-sub">Everything is included. No hidden fees.</div>
+        </div>
+
+        <!-- BENTO GRID -->
+        <div class="grid-2">
+
+            <!-- 1. Hallstatt -->
+            <div class="bento-card wide">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
+                    class="b-img">
+                <div class="b-overlay"></div>
+                <div class="b-content">
+                    <span class="b-tag">Dawn Patrol</span>
+                    <h3 class="b-title">Hallstatt</h3>
+                    <p class="b-desc">We arrive at 8 AM. Zero tourists. Just you, the lake, and our photographer.</p>
+                </div>
+            </div>
+
+            <!-- 2. Sledding (Video) -->
+            <div class="bento-card tall" onclick="toggleVideo(this)">
+                <video class="b-img"
+                    src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
+                    playsinline webkit-playsinline loop muted></video>
+                <div class="b-overlay"></div>
+                <div class="video-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M8 5v14l11-7z" />
+                    </svg></div>
+                <div class="b-content">
+                    <span class="b-tag" style="background:#BDFF00; color:black;">Must Do</span>
+                    <h3 class="b-title">14 KM Drift</h3>
+                    <p class="b-desc">World's longest sled run. 40 mins of pure adrenaline.</p>
+                </div>
+            </div>
+
+            <!-- 3. Hotel -->
+            <div class="bento-card square">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/332735359.jpg"
+                    class="b-img">
+                <div class="b-overlay"></div>
+                <div class="b-content">
+                    <h3 class="b-title">Hotel 4*</h3>
+                    <p class="b-desc">Pool included.</p>
+                </div>
+            </div>
+
+            <!-- 4. Salzburg -->
+            <div class="bento-card square">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_xmas.jpg"
+                    class="b-img">
+                <div class="b-overlay"></div>
+                <div class="b-content">
+                    <h3 class="b-title">Salzburg</h3>
+                    <p class="b-desc">Xmas Vibes.</p>
+                </div>
+            </div>
+
+            <!-- 5. Hangar-7 -->
+            <div class="bento-card wide">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/bull1.jpg"
+                    class="b-img">
+                <div class="b-overlay"></div>
+                <div class="b-content">
+                    <span class="b-tag">Red Bull</span>
+                    <h3 class="b-title">Hangar-7</h3>
+                    <p class="b-desc">Formula 1 cars, fighter jets & modern art.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="section">
+        <div class="container">
+            <h2 class="section-title" style="margin-bottom:24px;">Vibe Check.</h2>
+        </div>
+
+        <div class="review-scroller">
+            <div class="review-card">
+                <div class="r-header">
+                    <div class="r-avatar">A</div>
+                    <div>
+                        <div class="r-name">Alexey</div>
+                        <div class="r-stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="r-text">"Honestly, the sledding part was insane. I didn't expect it to be this long. Hotel
+                    was top notch."</div>
+            </div>
+            <div class="review-card">
+                <div class="r-header">
+                    <div class="r-avatar">M</div>
+                    <div>
+                        <div class="r-name">Maria</div>
+                        <div class="r-stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="r-text">"Hallstatt without people is magical. Thank you for waking us up early!"</div>
+            </div>
+            <div class="review-card">
+                <div class="r-header">
+                    <div class="r-avatar">D</div>
+                    <div>
+                        <div class="r-name">Dmitry</div>
+                        <div class="r-stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="r-text">"Best weekend ever. Highly recommend the schnitzel in Salzburg."</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container section" style="padding-bottom: 120px;">
+        <h2 class="section-title" style="margin-bottom:24px;">Details.</h2>
+
+        <div class="details-list">
+            <div class="detail-item">
+                <div class="d-icon">🏰</div>
+                <div class="d-content">
+                    <div class="d-title">What's included?</div>
+                    <div class="d-sub">Hotel, Transfer, Sledding Pass, Breakfast</div>
+                </div>
+                <div class="d-arrow">↓</div>
+            </div>
+            <div class="detail-item">
+                <div class="d-icon">💶</div>
+                <div class="d-content">
+                    <div class="d-title">Extra costs</div>
+                    <div class="d-sub">Dinner (~20€), Souvenirs</div>
+                </div>
+                <div class="d-arrow">↓</div>
+            </div>
+            <div class="detail-item">
+                <div class="d-icon">👖</div>
+                <div class="d-content">
+                    <div class="d-title">What to wear?</div>
+                    <div class="d-sub">Warm clothes, ski pants for sledding</div>
+                </div>
+                <div class="d-arrow">↓</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOAT CTA -->
+    <div class="float-nav">
+        <div class="fv-price">
+            <span class="fv-label">Total Price</span>
+            <span class="fv-val">€250</span>
+        </div>
+        <button class="fv-btn">BOOK NOW</button>
+    </div>
+
+
+    <script>
+        function toggleVideo(card) {
+            const video = card.querySelector('video');
+            const btn = card.querySelector('.video-play');
+            if (video.paused) {
+                video.play();
+                btn.style.opacity = '0';
+            } else {
+                video.pause();
+                btn.style.opacity = '1';
+            }
+        }
+
+        function scrollToProgram() {
+            document.getElementById('program').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>
