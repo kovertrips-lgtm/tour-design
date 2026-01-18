@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kover Alps - TREND 2026 Mobile</title>
+</head>
+
+<body style="margin:0; padding:0;">
+    <!-- Main Content Container -->
+    <div id="content-container"></div>
+
+    <!-- Scripts -->
+    <script>
+        // CONFIGURATION
+        const mobileFiles = [
+            'Widget_Config.html',
+            'Widget_Core.html',
+            'Mobile_Version/Full_Page_V4_Trend.html'
+        ];
+
+        async function loadContent() {
+            const container = document.getElementById('content-container');
+            let allHtml = '';
+
+            try {
+                // Determine which set of files to load
+                // (Force mobile files for this specific comparison page as requested)
+                const filesToLoad = mobileFiles;
+
+                // Load all files
+                for (const file of filesToLoad) {
+                    try {
+                        const response = await fetch(file);
+                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                        const html = await response.text();
+                        allHtml += html; // Simply concatenate
+                    } catch (e) {
+                        console.error(`Error loading ${file}:`, e);
+                        allHtml += `<div style="color:red; padding:20px;">Error loading ${file}</div>`;
+                    }
+                }
+
+                // Inject into container
+                container.innerHTML = allHtml;
+
+                // Execute scripts in the injected HTML (necessary for widgets/sliders)
+                const scripts = container.getElementsByTagName('script');
+                for (let i = 0; i < scripts.length; i++) {
+                    const newScript = document.createElement('script');
+                    if (scripts[i].src) {
+                        newScript.src = scripts[i].src;
+                    } else {
+                        newScript.textContent = scripts[i].textContent;
+                    }
+                    document.body.appendChild(newScript);
+                }
+
+            } catch (error) {
+                container.innerHTML = '<h1>Error loading content</h1><p>' + error.message + '</p>';
+            }
+        }
+
+        // Start loading
+        loadContent();
+    </script>
+</body>
+
+</html>
