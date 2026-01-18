@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Mobile Program - FEED STYLE */
+        .m-program-section {
+            background: #111;
+            padding: 20px 0;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+        }
+
+        .m-section-header {
+            padding: 0 20px 24px;
+        }
+
+        .m-h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .m-sub {
+            color: #888;
+            font-size: 14px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* FEED CONTAINER - Vertical Stack */
+        .m-feed-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding-bottom: 40px;
+        }
+
+        /* FEED BLOCK ITEM */
+        .m-feed-block {
+            background: #1A1A1A;
+            /* border-top: 1px solid #333; */
+            /* border-bottom: 1px solid #333; */
+        }
+
+        /* Swiper for Header Images */
+        .m-feed-gallery {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .m-feed-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            height: 100%;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .m-feed-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .m-feed-img {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            scroll-snap-align: center;
+        }
+
+        /* Content Body */
+        .m-feed-content {
+            padding: 24px 20px;
+        }
+
+        .m-feed-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .m-feed-tag.lime {
+            background: rgba(189, 255, 0, 0.15);
+            color: #BDFF00;
+            border-color: rgba(189, 255, 0, 0.3);
+        }
+
+        .m-feed-tag.blue {
+            background: rgba(41, 182, 246, 0.15);
+            color: #29B6F6;
+            border-color: rgba(41, 182, 246, 0.3);
+        }
+
+        .m-feed-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            margin: 0 0 8px 0;
+            line-height: 1.0;
+            text-transform: uppercase;
+        }
+
+        .m-feed-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .m-article-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #d0d0d0;
+            margin-bottom: 24px;
+        }
+
+        .m-article-text b {
+            color: white;
+        }
+
+        .m-article-h {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin: 32px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Video Card Styles (Reused) */
+        .m-card-video {
+            width: 100%;
+            /* max-width: 340px; NO MAX WIDTH IN FEED? or keep it card like? Let's make it full width minus padding */
+            height: 500px;
+            /* Vertical aspect */
+            margin: 20px 0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .m-video-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .m-video-overlay {
+            /* reusing from before */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            pointer-events: none;
+            z-index: 3;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+
+        .m-video-caption {
+            color: white;
+            fone-weight: 600;
+            font-size: 14px;
+        }
+
+        .m-play-btn {
+            /* reusing */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .m-play-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-left: 4px;
+        }
+
+        .m-card-video.playing .m-play-btn,
+        .m-card-video.playing .m-video-overlay,
+        .m-card-video.playing .m-video-poster {
+            opacity: 0;
+        }
+
+        /* Booking / Reviews */
+        .m-quote-card {
+            background: #222;
+            border-left: 4px solid #29B6F6;
+            padding: 16px;
+            font-style: italic;
+            color: #bbb;
+            margin: 20px 0;
+            border-radius: 0 12px 12px 0;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .m-g-review {
+            display: flex;
+            gap: 12px;
+            background: #222;
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+
+        .m-g-avatar {
+            width: 40px;
+            height: 40px;
+            background: #666;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .m-g-name {
+            font-weight: 700;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .m-g-stars {
+            color: #FFD700;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .m-g-text {
+            font-size: 14px;
+            color: #aaa;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="m-program-section">
+        <div class="m-section-header">
+            <h2 class="m-h2">Детальная программа</h2>
+            <div class="m-sub">
+                Скролльте вниз, чтобы погрузиться в путешествие
+            </div>
+        </div>
+
+        <div class="m-feed-container">
+
+            <!-- BLOCK 1: HALLSTATT -->
+            <div class="m-feed-block">
+                <!-- Gallery Slider -->
+                <div class="m-feed-gallery">
+                    <div class="m-feed-scroll">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
+                            class="m-feed-img">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_2.jpg"
+                            class="m-feed-img">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_4.jpg"
+                            class="m-feed-img">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/hallstatt_best_5.jpg"
+                            class="m-feed-img">
+                    </div>
+                    <!-- Optional: Dots overlay if needed, or simple scroll is understandable -->
+                </div>
+
+                <div class="m-feed-content">
+                    <span class="m-feed-tag blue">Австрия</span>
+                    <h3 class="m-feed-title">Магия Гальштата</h3>
+                    <div class="m-feed-subtitle">ЮНЕСКО · История · Фотосессия</div>
+
+                    <p class="m-article-text">
+                        <b>Проблема Гальштата — толпы туристов.</b> Обычно здесь не протолкнуться.
+                        <br><br>
+                        <b>Наше решение:</b> Мы прибываем на рассвете. Весь город принадлежит тебе. Тишина, туман над
+                        озером и лебеди. Ты увидишь знаменитую "открытку", пока остальные только просыпаются.
+                    </p>
+
+                    <div class="m-article-h">&#128248; Твой личный фотограф</div>
+                    <p class="m-article-text">
+                        Не трать время на селфи. С нами едет профи, который знает лучшие (и секретные) ракурсы.
+                        Ты получишь идеальные кадры, где ты — главный герой на фоне истории.
+                        <br><i style="color:#888; font-size:12px;">(Обычно такая съемка стоит от 200€, у нас —
+                            включено).</i>
+                    </p>
+
+                    <div class="m-article-h">&#129504; Без скучных лекций</div>
+                    <p class="m-article-text">
+                        Никаких "посмотрите налево, посмотрите направо". Только живые истории: почему соль была
+                        дороже золота и как люди жили здесь 7000 лет назад.
+                    </p>
+
+                    <div class="m-quote-card">
+                        "Гальштат утром — это совершенно другая планета. Тишина, туман над озером и лебеди. Это
+                        стоит того, чтобы проснуться пораньше!"
+                    </div>
+                </div>
+            </div>
+            <!-- END BLOCK 1 -->
+
+            <!-- BLOCK 2: SLEDDING -->
+            <div class="m-feed-block">
+                <!-- Gallery: Just Main Hero Image? Or Gallery? Let's use gallery to show variety -->
+                <div class="m-feed-gallery">
+                    <div class="m-feed-scroll">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
+                            class="m-feed-img">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani1.jpg"
+                            class="m-feed-img">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani3.jpg"
+                            class="m-feed-img">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani5.jpg"
+                            class="m-feed-img">
+                    </div>
+                </div>
+
+                <div class="m-feed-content">
+                    <span class="m-feed-tag lime">Экшн</span>
+                    <h3 class="m-feed-title">14 КМ Адреналина</h3>
+                    <div class="m-feed-subtitle">Wildkogel Arena · Катание на закате</div>
+
+                    <p class="m-article-text">
+                        <b>Новый взгляд на зимние развлечения.</b> Это не детская горка.
+                        <br>Это Wildkogel Arena — 14 километров чистого драйва. Спуск длится почти час!
+                    </p>
+
+                    <div class="m-article-h">&#128640; Почему это безопасно и круто?</div>
+                    <p class="m-article-text">
+                        Трасса подготовлена ратраками, как горнолыжный склон. Уклоны плавные, повороты широкие.
+                        <br><br>
+                        Мы стартуем с высоты 2200м (поднимаемся на подъемнике). Вокруг — потрясающие виды Альп, а ты
+                        летишь по бесконечной
+                        снежной трассе.
+                        <b>Это возвращает в детство, но с масштабом Альп.</b>
+                    </p>
+
+                    <!-- VIDEO CARD INLINE -->
+                    <div class="m-card-video" onclick="toggleVideo(this)">
+                        <video class="m-video-cover"
+                            src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
+                            playsinline webkit-playsinline loop muted preload="metadata">
+                        </video>
+                        <div class="m-video-cover m-video-poster"
+                            style="background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg'); background-size: cover; background-position: center; z-index: 2;">
+                        </div>
+                        <div class="m-video-overlay">
+                            <div class="m-video-caption">Wildkogel Arena · 14 км</div>
+                        </div>
+                        <div class="m-play-btn">
+                            <svg class="m-play-icon" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="m-article-h">&#11088; Отзывы</div>
+                    <div class="m-g-review">
+                        <div class="m-g-avatar">A</div>
+                        <div>
+                            <div class="m-g-name">Alexey K.</div>
+                            <div class="m-g-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+                            <div class="m-g-text">"Это было лучшее впечатление за всю поездку! Думал будет страшно, но
+                                санки легко управляются."</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END BLOCK 2 -->
+
+            <!-- BLOCK 3: HOTEL -->
+            <div class="m-feed-block">
+                <div class="m-feed-gallery">
+                    <div class="m-feed-scroll">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/alpine_hotel.png"
+                            class="m-feed-img">
+                    </div>
+                </div>
+                <div class="m-feed-content">
+                    <span class="m-feed-tag blue">Релакс</span>
+                    <h3 class="m-feed-title">Отель & SPA</h3>
+                    <div class="m-feed-subtitle">4 звезды · Бассейн · Сауна</div>
+
+                    <p class="m-article-text">
+                        После активного дня мы едем не в хостел, а в отличный альпийский отель.
+                        Размещение в 2-х местных номерах.
+                    </p>
+
+                    <div class="m-article-h">&#129360; SPA & Relax</div>
+                    <p class="m-article-text">
+                        Горячая сауна и бассейн — то, что нужно твоим мышцам после санок. Просто расслабься.
+                        Утром — богатый альпийский завтрак (шведский стол).
+                    </p>
+
+                    <div class="m-g-review">
+                        <div class="m-g-avatar" style="background:#29B6F6;">O</div>
+                        <div>
+                            <div class="m-g-name">Olga</div>
+                            <div class="m-g-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+                            <div class="m-g-text">"Отель просто супер, особенно спа зона. После прогулки отогреться в
+                                сауне было идеально."</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOCK 4: RED BULL -->
+            <div class="m-feed-block">
+                <div class="m-feed-gallery">
+                    <div class="m-feed-scroll">
+                        <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/redbull_hangar.png"
+                            class="m-feed-img">
+                    </div>
+                </div>
+                <div class="m-feed-content">
+                    <span class="m-feed-tag lime">Технологии</span>
+                    <h3 class="m-feed-title">Hangar-7</h3>
+                    <div class="m-feed-subtitle">Музей Red Bull · Зальцбург</div>
+
+                    <p class="m-article-text">
+                        Это не просто ангар, а шедевр архитектуры из стекла и стали. Внутри — частная коллекция Дитриха
+                        Матешица.
+                    </p>
+                    <p class="m-article-text">
+                        <b>Что увидим:</b>
+                        <br>— Болиды Формулы-1
+                        <br>— Летающие "Кобры" и бомбардировщики
+                        <br>— Капсулу стратостата Felix Baumgartner
+                    </p>
+                </div>
+            </div>
+
+        </div> <!-- End feed container -->
+    </div>
+
+    <!-- Video Logic Script (Must be included since we don't have popups but have inline video) -->
+    <script>
+        function toggleVideo(card) {
+            const video = card.querySelector('video');
+            if (video.paused) {
+                // Pause all other videos
+                document.querySelectorAll('video').forEach(v => {
+                    if (v !== video) {
+                        v.pause();
+                        v.closest('.m-card-video').classList.remove('playing');
+                    }
+                });
+                video.play();
+                card.classList.add('playing');
+            } else {
+                video.pause();
+                card.classList.remove('playing');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

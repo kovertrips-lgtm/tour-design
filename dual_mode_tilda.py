@@ -17,7 +17,7 @@ DESKTOP_FILES = [
 
 MOBILE_FILES = [
     "Двухдневка в Альпы/Mobile_Version/01_Hero_Mobile.html",
-    "Двухдневка в Альпы/Mobile_Version/02_Program_Mobile.html",
+    "Двухдневка в Альпы/Mobile_Version/02_Program_Mobile_Feed.html",
     "Двухдневка в Альпы/Mobile_Version/03_Reviews_Mobile.html",
     "Двухдневка в Альпы/Mobile_Version/09_OrgDetails_Mobile.html"
 ]
