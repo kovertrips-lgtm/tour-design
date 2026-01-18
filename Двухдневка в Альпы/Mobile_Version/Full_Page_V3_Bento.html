@@ -3,10 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Kover Alps - Bento Full Experience</title>
 
-    <!-- Google Fonts: Inter & Space Grotesk for that "Trend" look -->
+    <!-- Google Fonts: Inter & Space Grotesk -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -16,17 +17,24 @@
     <style>
         /* --- RESET & VARIABLES --- */
         :root {
-            --bg: #0A0A0A;
-            --surface: #141414;
-            --surface-hover: #1F1F1F;
+            --bg: #000000;
+            --surface: #121212;
+            --surface-card: #1C1C1E;
+            --surface-hover: #2C2C2E;
             --border: rgba(255, 255, 255, 0.08);
+            /* Apple-like subtle border */
             --text-main: #FFFFFF;
-            --text-muted: #999999;
-            --accent: #3B82F6;
-            --accent-gradient: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-            --radius: 28px;
-            --radius-sm: 16px;
-            --pad: 20px;
+            --text-muted: #98989E;
+            /* Apple gray */
+            --accent: #0A84FF;
+            /* iOS Blue */
+            --accent-lime: #BDFF00;
+            /* Kover Lime */
+            --radius-L: 32px;
+            --radius-M: 20px;
+            --radius-S: 12px;
+            --font-head: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
 
         * {
@@ -37,22 +45,24 @@
         body {
             background: var(--bg);
             color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            font-size: 16px;
+            font-size: 17px;
+            /* iOS standard body size */
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
         h1,
         h2,
         h3,
         h4 {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-head);
             margin: 0;
             font-weight: 700;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.02em;
         }
 
         img,
@@ -71,7 +81,7 @@
         }
 
         .section {
-            margin-bottom: 60px;
+            margin-bottom: 80px;
         }
 
         .grid-2 {
@@ -84,20 +94,23 @@
         .chip {
             display: inline-flex;
             align-items: center;
-            height: 32px;
-            padding: 0 12px;
+            justify-content: center;
+            height: 34px;
+            padding: 0 14px;
             border-radius: 100px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
             font-size: 13px;
             font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            letter-spacing: 0.02em;
         }
 
         .chip.accent {
             background: var(--accent);
             color: white;
             border: none;
+            box-shadow: 0 4px 12px rgba(10, 132, 255, 0.3);
         }
 
         .btn-primary {
@@ -106,12 +119,13 @@
             border: none;
             height: 56px;
             width: 100%;
-            border-radius: 16px;
-            font-size: 18px;
+            border-radius: 18px;
+            font-size: 17px;
             font-weight: 700;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-body);
+            /* Using Inter for buttons feels more UI-native */
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -125,14 +139,15 @@
         /* --- HERO SECTION --- */
         .hero {
             position: relative;
-            height: 85vh;
+            height: 92vh;
+            /* Almost full screen */
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 24px;
             overflow: hidden;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
+            border-bottom-left-radius: 48px;
+            border-bottom-right-radius: 48px;
         }
 
         .hero-bg {
@@ -142,7 +157,14 @@
             width: 100%;
             height: 100%;
             z-index: 0;
+            filter: brightness(0.9);
         }
+
+        .hero-bg video {
+            transform: scale(1.05);
+        }
+
+        /* Slight zoom to cover edges */
 
         .hero-bg::after {
             content: "";
@@ -150,8 +172,8 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 70%;
-            background: linear-gradient(to top, #0A0A0A 0%, transparent 100%);
+            height: 60%;
+            background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
             z-index: 1;
         }
 
@@ -161,87 +183,102 @@
         }
 
         .hero-badge {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .hero-title {
-            font-size: 48px;
+            font-size: 52px;
             line-height: 0.95;
             text-transform: uppercase;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .hero-title span {
             color: transparent;
-            -webkit-text-stroke: 1px white;
+            -webkit-text-stroke: 1.5px white;
         }
 
         .hero-meta {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             margin-bottom: 32px;
         }
 
         .meta-item {
-            background: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
+            background: rgba(28, 28, 30, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 14px 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             flex: 1;
         }
 
         .meta-label {
             font-size: 11px;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.6);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-bottom: 4px;
+            font-weight: 600;
         }
 
         .meta-val {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
+            letter-spacing: -0.01em;
         }
 
         /* --- PROGRAM: BENTO GRID --- */
         .bento-header {
-            margin-bottom: 24px;
+            margin-bottom: 32px;
+            margin-top: 40px;
         }
 
         .section-title {
-            font-size: 32px;
+            font-size: 34px;
             margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
 
         .section-sub {
             color: var(--text-muted);
+            font-size: 16px;
+            font-weight: 500;
         }
 
         .bento-card {
-            background: var(--surface);
+            background: var(--surface-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
+            border-radius: var(--radius-L);
+            padding: 24px;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: translateZ(0);
+            /* HW Accel */
+        }
+
+        .bento-card:active {
+            transform: scale(0.98);
         }
 
         .bento-card.tall {
             grid-row: span 2;
-            min-height: 360px;
+            min-height: 400px;
         }
 
         .bento-card.wide {
             grid-column: span 2;
-            min-height: 280px;
+            min-height: 320px;
         }
 
         .bento-card.square {
-            min-height: 180px;
+            min-height: 200px;
             aspect-ratio: 1/1;
         }
 
@@ -251,8 +288,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
             z-index: 1;
+            filter: brightness(0.9);
         }
 
         .bento-card:active .b-img {
@@ -265,7 +303,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 10%, rgba(0, 0, 0, 0.2) 60%, transparent 100%);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
             z-index: 2;
         }
 
@@ -274,46 +312,191 @@
             z-index: 3;
         }
 
+        .b-tag-wrap {
+            margin-bottom: 12px;
+        }
+
         .b-tag {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             color: black;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 800;
             text-transform: uppercase;
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 6px 10px;
+            border-radius: 8px;
             display: inline-block;
-            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+        }
+
+        .b-tag.lime {
+            background: var(--accent-lime);
+            color: black;
         }
 
         .b-title {
-            font-size: 20px;
+            font-size: 22px;
             line-height: 1.1;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
         .b-desc {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.3;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.4;
+            font-weight: 500;
         }
 
-        .video-play {
+        .b-btn-arrow {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 4;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- SHEET / MODAL STYLES --- */
+        .sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            opacity: 0;
             pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .sheet-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sheet-modal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 90vh;
+            /* iOS sheet style */
+            background: #151515;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            overflow-y: auto;
+            box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sheet-overlay.active .sheet-modal {
+            transform: translateY(0);
+        }
+
+        .sheet-handle-area {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(21, 21, 21, 0.9) 0%, rgba(21, 21, 21, 0) 100%);
+            flex-shrink: 0;
+        }
+
+        .sheet-handle {
+            width: 48px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .sheet-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: rgba(60, 60, 60, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+            z-index: 20;
+            border: none;
+            cursor: pointer;
+        }
+
+        .sheet-gallery {
+            height: 360px;
+            width: 100%;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .sheet-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sheet-content {
+            padding: 32px 24px 120px;
+            /* Pad for bottom button */
+            flex-grow: 1;
+        }
+
+        .s-title {
+            font-size: 32px;
+            margin-bottom: 8px;
+            line-height: 1.1;
+        }
+
+        .s-sub {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .s-text {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #E0E0E0;
+            margin-bottom: 24px;
+        }
+
+        .s-h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+
+        .s-quote {
+            border-left: 3px solid var(--accent-lime);
+            padding-left: 16px;
+            margin: 24px 0;
+            font-style: italic;
+            color: #CCCCCC;
+            font-size: 16px;
         }
 
         /* --- REVIEWS: TICKER STYLE --- */
@@ -322,7 +505,6 @@
             overflow-x: auto;
             gap: 16px;
             padding: 0 16px 20px;
-            /* Hide scrollbar visual */
             scroll-snap-type: x mandatory;
             scrollbar-width: none;
         }
@@ -333,7 +515,7 @@
 
         .review-card {
             min-width: 280px;
-            background: var(--surface);
+            background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 20px;
@@ -356,7 +538,8 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            color: #666;
+            color: #aaa;
+            font-size: 14px;
         }
 
         .r-name {
@@ -370,26 +553,26 @@
         }
 
         .r-text {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.5;
+            font-size: 15px;
+            color: #D0D0D0;
+            line-height: 1.4;
         }
 
 
-        /* --- ORG DETAILS: MODERN LIST --- */
+        /* --- DETAILS LIST --- */
         .details-list {
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            /* Thin lines */
-            background: var(--border);
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            /* Separator color */
             border-radius: 24px;
             overflow: hidden;
             border: 1px solid var(--border);
         }
 
         .detail-item {
-            background: var(--surface);
+            background: var(--surface-card);
             padding: 20px;
             display: flex;
             align-items: center;
@@ -401,8 +584,10 @@
         }
 
         .d-icon {
-            font-size: 20px;
+            font-size: 22px;
             margin-right: 16px;
+            width: 30px;
+            text-align: center;
         }
 
         .d-content {
@@ -412,41 +597,44 @@
         .d-title {
             font-weight: 600;
             font-size: 16px;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
+            color: #fff;
         }
 
         .d-sub {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-muted);
         }
 
         .d-arrow {
-            color: #444;
+            color: #555;
+            font-size: 12px;
         }
 
 
         /* --- FLOATING CTA --- */
         .float-nav {
             position: fixed;
-            bottom: 24px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 32px);
+            width: calc(100% - 40px);
             max-width: 500px;
-            background: rgba(15, 15, 15, 0.85);
-            backdrop-filter: blur(20px);
+            background: rgba(28, 28, 30, 0.85);
+            /* iOS System Gray 6 */
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px;
-            border-radius: 24px;
+            padding: 10px 10px 10px 24px;
+            border-radius: 100px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 1000;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
 
-        .fv-price {
-            padding-left: 12px;
+        .fv-content {
             display: flex;
             flex-direction: column;
         }
@@ -454,24 +642,30 @@
         .fv-label {
             font-size: 11px;
             color: #888;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
         }
 
         .fv-val {
             font-size: 18px;
             font-weight: 700;
             color: white;
+            margin-top: 2px;
         }
 
         .fv-btn {
             background: #fff;
             color: #000;
             border: none;
-            padding: 12px 24px;
-            border-radius: 16px;
+            padding: 0 28px;
+            height: 48px;
+            border-radius: 100px;
             font-weight: 700;
             font-size: 15px;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-body);
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
         }
     </style>
 </head>
@@ -484,7 +678,6 @@
             <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;">
                 <source src="https://kovertrip.b-cdn.net/hero_vid_compress.mp4" type="video/mp4">
             </video>
-            <!-- Fallback Image if video fails or while loading -->
             <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
                 style="position:absolute; top:0; left:0; z-index:-1;">
         </div>
@@ -508,7 +701,7 @@
 
             <button onclick="scrollToProgram()" class="btn-primary" style="color:#000;">
                 Смотреть программу
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
                 </svg>
             </button>
@@ -519,69 +712,74 @@
     <div class="container section" id="program">
         <div class="bento-header">
             <h2 class="section-title">План действий.</h2>
-            <div class="section-sub">Всё включено. Никаких доплат.</div>
+            <div class="section-sub">Нажми на карточку, чтобы узнать детали.</div>
         </div>
 
         <!-- BENTO GRID -->
         <div class="grid-2">
 
             <!-- 1. Hallstatt -->
-            <div class="bento-card wide">
+            <div class="bento-card wide" onclick="openSheet('hallstatt')">
                 <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg"
                     class="b-img">
                 <div class="b-overlay"></div>
+                <div class="b-btn-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="4" />
+                    </svg></div>
                 <div class="b-content">
-                    <span class="b-tag">Без толп</span>
+                    <div class="b-tag-wrap"><span class="b-tag">Без толп</span></div>
                     <h3 class="b-title">Гальштат</h3>
                     <p class="b-desc">Приезжаем в 8 утра. Только мы, озеро и наш личный фотограф.</p>
                 </div>
             </div>
 
-            <!-- 2. Sledding (Video) -->
-            <div class="bento-card tall" onclick="toggleVideo(this)">
-                <video class="b-img"
-                    src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
-                    playsinline webkit-playsinline loop muted></video>
+            <!-- 2. Sledding -->
+            <div class="bento-card tall" onclick="openSheet('sledding')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"
+                    class="b-img">
                 <div class="b-overlay"></div>
-                <div class="video-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                        <path d="M8 5v14l11-7z" />
+                <div class="b-btn-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="4" />
                     </svg></div>
                 <div class="b-content">
-                    <span class="b-tag" style="background:#BDFF00; color:black;">Экшн</span>
+                    <div class="b-tag-wrap"><span class="b-tag lime">Экшн</span></div>
                     <h3 class="b-title">14 КМ Дрифта</h3>
-                    <p class="b-desc">Самая длинная трасса в мире. 40 минут чистого адреналина.</p>
+                    <p class="b-desc">Самая длинная санная трасса в мире. 40 минут чистого адреналина.</p>
                 </div>
             </div>
 
             <!-- 3. Hotel -->
-            <div class="bento-card square">
+            <div class="bento-card square" onclick="openSheet('hotel')">
                 <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/332735359.jpg"
                     class="b-img">
                 <div class="b-overlay"></div>
                 <div class="b-content">
                     <h3 class="b-title">Отель 4*</h3>
-                    <p class="b-desc">Бассейн и SPA включены.</p>
+                    <p class="b-desc">Pool & SPA</p>
                 </div>
             </div>
 
             <!-- 4. Salzburg -->
-            <div class="bento-card square">
+            <div class="bento-card square" onclick="openSheet('salzburg')">
                 <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_xmas.jpg"
                     class="b-img">
                 <div class="b-overlay"></div>
                 <div class="b-content">
                     <h3 class="b-title">Зальцбург</h3>
-                    <p class="b-desc">Рождественская магия.</p>
+                    <p class="b-desc">Xmas Vibes</p>
                 </div>
             </div>
 
             <!-- 5. Hangar-7 -->
-            <div class="bento-card wide">
+            <div class="bento-card wide" onclick="openSheet('redbull')">
                 <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/bull1.jpg"
                     class="b-img">
                 <div class="b-overlay"></div>
+                <div class="b-btn-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="4" />
+                    </svg></div>
                 <div class="b-content">
-                    <span class="b-tag">Технологии</span>
+                    <div class="b-tag-wrap"><span class="b-tag">Технологии</span></div>
                     <h3 class="b-title">Hangar-7</h3>
                     <p class="b-desc">Болиды F1, истребители и современное искусство.</p>
                 </div>
@@ -615,7 +813,8 @@
                         <div class="r-stars">★★★★★</div>
                     </div>
                 </div>
-                <div class="r-text">"Гальштат без людей это магия. Спасибо что разбудили нас так рано!"</div>
+                <div class="r-text">"Гальштат без людей это магия. Спасибо что разбудили нас так рано! Фотограф супер."
+                </div>
             </div>
             <div class="review-card">
                 <div class="r-header">
@@ -625,13 +824,14 @@
                         <div class="r-stars">★★★★★</div>
                     </div>
                 </div>
-                <div class="r-text">"Лучшие выходные. Всем рекомендую шницель в Зальцбурге."</div>
+                <div class="r-text">"Лучшие выходные года. Всем рекомендую шницель в Зальцбурге и бассейн после гор."
+                </div>
             </div>
         </div>
     </div>
 
 
-    <div class="container section" style="padding-bottom: 120px;">
+    <div class="container section" style="padding-bottom: 140px;">
         <h2 class="section-title" style="margin-bottom:24px;">Важно знать.</h2>
 
         <div class="details-list">
@@ -639,9 +839,9 @@
                 <div class="d-icon">🏰</div>
                 <div class="d-content">
                     <div class="d-title">Что включено?</div>
-                    <div class="d-sub">Отель, Трансфер, Скипасс на санки, Завтрак</div>
+                    <div class="d-sub">Отель, Трансфер, Скипасс, Завтрак</div>
                 </div>
-                <div class="d-arrow" style="transform: rotate(-90deg);">➔</div>
+                <div class="d-arrow">➔</div>
             </div>
             <div class="detail-item" onclick="openWidget()">
                 <div class="d-icon">💶</div>
@@ -649,7 +849,7 @@
                     <div class="d-title">Доп. расходы</div>
                     <div class="d-sub">Ужин (~20€), Сувениры</div>
                 </div>
-                <div class="d-arrow" style="transform: rotate(-90deg);">➔</div>
+                <div class="d-arrow">➔</div>
             </div>
             <div class="detail-item" onclick="openWidget()">
                 <div class="d-icon">👖</div>
@@ -657,14 +857,14 @@
                     <div class="d-title">Что надеть?</div>
                     <div class="d-sub">Теплую одежду, штаны для катания</div>
                 </div>
-                <div class="d-arrow" style="transform: rotate(-90deg);">➔</div>
+                <div class="d-arrow">➔</div>
             </div>
         </div>
     </div>
 
     <!-- FLOAT CTA -->
     <div class="float-nav">
-        <div class="fv-price">
+        <div class="fv-content">
             <span class="fv-label">Цена тура</span>
             <span class="fv-val">250€</span>
         </div>
@@ -672,21 +872,208 @@
     </div>
 
 
-    <script>
-        function toggleVideo(card) {
-            const video = card.querySelector('video');
-            const btn = card.querySelector('.video-play');
-            if (video.paused) {
-                video.play();
-                btn.style.opacity = '0';
-            } else {
-                video.pause();
-                btn.style.opacity = '1';
-            }
-        }
+    <!-- HIDDEN DATA FOR SHEETS -->
+    <div id="data-store" style="display:none;">
 
+        <!-- Hallstatt Data -->
+        <div id="content-hallstatt">
+            <div class="s-title">Магия Гальштата</div>
+            <div class="s-sub">ЮНЕСКО · История · Фотосессия</div>
+            <img class="s-img-src"
+                src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg">
+            <div class="s-body">
+                <p class="s-text">
+                    <b>Проблема Гальштата — толпы туристов.</b> Обычно здесь не протолкнуться.
+                    Мы поступаем умнее: прибываем на рассвете. Весь город принадлежит тебе. Тишина, туман над озером и
+                    лебеди.
+                </p>
+                <div class="s-h3">📸 Твой личный фотограф</div>
+                <p class="s-text">
+                    Не трать время на селфи. С нами едет профи, который знает лучшие (и секретные) ракурсы.
+                    Ты получишь идеальные кадры, где ты — главный герой на фоне истории.
+                </p>
+                <div class="s-quote">
+                    "Гальштат утром — это совершенно другая планета. Тишина, туман над озером и лебеди. Это стоит того,
+                    чтобы проснуться пораньше!"
+                </div>
+            </div>
+        </div>
+
+        <!-- Sledding Data -->
+        <div id="content-sledding">
+            <div class="s-title">14 КМ Адреналина</div>
+            <div class="s-sub">Wildkogel Arena · Катание на закате</div>
+            <video class="s-video-src"
+                src="https://vz-244f7910-31a.b-cdn.net/028796b4-9dc9-4831-8d81-6ad81d91bded/play_720p.mp4"
+                poster="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/sani4.jpg"></video>
+            <div class="s-body">
+                <p class="s-text">
+                    <b>Новый взгляд на зимние развлечения.</b> Это не детская горка.
+                    Это Wildkogel Arena — 14 километров чистого драйва. Спуск длится почти час!
+                </p>
+                <div class="s-h3"> Почему это безопасно?</div>
+                <p class="s-text">
+                    Трасса подготовлена ратраками, как горнолыжный склон. Уклоны плавные, повороты широкие.
+                    Мы стартуем с высоты 2200м с видом на Альпы.
+                </p>
+                <div class="s-quote">
+                    "Это было лучшее впечатление за всю поездку! Думал будет страшно, но санки легко управляются."
+                </div>
+            </div>
+        </div>
+
+        <!-- Hotel Data -->
+        <div id="content-hotel">
+            <div class="s-title">Альпийский Комфорт</div>
+            <div class="s-sub">Hotel Römerhof 4* · SPA</div>
+            <img class="s-img-src"
+                src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/805943864.jpg">
+            <div class="s-body">
+                <p class="s-text">
+                    После дня в горах телу нужен отдых. Мы выбрали <b>Hotel Römerhof</b> не просто так — здесь лучшая
+                    SPA-зона в регионе.
+                    Рейтинг Booking.com: <b>8.9 (Потрясающе)</b>.
+                </p>
+                <div class="s-h3">❄️ Контраст ощущений</div>
+                <p class="s-text">
+                    Представь: на улице -5°C, идет снег, а ты плаваешь в <b>горячем открытом бассейне (+32°C)</b> с
+                    видом на горы.
+                </p>
+                <div class="s-h3">🛏 Комфорт 4*</div>
+                <p class="s-text">
+                    Просторные номера и настоящий "фермерский" завтрак (шведский стол), ради которого хочется
+                    проснуться.
+                </p>
+            </div>
+        </div>
+
+        <!-- Salzburg Data -->
+        <div id="content-salzburg">
+            <div class="s-title">Классика и Стиль</div>
+            <div class="s-sub">UNESCO · Моцарт · Кофе</div>
+            <img class="s-img-src"
+                src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/salzburg_city.png">
+            <div class="s-body">
+                <p class="s-text">
+                    Мы не будем бегать по датам и памятникам. Это поездка про удовольствие. Эстетика старой Европы.
+                </p>
+                <div class="s-h3">☕️ Dolce Vita по-австрийски</div>
+                <p class="s-text">
+                    Пройдемся по садам Мирабель и заглянем в старейшую кофейню <b>Tomaselli</b> (здесь любил бывать
+                    Моцарт).
+                    Попробуем настоящий "Захер" или конфеты Mozartkugel. Стильная точка твоего путешествия.
+                </p>
+            </div>
+        </div>
+
+        <!-- Red Bull Data -->
+        <div id="content-redbull">
+            <div class="s-title">Легендарный Hangar-7</div>
+            <div class="s-sub">Авиация · F1 · Искусство</div>
+            <img class="s-img-src"
+                src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/bull1.jpg">
+            <div class="s-body">
+                <p class="s-text">
+                    Даже если ты не фанат гонок, это место тебя впечатлит. Живой музей энергии и скорости.
+                    Здесь 15,000+ отзывов на Google Maps с рейтингом 4.8.
+                </p>
+                <div class="s-h3">🏎 Прикоснись к легенде</div>
+                <p class="s-text">
+                    Болиды Формулы-1, стоящие здесь, выигрывали чемпионаты. Самолеты The Flying Bulls до сих пор
+                    участвуют в авиашоу.
+                    Это место заряжает энергией достижения.
+                </p>
+                <div class="s-quote">
+                    "Здесь всё пропитано духом победы и скорости."
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SHEET OVERLAY -->
+    <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()">
+        <div class="sheet-modal" onclick="event.stopPropagation()">
+            <div class="sheet-handle-area">
+                <div class="sheet-handle"></div>
+                <button class="sheet-close-btn" onclick="closeSheet()">&times;</button>
+            </div>
+
+            <div class="sheet-gallery" id="sheet-media">
+                <!-- Media injected here -->
+            </div>
+
+            <div class="sheet-content">
+                <h2 class="s-title" id="sheet-title">Title</h2>
+                <div class="s-sub" id="sheet-sub">Subtitle</div>
+                <div id="sheet-body">
+                    <!-- Body injected here -->
+                </div>
+
+                <button class="btn-primary" onclick="closeSheet(); openWidget();">Забронировать место</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Smooth scroll
         function scrollToProgram() {
             document.getElementById('program').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sheet Logic
+        function openSheet(id) {
+            const source = document.getElementById('content-' + id);
+            if (!source) return;
+
+            // Extract Data
+            const title = source.querySelector('.s-title').innerText;
+            const sub = source.querySelector('.s-sub').innerText;
+            const body = source.querySelector('.s-body').innerHTML;
+
+            // Handle Media (Image or Video)
+            const mediaContainer = document.getElementById('sheet-media');
+            mediaContainer.innerHTML = ''; // clear
+
+            const videoSrc = source.querySelector('.s-video-src');
+            const imgSrc = source.querySelector('.s-img-src');
+
+            if (videoSrc) {
+                const vid = document.createElement('video');
+                vid.src = videoSrc.getAttribute('src');
+                vid.poster = videoSrc.getAttribute('poster');
+                vid.controls = true;
+                vid.playsInline = true;
+                vid.style.width = '100%';
+                vid.style.height = '100%';
+                vid.style.objectFit = 'cover';
+                mediaContainer.appendChild(vid);
+            } else if (imgSrc) {
+                const img = document.createElement('img');
+                img.src = imgSrc.src;
+                mediaContainer.appendChild(img);
+            }
+
+            // Inject Text
+            document.getElementById('sheet-title').innerText = title;
+            document.getElementById('sheet-sub').innerText = sub;
+            document.getElementById('sheet-body').innerHTML = body;
+
+            // Show
+            const overlay = document.getElementById('sheet-overlay');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // prevent bg scroll
+        }
+
+        function closeSheet() {
+            const overlay = document.getElementById('sheet-overlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+
+            // Pause any video
+            const vids = document.getElementById('sheet-media').querySelectorAll('video');
+            vids.forEach(v => v.pause());
         }
     </script>
 </body>
