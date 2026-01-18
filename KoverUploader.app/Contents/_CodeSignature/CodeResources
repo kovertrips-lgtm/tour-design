@@ -6,13 +6,13 @@
 	<dict>
 		<key>Resources/Scripts/main.scpt</key>
 		<data>
-		qHzim7E00YstGciMMKgC2M7rTTA=
+		74jv8RKFVkIZIP1DEdy6uX+NQKY=
 		</data>
-		<key>Resources/applet.icns</key>
+		<key>Resources/droplet.icns</key>
 		<data>
-		sINd6lbiqHD5dL8c6u79cFvVXhw=
+		qNNSP6gATivEfI1mX4+VCxUouHQ=
 		</data>
-		<key>Resources/applet.rsrc</key>
+		<key>Resources/droplet.rsrc</key>
 		<data>
 		ar5xmDs9mPpaINVXiVlVqUCB8ao=
 		</data>
@@ -23,25 +23,25 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			qHzim7E00YstGciMMKgC2M7rTTA=
+			74jv8RKFVkIZIP1DEdy6uX+NQKY=
 			</data>
 			<key>hash2</key>
 			<data>
-			jXHkKIZaIcpsnMPkf0soluSjfujrAk+wIV851EzN6kI=
+			o/zJ2ELd4/Df7avQ/wUkV+rPpIfk1RocZIEdmT0CDHA=
 			</data>
 		</dict>
-		<key>Resources/applet.icns</key>
+		<key>Resources/droplet.icns</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			sINd6lbiqHD5dL8c6u79cFvVXhw=
+			qNNSP6gATivEfI1mX4+VCxUouHQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			J7weZ6vlnv9r32tS5HFcyuPXl2StdDnfepLxAixlryk=
+			8bc0JqW+sc2ju5zB4gkHAD9/lxjPcq52eiav7nh8dZ4=
 			</data>
 		</dict>
-		<key>Resources/applet.rsrc</key>
+		<key>Resources/droplet.rsrc</key>
 		<dict>
 			<key>hash</key>
 			<data>

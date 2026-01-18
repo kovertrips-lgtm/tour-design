@@ -125,6 +125,23 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .m-photo-count {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 10;
+        }
+
         .m-story-tag.lime {
             background: #BDFF00;
             color: black;
@@ -295,16 +312,19 @@
         }
 
         .m-popup-content {
-            padding: 0 24px 100px;
+            padding: 24px 24px 100px;
             /* Extra padding for bottom scroll */
-            margin-top: -20px;
+            margin-top: 0;
             position: relative;
             z-index: 5;
             background: #1A1A1A;
             /* To cover bottom of image if rounded */
             border-radius: 24px 24px 0 0;
             min-height: 500px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
         }
+
+
 
         .m-popup-title {
             font-size: 28px;
@@ -621,7 +641,7 @@
                     <span class="m-story-tag lime">Экшн</span>
                     <h3 class="m-story-title">14 КМ Саней</h3>
                     <p class="m-story-desc">Самая длинная трасса в мире. Ночной спуск.</p>
-                    <div class="m-story-btn" style="background:#BDFF00; color:black;">Погнать &rarr;</div>
+                    <div class="m-story-btn" style="background:#BDFF00; color:black;">Смотреть &rarr;</div>
                 </div>
                 <div class="popup-data" id="data-sledding" style="display:none;">
                     <div class="title">14 КМ Адреналина</div>
@@ -843,6 +863,9 @@
                     <div class="m-gallery-scroll" id="gallery-track">
                         <!-- Images injected by JS -->
                     </div>
+                    <div class="m-photo-count" id="photo-counter">
+                        📷 1/5
+                    </div>
                     <div class="m-gallery-dots" id="gallery-dots">
                         <!-- Dots injected by JS -->
                     </div>
@@ -911,7 +934,16 @@
                     const dots = dotsContainer.querySelectorAll('.m-dot');
                     dots.forEach(d => d.classList.remove('active'));
                     if (dots[index]) dots[index].classList.add('active');
+
+                    // Update counter
+                    document.getElementById('photo-counter').innerText = `📷 ${index + 1}/${images.length}`;
                 };
+
+                // Init counter
+                document.getElementById('photo-counter').innerText = `📷 1/${images.length}`;
+                document.getElementById('photo-counter').style.display = 'flex';
+            } else {
+                document.getElementById('photo-counter').style.display = 'none';
             }
 
             // Show

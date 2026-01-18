@@ -1,3 +1,4 @@
+
 import os
 import sys
 import json
@@ -11,23 +12,30 @@ from tkinter import simpledialog, messagebox
 BUNNY_API_KEY = "362d59db-046b-4538-821bf3d1d197-7ea2-42f4"
 STORAGE_NAME = "kovertripweb"
 
-# --- APPLESCRIPT TO GET FINDER SELECTION ---
 def get_finder_selection():
+    # AppleScript to get selection from the *last active* Finder window
+    # We iterate windows to find one with selection
     script = '''
     tell application "Finder"
-        set selectedItems to selection
-        set pathList to {}
-        repeat with itemRef in selectedItems
-            set end of pathList to POSIX path of (itemRef as text)
+        set windowList to every window
+        repeat with w in windowList
+            try
+                set sel to selection of w
+                if (count of sel) > 0 then
+                    set pathList to {}
+                    repeat with itemRef in sel
+                        set end of pathList to POSIX path of (itemRef as text)
+                    end repeat
+                    set AppleScript's text item delimiters to "\\n"
+                    return pathList as text
+                end if
+            end try
         end repeat
-        set AppleScript's text item delimiters to "\\n"
-        return pathList as text
+        return ""
     end tell
     '''
     try:
-        # Run AppleScript
         result = subprocess.check_output(['osascript', '-e', script], text=True)
-        # Split by newline and filter empty
         paths = [p.strip() for p in result.split('\n') if p.strip()]
         return paths
     except Exception as e:
@@ -63,57 +71,50 @@ def upload_bunny(local_path, target_folder, index):
         return False
 
 def main():
-    # 1. Hide the main Tkinter window (we only need dialogs)
     root = tk.Tk()
     root.withdraw()
     
-    # 2. Get Selection
-    print("👀 Asking Finder for selection...")
-    files = get_finder_selection()
+    # Check CLI args first (Drag & Drop)
+    if len(sys.argv) > 1:
+        files = sys.argv[1:]
+    else:
+        # Fallback to finding selection in Finder
+        files = get_finder_selection()
     
-    valid_files = [f for f in files if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.heic'))]
+    valid_files = [f for f in files if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.heic', '.mov', '.mp4'))]
     
     if not valid_files:
-        messagebox.showwarning("Kover Uploader", "⚠️ Ничего не выбрано!\n\n1. Откройте Finder.\n2. Выделите фотографии.\n3. Запустите программу снова.")
+        messagebox.showwarning("Kover Uploader", "⚠️ Ничего не выбрано!\n\nПеретащите фото на иконку программы\nИЛИ\nВыделите их в Finder и запустите программу.")
         sys.exit()
     
-    # 3. Ask for Folder Name
-    folder_name = simpledialog.askstring("Kover Uploader", f"Выбрано фото: {len(valid_files)}\n\nКуда загружаем? (Название папки на Bunny):", initialvalue="hallstatt_best")
+    # Ask for Folder Name
+    folder_name = simpledialog.askstring("Kover Uploader", f"Выбрано файлов: {len(valid_files)}\n\nКуда загружаем? (Название папки):", initialvalue="hallstatt_best")
     
     if not folder_name:
         sys.exit() # Cancelled
         
     folder_name = folder_name.strip()
     
-    # 4. Upload Loop
+    # Upload
     success_count = 0
     errors = []
     
-    # Simple Progress Window (Optional refinement: Real progress bar. For now, just blocking)
-    # Let's verify file access first
-    files_access_ok = all(os.access(f, os.R_OK) for f in valid_files)
-    if not files_access_ok:
-         messagebox.showerror("Error", "Нет доступа к файлам. Возможно, это сетевой диск и он отвалился.")
-         sys.exit()
-
-    print(f"🚀 Uploading {len(valid_files)} items to '{folder_name}'...")
-    
-    # We can use a simple Toplevel for progress if we want, but let's keep it simple:
-    # Just do it. Cursor might spin.
-    
+    # Blocking loop (simple)
     for i, fpath in enumerate(valid_files):
         if upload_bunny(fpath, folder_name, i+1):
             success_count += 1
         else:
             errors.append(os.path.basename(fpath))
             
-    # 5. Result
+    # Result
     msg = f"✅ Готово!\nЗагружено: {success_count} из {len(valid_files)}"
     if errors:
         msg += f"\n\n❌ Ошибки ({len(errors)}):\n" + "\n".join(errors)
         messagebox.showwarning("Результат", msg)
+        print(msg)
     else:
         messagebox.showinfo("Результат", msg)
+        print(msg)
 
 if __name__ == "__main__":
     main()
