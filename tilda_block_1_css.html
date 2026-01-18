@@ -1278,7 +1278,14 @@
             text-align: center;
             cursor: pointer;
             backdrop-filter: blur(5px);
-            transition: transform 0.2s;
+            transition: transform 0.2s, opacity 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .m-float-cta.visible {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .m-float-cta:active {

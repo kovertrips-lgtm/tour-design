@@ -135,7 +135,14 @@
             text-align: center;
             cursor: pointer;
             backdrop-filter: blur(5px);
-            transition: transform 0.2s;
+            transition: transform 0.2s, opacity 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .m-float-cta.visible {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .m-float-cta:active {
@@ -202,9 +209,20 @@
         <div class="m-float-spacer"></div>
     </div>
 
-    <button onclick="openWidget()" class="m-float-cta">
+    <button onclick="openWidget()" class="m-float-cta" id="sticky-cta">
         Занять место
     </button>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('sticky-cta');
+            if (window.scrollY > 600) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+    </script>
 
 </body>
 
