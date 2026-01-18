@@ -20,6 +20,7 @@ This document outlines the copywriting and marketing principles for the Kover An
     *   *Reason:* These are overused marketing clichés that lower trust and sound cheap.
 
 ## ✍️ Tone of Voice
+*   **Informal Address ("Ты"):** Always address the client as "ты" (friendly, peer-to-peer). Avoid "Вы".
 *   **Confident & Direct:** Speak with authority but without arrogance.
 *   **Benefit-Driven:** Don't just list features. Explain *why* it matters.
     *   *Bad:* "We have a photographer."
