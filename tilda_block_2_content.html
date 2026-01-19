@@ -466,6 +466,7 @@
                     videoUrl: videoTimur,
                     posterUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80',
                     author: 'Тимур',
+                    tourName: 'Тур: Гальштат и Сани',
                     instagram: 'alena_liza',
                     instagramLink: '#'
                 },
@@ -473,7 +474,7 @@
                     type: 'hybrid_split',
                     videoUrl: videoGirls,
                     author: 'Алена',
-                    tourName: 'Тур: Тенерифе',
+                    tourName: 'Тур: Гальштат и Сани',
                     statNumber: '85%',
                     statDesc: 'участников едут с&nbsp;нами во&nbsp;второй раз'
                 },
@@ -536,6 +537,7 @@
                     <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
                         <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
                         <div class="video-overlay"></div>
+                        <div class="video-badge-top">${item.tourName || 'Тур: Гальштат и Сани'}</div>
                         <div class="rv-play-btn">${icons.play}</div>
                     </div>`;
                 } else if (item.type === 'hybrid_split') {
@@ -544,6 +546,7 @@
                         <div class="hybrid-video-section">
                             <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
                                 <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                                <div class="video-badge-top">${item.tourName || 'Тур: Гальштат и Сани'}</div>
                                 <div class="rv-play-btn">${icons.play}</div>
                             </div>
                         </div>
@@ -1322,6 +1325,7 @@
                     videoUrl: videoTimur,
                     posterUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80',
                     author: 'Тимур',
+                    tourName: 'Тур: Гальштат и Сани',
                     instagram: 'alena_liza',
                     instagramLink: '#'
                 },
@@ -1329,7 +1333,7 @@
                     type: 'hybrid_split',
                     videoUrl: videoGirls,
                     author: 'Алена',
-                    tourName: 'Тур: Тенерифе',
+                    tourName: 'Тур: Гальштат и Сани',
                     statNumber: '85%',
                     statDesc: 'участников едут с&nbsp;нами во&nbsp;второй раз'
                 },
@@ -1392,6 +1396,7 @@
                     <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
                         <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
                         <div class="video-overlay"></div>
+                        <div class="video-badge-top">${item.tourName || 'Тур: Гальштат и Сани'}</div>
                         <div class="rv-play-btn">${icons.play}</div>
                     </div>`;
                 } else if (item.type === 'hybrid_split') {
@@ -1400,6 +1405,7 @@
                         <div class="hybrid-video-section">
                             <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
                                 <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                                <div class="video-badge-top">${item.tourName || 'Тур: Гальштат и Сани'}</div>
                                 <div class="rv-play-btn">${icons.play}</div>
                             </div>
                         </div>

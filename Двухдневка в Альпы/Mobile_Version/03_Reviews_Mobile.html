@@ -144,6 +144,23 @@
             z-index: 3;
         }
 
+        .reviews-section-v3 .video-badge-top {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+            z-index: 5;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+        }
+
         .reviews-section-v3 .rv-play-btn {
             position: absolute;
             top: 50%;
@@ -618,6 +635,7 @@
                     videoUrl: videoTimur,
                     posterUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80',
                     author: 'Тимур',
+                    tourName: 'Тур: Гальштат и Сани',
                     instagram: 'alena_liza',
                     instagramLink: '#'
                 },
@@ -625,7 +643,7 @@
                     type: 'hybrid_split',
                     videoUrl: videoGirls,
                     author: 'Алена',
-                    tourName: 'Тур: Тенерифе',
+                    tourName: 'Тур: Гальштат и Сани',
                     statNumber: '85%',
                     statDesc: 'участников едут с&nbsp;нами во&nbsp;второй раз'
                 },
@@ -688,6 +706,7 @@
                     <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
                         <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
                         <div class="video-overlay"></div>
+                        <div class="video-badge-top">${item.tourName || 'Тур: Гальштат и Сани'}</div>
                         <div class="rv-play-btn">${icons.play}</div>
                     </div>`;
                 } else if (item.type === 'hybrid_split') {
@@ -696,6 +715,7 @@
                         <div class="hybrid-video-section">
                             <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
                                 <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                                <div class="video-badge-top">${item.tourName || 'Тур: Гальштат и Сани'}</div>
                                 <div class="rv-play-btn">${icons.play}</div>
                             </div>
                         </div>
