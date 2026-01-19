@@ -28,7 +28,10 @@ def extract_content(filepath):
         styles.append(s)
         
     body_match = re.search(r'<body[^>]*>(.*?)</body>', content, re.DOTALL)
-    body_content = body_match.group(1) if body_match else ""
+    if body_match:
+        body_content = body_match.group(1)
+    else:
+        body_content = content
     
     # Strip styles from body content to avoid duplication
     body_content = re.sub(r'<style[^>]*>.*?</style>', '', body_content, flags=re.DOTALL)
