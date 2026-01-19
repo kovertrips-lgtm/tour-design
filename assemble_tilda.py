@@ -5,8 +5,12 @@ import re
 FILES = [
     "Двухдневка в Альпы/Mobile_Version/01_Hero_Mobile.html",
     "Двухдневка в Альпы/Mobile_Version/02_Program_Mobile.html",
+    "Двухдневка в Альпы/Mobile_Version/08_Timeline_Mobile.html",
+    "Двухдневка в Альпы/Mobile_Version/09_OrgDetails_Mobile.html",
     "Двухдневка в Альпы/Mobile_Version/03_Reviews_Mobile.html",
-    "Двухдневка в Альпы/Mobile_Version/09_OrgDetails_Mobile.html"
+    "Двухдневка в Альпы/Mobile_Version/10_HowItWorks_Mobile.html",
+    "Двухдневка в Альпы/Mobile_Version/10b_CTA_Mobile.html",
+    "Двухдневка в Альпы/Mobile_Version/11_Team_Mobile.html"
 ]
 
 WIDGET_FILES = [
