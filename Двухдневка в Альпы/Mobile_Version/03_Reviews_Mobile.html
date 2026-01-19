@@ -144,11 +144,12 @@
             z-index: 3;
         }
 
-        .reviews-section-v3 .video-badge-top {
+        .reviews-section-v3 .video-badge-bottom {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            left: auto;
+            top: auto;
+            bottom: 12px;
+            left: 12px;
+            right: auto;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
             padding: 6px 12px;
@@ -706,7 +707,7 @@
                     <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
                         <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
                         <div class="video-overlay"></div>
-                        <div class="video-badge-top">${item.tourName || 'Тур: Гальштат и Сани'}</div>
+                        <div class="video-badge-bottom">${item.tourName || 'Тур: Гальштат и Сани'}</div>
                         <div class="rv-play-btn">${icons.play}</div>
                     </div>`;
                 } else if (item.type === 'hybrid_split') {
@@ -715,7 +716,7 @@
                         <div class="hybrid-video-section">
                             <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
                                 <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
-                                <div class="video-badge-top">${item.tourName || 'Тур: Гальштат и Сани'}</div>
+                                <div class="video-badge-bottom">${item.tourName || 'Тур: Гальштат и Сани'}</div>
                                 <div class="rv-play-btn">${icons.play}</div>
                             </div>
                         </div>
