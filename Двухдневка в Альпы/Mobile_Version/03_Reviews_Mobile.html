@@ -151,8 +151,9 @@
             transform: translate(-50%, -50%);
             width: 56px;
             height: 56px;
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -160,6 +161,7 @@
             z-index: 4;
             pointer-events: none;
             transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
         .reviews-section-v3 .play-icon {
@@ -609,8 +611,8 @@
 
     <script>
         (function () {
-            const videoGirls = 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766617712/%D0%9E%D1%82%D0%B7%D1%8B%D0%B2_%D0%90%D0%BB%D0%B5%D0%BD%D1%8B_%D0%B8_%D0%9B%D0%B8%D0%B7%D1%8B_%D0%B8%D0%B7_%D0%A2%D0%B5%D0%BD%D0%B5%D1%80%D0%B8%D1%84%D0%B5_720_sxqjul.mp4';
-            const videoTimur = 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766618631/%D0%9E%D1%82%D0%B7%D1%8B%D0%B2_%D0%A2%D0%B8%D0%BC%D1%83%D1%80%D0%B0_%D0%BE_%D1%82%D0%B5%D0%BD%D0%B5%D1%80%D0%B8%D1%84%D0%B5_D_quya79.mp4';
+            const videoGirls = 'https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/play_720p.mp4';
+            const videoTimur = 'https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/play_720p.mp4';
 
             const reviewsData = [
                 {
