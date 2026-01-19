@@ -437,104 +437,198 @@
 
 
 
-    <div class="m-reviews-section">
-        <div class="m-reviews-header">
-            <h2 class="m-reviews-title">Живые отзывы</h2>
-            <p class="m-reviews-subtitle">Истории тех, кто уже съездил</p>
+    <section class="reviews-section-v3">
+        <div class="container">
+            <header class="reviews-header">
+                <h2 class="reviews-title">Что говорят наши путешественники</h2>
+                <div class="rating-badge">
+                    <svg class="rating-star" viewBox="0 0 24 24">
+                        <path
+                            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                    <span>Оценка 9.5 из 10 (250+ туров)</span>
+                </div>
+            </header>
         </div>
 
-        <div class="m-reviews-scroll">
-
-            <!-- Review 1 -->
-            <div class="m-review-card" onclick="toggleReviewVideo(this)">
-                <video class="m-review-video"
-                    src="https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/play_720p.mp4"
-                    playsinline loop muted preload="metadata"></video>
-
-                <!-- Explicit IMG Poster -->
-                <img class="m-review-poster-img"
-                    src="https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/thumbnail.jpg"
-                    alt="Review Cover 1">
-
-                <!-- Overlay Removed -->
-                <div class="m-review-play">
-                    <svg class="m-play-icon" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Review 2 -->
-            <div class="m-review-card" onclick="toggleReviewVideo(this)">
-                <video class="m-review-video"
-                    src="https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/play_720p.mp4"
-                    playsinline loop muted preload="metadata"></video>
-
-                <img class="m-review-poster-img"
-                    src="https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/thumbnail.jpg"
-                    alt="Review Cover 2">
-
-                <div class="m-review-play">
-                    <svg class="m-play-icon" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Review 3 -->
-            <div class="m-review-card" onclick="toggleReviewVideo(this)">
-                <video class="m-review-video"
-                    src="https://vz-244f7910-31a.b-cdn.net/3ee8bc4d-418e-4428-be72-264c4190a3e8/play_720p.mp4"
-                    playsinline loop muted preload="metadata"></video>
-
-                <img class="m-review-poster-img"
-                    src="https://vz-244f7910-31a.b-cdn.net/3ee8bc4d-418e-4428-be72-264c4190a3e8/thumbnail.jpg"
-                    alt="Review Cover 3">
-
-                <div class="m-review-play">
-                    <svg class="m-play-icon" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                    </svg>
-                </div>
-            </div>
-
-        </div>
-    </div>
+        <div class="reviews-track-wrapper" id="reviewsContainerV3"></div>
+        <div class="cta-container"><a href="#tour" class="btn-primary">Хочу поехать с вами</a></div>
+    </section>
 
     <script>
-        function toggleReviewVideo(el) {
-            const video = el.querySelector('video');
-            if (!video) return;
+        (function () {
+            const videoGirls = 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766617712/%D0%9E%D1%82%D0%B7%D1%8B%D0%B2_%D0%90%D0%BB%D0%B5%D0%BD%D1%8B_%D0%B8_%D0%9B%D0%B8%D0%B7%D1%8B_%D0%B8%D0%B7_%D0%A2%D0%B5%D0%BD%D0%B5%D1%80%D0%B8%D1%84%D0%B5_720_sxqjul.mp4';
+            const videoTimur = 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766618631/%D0%9E%D1%82%D0%B7%D1%8B%D0%B2_%D0%A2%D0%B8%D0%BC%D1%83%D1%80%D0%B0_%D0%BE_%D1%82%D0%B5%D0%BD%D0%B5%D1%80%D0%B8%D1%84%D0%B5_D_quya79.mp4';
 
-            if (video.paused) {
-                // Pause all other videos
-                document.querySelectorAll('video').forEach(v => {
-                    if (v !== video) {
-                        v.pause();
-                        v.closest('.m-review-card')?.classList.remove('playing');
-                    }
-                });
-
-                video.muted = false; // Unmute
-                var promise = video.play();
-
-                if (promise !== undefined) {
-                    promise.then(_ => {
-                        // Play started
-                        el.classList.add('playing');
-                    }).catch(error => {
-                        // Auto-play was prevented
-                        console.log("Play failed", error);
-                    });
-                } else {
-                    el.classList.add('playing');
+            const reviewsData = [
+                {
+                    type: 'video',
+                    videoUrl: videoTimur,
+                    posterUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80',
+                    author: 'Тимур',
+                    instagram: 'alena_liza',
+                    instagramLink: '#'
+                },
+                {
+                    type: 'hybrid_split',
+                    videoUrl: videoGirls,
+                    author: 'Алена',
+                    tourName: 'Тур: Тенерифе',
+                    statNumber: '85%',
+                    statDesc: 'участников едут с&nbsp;нами во&nbsp;второй раз'
+                },
+                {
+                    type: 'apple_audio',
+                    photoUrl: 'https://static.tildacdn.com/tild6135-3531-4266-b535-333562386530/kover_amster_949.jpg',
+                    audioUrl: 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766626439/otzyv_tenerife_sjiuun.ogg',
+                    author: 'Дима и Даша',
+                    tourName: 'Тур: Тенерифе',
+                    time: '0:00'
+                },
+                {
+                    type: 'scrollable_text',
+                    items: [
+                        { author: 'Екатерина', instagram: 'dlougY_', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80', text: 'Живу в Праге 3 года, KOVER — это спасение! Села в автобус, расслабилась и кайфуешь.', tourName: 'Тур: Австрия' },
+                        { author: 'Дмитрий', instagram: 'dimon_prg', rating: '9/10', avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80', text: 'Кресла удобные, остановок много. Компания собралась отличная!', tourName: 'Тур: Саксония' },
+                        { author: 'Ольга', instagram: 'helga_travels', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&q=80', text: 'Первый раз поехала одна, но сразу нашла друзей. Атмосфера просто супер!', tourName: 'Тур: Италия' },
+                        { author: 'Иван', instagram: 'ivan_skier', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&q=80', text: 'Организация на высоте. Никаких забот, только отдых и горы.', tourName: 'Тур: Франция' }
+                    ]
                 }
+            ];
 
-            } else {
-                video.pause();
-                el.classList.remove('playing');
+            const container = document.getElementById('reviewsContainerV3');
+            const icons = {
+                play: '<svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                insta: '<svg class="insta-icon" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>',
+                star: '<svg class="star-small" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
+                applePlay: '<svg class="apple-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                applePause: '<svg class="apple-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'
+            };
+
+            const appleBarsHtml = Array(40).fill('<div class="apple-bar"></div>').join('');
+
+            function createScrollItem(data) {
+                let infoRight = '';
+                if (data.instagram) {
+                    const handle = data.instagram.replace('@', '');
+                    infoRight = `
+                    <a href="https://instagram.com/${handle}" target="_blank" class="sc-insta-pill">
+                        <svg class="insta-icon-mini" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>
+                        <span>${handle}</span>
+                    </a>`;
+                }
+                const ratingVal = data.rating || '10/10';
+                const dynamicRating = `<div class="sc-rating-badge"><span>${ratingVal}</span>${icons.star}</div>`;
+                return `
+                <div class="review-item-scroll">
+                    <div class="mini-header"><img src="${data.avatarUrl}" class="mini-avatar"><div class="mini-name">${data.author}</div>${infoRight}</div>
+                    <div class="review-text-body">${data.text}</div>
+                    <div class="review-footer">${dynamicRating}<div class="mini-tour">${data.tourName}</div></div>
+                </div>`;
             }
-        }
+
+            reviewsData.forEach(item => {
+                let cardHtml = '';
+                const videoUrlWithTime = item.videoUrl ? item.videoUrl + '#t=0.1' : '';
+
+                if (item.type === 'video') {
+                    cardHtml = `
+                    <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
+                        <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                        <div class="video-overlay"></div>
+                        <div class="play-btn-centered">${icons.play}</div>
+                        <div class="video-info"><h4>${item.author}</h4><a href="${item.instagramLink}" class="insta-link" target="_blank">${item.instagram}</a></div>
+                    </div>`;
+                } else if (item.type === 'hybrid_split') {
+                    cardHtml = `
+                    <div class="review-card review-card--hybrid-split">
+                        <div class="hybrid-video-section">
+                            <div class="hybrid-overlay-header"><span class="hybrid-author-name">${item.author}</span><span class="hybrid-tour-name">${item.tourName}</span></div>
+                            <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
+                                <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                                <div class="play-btn-centered">${icons.play}</div>
+                            </div>
+                        </div>
+                        <div class="hybrid-stats-section"><div class="hybrid-stat-number">${item.statNumber}</div><div class="hybrid-stat-desc">${item.statDesc}</div></div>
+                    </div>`;
+                } else if (item.type === 'apple_audio') {
+                    cardHtml = `
+                    <div class="review-card review-card--apple">
+                        <div class="apple-image-section"><img src="${item.photoUrl}" class="apple-photo" alt="${item.author}"></div>
+                        <div class="apple-content-section">
+                            <div class="apple-header"><div><div class="apple-name">${item.author}</div><div class="apple-tour">${item.tourName}</div></div></div>
+                            <div class="apple-player-row">
+                                <div class="apple-play-btn" onclick="window.reviewsV3.toggleAudio(this, '${item.audioUrl}')">${icons.applePlay}${icons.applePause}</div>
+                                <div class="apple-waveform-stack"><div class="apple-layer apple-layer-gray">${appleBarsHtml}</div><div class="apple-layer apple-layer-black">${appleBarsHtml}</div></div>
+                                <div class="apple-time">0:00</div>
+                            </div>
+                        </div>
+                        <audio class="hidden-audio" preload="metadata" ontimeupdate="window.reviewsV3.updateAudioProgress(this)" onloadedmetadata="window.reviewsV3.initAudioDuration(this)"></audio>
+                    </div>`;
+                } else if (item.type === 'scrollable_text') {
+                    cardHtml = `<div class="review-card--scrollable"><div class="scroll-track">${item.items.map(sub => createScrollItem(sub)).join('')}</div></div>`;
+                }
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+            container.insertAdjacentHTML('beforeend', '<div style="flex: 0 0 1px;"></div>');
+
+            // Expose functions safely
+            window.reviewsV3 = {
+                toggleVideo: function (el) { playPauseLogic(el, el.querySelector('video')); },
+                toggleHybridVideo: function (el) { playPauseLogic(el, el.querySelector('video')); },
+                toggleAudio: function (btn, url) {
+                    const card = btn.closest('.review-card--apple');
+                    const audio = card.querySelector('audio');
+                    if (audio.paused) {
+                        pauseAllMedia();
+                        if (!audio.src) audio.src = url;
+                        audio.play(); card.classList.add('is-playing');
+                    } else {
+                        audio.pause(); card.classList.remove('is-playing');
+                    }
+                },
+                initAudioDuration: function (audio) {
+                    const card = audio.closest('.review-card--apple');
+                    const timer = card.querySelector('.apple-time');
+                    if (audio.duration) timer.innerText = formatTime(audio.duration);
+                },
+                updateAudioProgress: function (audio) {
+                    const card = audio.closest('.review-card--apple');
+                    const blackLayer = card.querySelector('.apple-layer-black');
+                    const timer = card.querySelector('.apple-time');
+                    if (!audio.duration) return;
+                    const percentPlayed = (audio.currentTime / audio.duration) * 100;
+                    blackLayer.style.clipPath = `inset(0 ${100 - percentPlayed}% 0 0)`;
+                    timer.innerText = formatTime(audio.duration - audio.currentTime);
+                    if (audio.ended) {
+                        card.classList.remove('is-playing');
+                        blackLayer.style.clipPath = `inset(0 100% 0 0)`;
+                        timer.innerText = formatTime(audio.duration);
+                    }
+                }
+            };
+
+            function playPauseLogic(wrapper, video) {
+                if (event.target.closest('a') || !video) return;
+                if (video.paused) {
+                    pauseAllMedia(); video.muted = false; video.play(); wrapper.classList.add('is-playing');
+                } else {
+                    video.pause(); wrapper.classList.remove('is-playing');
+                }
+            }
+            function pauseAllMedia() {
+                const section = document.querySelector('.reviews-section-v3');
+                section.querySelectorAll('video').forEach(v => { v.pause(); v.closest('.review-card--video, .hybrid-video-wrap')?.classList.remove('is-playing'); });
+                section.querySelectorAll('audio').forEach(a => { a.pause(); a.closest('.review-card--apple')?.classList.remove('is-playing'); });
+            }
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return "0:00";
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return `${m}:${s < 10 ? '0' : ''}${s}`;
+            }
+
+        })();
     </script>
 
 
@@ -1186,104 +1280,198 @@
 
 
 
-    <div class="m-reviews-section">
-        <div class="m-reviews-header">
-            <h2 class="m-reviews-title">Живые отзывы</h2>
-            <p class="m-reviews-subtitle">Истории тех, кто уже съездил</p>
+    <section class="reviews-section-v3">
+        <div class="container">
+            <header class="reviews-header">
+                <h2 class="reviews-title">Что говорят наши путешественники</h2>
+                <div class="rating-badge">
+                    <svg class="rating-star" viewBox="0 0 24 24">
+                        <path
+                            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                    <span>Оценка 9.5 из 10 (250+ туров)</span>
+                </div>
+            </header>
         </div>
 
-        <div class="m-reviews-scroll">
-
-            <!-- Review 1 -->
-            <div class="m-review-card" onclick="toggleReviewVideo(this)">
-                <video class="m-review-video"
-                    src="https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/play_720p.mp4"
-                    playsinline loop muted preload="metadata"></video>
-
-                <!-- Explicit IMG Poster -->
-                <img class="m-review-poster-img"
-                    src="https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/thumbnail.jpg"
-                    alt="Review Cover 1">
-
-                <!-- Overlay Removed -->
-                <div class="m-review-play">
-                    <svg class="m-play-icon" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Review 2 -->
-            <div class="m-review-card" onclick="toggleReviewVideo(this)">
-                <video class="m-review-video"
-                    src="https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/play_720p.mp4"
-                    playsinline loop muted preload="metadata"></video>
-
-                <img class="m-review-poster-img"
-                    src="https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/thumbnail.jpg"
-                    alt="Review Cover 2">
-
-                <div class="m-review-play">
-                    <svg class="m-play-icon" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Review 3 -->
-            <div class="m-review-card" onclick="toggleReviewVideo(this)">
-                <video class="m-review-video"
-                    src="https://vz-244f7910-31a.b-cdn.net/3ee8bc4d-418e-4428-be72-264c4190a3e8/play_720p.mp4"
-                    playsinline loop muted preload="metadata"></video>
-
-                <img class="m-review-poster-img"
-                    src="https://vz-244f7910-31a.b-cdn.net/3ee8bc4d-418e-4428-be72-264c4190a3e8/thumbnail.jpg"
-                    alt="Review Cover 3">
-
-                <div class="m-review-play">
-                    <svg class="m-play-icon" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                    </svg>
-                </div>
-            </div>
-
-        </div>
-    </div>
+        <div class="reviews-track-wrapper" id="reviewsContainerV3"></div>
+        <div class="cta-container"><a href="#tour" class="btn-primary">Хочу поехать с вами</a></div>
+    </section>
 
     <script>
-        function toggleReviewVideo(el) {
-            const video = el.querySelector('video');
-            if (!video) return;
+        (function () {
+            const videoGirls = 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766617712/%D0%9E%D1%82%D0%B7%D1%8B%D0%B2_%D0%90%D0%BB%D0%B5%D0%BD%D1%8B_%D0%B8_%D0%9B%D0%B8%D0%B7%D1%8B_%D0%B8%D0%B7_%D0%A2%D0%B5%D0%BD%D0%B5%D1%80%D0%B8%D1%84%D0%B5_720_sxqjul.mp4';
+            const videoTimur = 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766618631/%D0%9E%D1%82%D0%B7%D1%8B%D0%B2_%D0%A2%D0%B8%D0%BC%D1%83%D1%80%D0%B0_%D0%BE_%D1%82%D0%B5%D0%BD%D0%B5%D1%80%D0%B8%D1%84%D0%B5_D_quya79.mp4';
 
-            if (video.paused) {
-                // Pause all other videos
-                document.querySelectorAll('video').forEach(v => {
-                    if (v !== video) {
-                        v.pause();
-                        v.closest('.m-review-card')?.classList.remove('playing');
-                    }
-                });
-
-                video.muted = false; // Unmute
-                var promise = video.play();
-
-                if (promise !== undefined) {
-                    promise.then(_ => {
-                        // Play started
-                        el.classList.add('playing');
-                    }).catch(error => {
-                        // Auto-play was prevented
-                        console.log("Play failed", error);
-                    });
-                } else {
-                    el.classList.add('playing');
+            const reviewsData = [
+                {
+                    type: 'video',
+                    videoUrl: videoTimur,
+                    posterUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80',
+                    author: 'Тимур',
+                    instagram: 'alena_liza',
+                    instagramLink: '#'
+                },
+                {
+                    type: 'hybrid_split',
+                    videoUrl: videoGirls,
+                    author: 'Алена',
+                    tourName: 'Тур: Тенерифе',
+                    statNumber: '85%',
+                    statDesc: 'участников едут с&nbsp;нами во&nbsp;второй раз'
+                },
+                {
+                    type: 'apple_audio',
+                    photoUrl: 'https://static.tildacdn.com/tild6135-3531-4266-b535-333562386530/kover_amster_949.jpg',
+                    audioUrl: 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766626439/otzyv_tenerife_sjiuun.ogg',
+                    author: 'Дима и Даша',
+                    tourName: 'Тур: Тенерифе',
+                    time: '0:00'
+                },
+                {
+                    type: 'scrollable_text',
+                    items: [
+                        { author: 'Екатерина', instagram: 'dlougY_', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80', text: 'Живу в Праге 3 года, KOVER — это спасение! Села в автобус, расслабилась и кайфуешь.', tourName: 'Тур: Австрия' },
+                        { author: 'Дмитрий', instagram: 'dimon_prg', rating: '9/10', avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80', text: 'Кресла удобные, остановок много. Компания собралась отличная!', tourName: 'Тур: Саксония' },
+                        { author: 'Ольга', instagram: 'helga_travels', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&q=80', text: 'Первый раз поехала одна, но сразу нашла друзей. Атмосфера просто супер!', tourName: 'Тур: Италия' },
+                        { author: 'Иван', instagram: 'ivan_skier', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&q=80', text: 'Организация на высоте. Никаких забот, только отдых и горы.', tourName: 'Тур: Франция' }
+                    ]
                 }
+            ];
 
-            } else {
-                video.pause();
-                el.classList.remove('playing');
+            const container = document.getElementById('reviewsContainerV3');
+            const icons = {
+                play: '<svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                insta: '<svg class="insta-icon" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>',
+                star: '<svg class="star-small" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
+                applePlay: '<svg class="apple-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                applePause: '<svg class="apple-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'
+            };
+
+            const appleBarsHtml = Array(40).fill('<div class="apple-bar"></div>').join('');
+
+            function createScrollItem(data) {
+                let infoRight = '';
+                if (data.instagram) {
+                    const handle = data.instagram.replace('@', '');
+                    infoRight = `
+                    <a href="https://instagram.com/${handle}" target="_blank" class="sc-insta-pill">
+                        <svg class="insta-icon-mini" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>
+                        <span>${handle}</span>
+                    </a>`;
+                }
+                const ratingVal = data.rating || '10/10';
+                const dynamicRating = `<div class="sc-rating-badge"><span>${ratingVal}</span>${icons.star}</div>`;
+                return `
+                <div class="review-item-scroll">
+                    <div class="mini-header"><img src="${data.avatarUrl}" class="mini-avatar"><div class="mini-name">${data.author}</div>${infoRight}</div>
+                    <div class="review-text-body">${data.text}</div>
+                    <div class="review-footer">${dynamicRating}<div class="mini-tour">${data.tourName}</div></div>
+                </div>`;
             }
-        }
+
+            reviewsData.forEach(item => {
+                let cardHtml = '';
+                const videoUrlWithTime = item.videoUrl ? item.videoUrl + '#t=0.1' : '';
+
+                if (item.type === 'video') {
+                    cardHtml = `
+                    <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
+                        <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                        <div class="video-overlay"></div>
+                        <div class="play-btn-centered">${icons.play}</div>
+                        <div class="video-info"><h4>${item.author}</h4><a href="${item.instagramLink}" class="insta-link" target="_blank">${item.instagram}</a></div>
+                    </div>`;
+                } else if (item.type === 'hybrid_split') {
+                    cardHtml = `
+                    <div class="review-card review-card--hybrid-split">
+                        <div class="hybrid-video-section">
+                            <div class="hybrid-overlay-header"><span class="hybrid-author-name">${item.author}</span><span class="hybrid-tour-name">${item.tourName}</span></div>
+                            <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
+                                <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                                <div class="play-btn-centered">${icons.play}</div>
+                            </div>
+                        </div>
+                        <div class="hybrid-stats-section"><div class="hybrid-stat-number">${item.statNumber}</div><div class="hybrid-stat-desc">${item.statDesc}</div></div>
+                    </div>`;
+                } else if (item.type === 'apple_audio') {
+                    cardHtml = `
+                    <div class="review-card review-card--apple">
+                        <div class="apple-image-section"><img src="${item.photoUrl}" class="apple-photo" alt="${item.author}"></div>
+                        <div class="apple-content-section">
+                            <div class="apple-header"><div><div class="apple-name">${item.author}</div><div class="apple-tour">${item.tourName}</div></div></div>
+                            <div class="apple-player-row">
+                                <div class="apple-play-btn" onclick="window.reviewsV3.toggleAudio(this, '${item.audioUrl}')">${icons.applePlay}${icons.applePause}</div>
+                                <div class="apple-waveform-stack"><div class="apple-layer apple-layer-gray">${appleBarsHtml}</div><div class="apple-layer apple-layer-black">${appleBarsHtml}</div></div>
+                                <div class="apple-time">0:00</div>
+                            </div>
+                        </div>
+                        <audio class="hidden-audio" preload="metadata" ontimeupdate="window.reviewsV3.updateAudioProgress(this)" onloadedmetadata="window.reviewsV3.initAudioDuration(this)"></audio>
+                    </div>`;
+                } else if (item.type === 'scrollable_text') {
+                    cardHtml = `<div class="review-card--scrollable"><div class="scroll-track">${item.items.map(sub => createScrollItem(sub)).join('')}</div></div>`;
+                }
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+            container.insertAdjacentHTML('beforeend', '<div style="flex: 0 0 1px;"></div>');
+
+            // Expose functions safely
+            window.reviewsV3 = {
+                toggleVideo: function (el) { playPauseLogic(el, el.querySelector('video')); },
+                toggleHybridVideo: function (el) { playPauseLogic(el, el.querySelector('video')); },
+                toggleAudio: function (btn, url) {
+                    const card = btn.closest('.review-card--apple');
+                    const audio = card.querySelector('audio');
+                    if (audio.paused) {
+                        pauseAllMedia();
+                        if (!audio.src) audio.src = url;
+                        audio.play(); card.classList.add('is-playing');
+                    } else {
+                        audio.pause(); card.classList.remove('is-playing');
+                    }
+                },
+                initAudioDuration: function (audio) {
+                    const card = audio.closest('.review-card--apple');
+                    const timer = card.querySelector('.apple-time');
+                    if (audio.duration) timer.innerText = formatTime(audio.duration);
+                },
+                updateAudioProgress: function (audio) {
+                    const card = audio.closest('.review-card--apple');
+                    const blackLayer = card.querySelector('.apple-layer-black');
+                    const timer = card.querySelector('.apple-time');
+                    if (!audio.duration) return;
+                    const percentPlayed = (audio.currentTime / audio.duration) * 100;
+                    blackLayer.style.clipPath = `inset(0 ${100 - percentPlayed}% 0 0)`;
+                    timer.innerText = formatTime(audio.duration - audio.currentTime);
+                    if (audio.ended) {
+                        card.classList.remove('is-playing');
+                        blackLayer.style.clipPath = `inset(0 100% 0 0)`;
+                        timer.innerText = formatTime(audio.duration);
+                    }
+                }
+            };
+
+            function playPauseLogic(wrapper, video) {
+                if (event.target.closest('a') || !video) return;
+                if (video.paused) {
+                    pauseAllMedia(); video.muted = false; video.play(); wrapper.classList.add('is-playing');
+                } else {
+                    video.pause(); wrapper.classList.remove('is-playing');
+                }
+            }
+            function pauseAllMedia() {
+                const section = document.querySelector('.reviews-section-v3');
+                section.querySelectorAll('video').forEach(v => { v.pause(); v.closest('.review-card--video, .hybrid-video-wrap')?.classList.remove('is-playing'); });
+                section.querySelectorAll('audio').forEach(a => { a.pause(); a.closest('.review-card--apple')?.classList.remove('is-playing'); });
+            }
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return "0:00";
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return `${m}:${s < 10 ? '0' : ''}${s}`;
+            }
+
+        })();
     </script>
 
 

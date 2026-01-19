@@ -1118,65 +1118,116 @@
     }
 
 
-        /* --- БАЗОВЫЕ СТИЛИ --- */
-        .m-reviews-section {
-            background: #F4F5F7;
+        /* --- 1. БАЗОВЫЕ СТИЛИ (SCOPED) --- */
+        .reviews-section-v3 {
+            --kover-accent: #18B7EA;
+            --kover-dark: #1A1A1A;
+            --kover-gray: #F4F5F7;
+            --kover-white: #FFFFFF;
+            --text-main: #2C2C2C;
+            --text-secondary: #666666;
+
+            --card-radius: 20px;
+            --container-padding: 20px;
+            --gap: 16px;
+            --card-height: 415px;
+            --card-width: 280px;
+
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
             padding: 40px 0;
             overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            background-color: var(--kover-gray);
+            position: relative;
+            color: var(--text-main);
         }
 
-        .m-reviews-header {
-            padding: 0 20px;
+        .reviews-section-v3 *,
+        .reviews-section-v3 *::before,
+        .reviews-section-v3 *::after {
+            box-sizing: border-box;
+        }
+
+        .reviews-section-v3 .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+            position: relative;
+        }
+
+        .reviews-section-v3 .reviews-header {
+            text-align: center;
             margin-bottom: 24px;
         }
 
-        .m-reviews-title {
-            font-size: 28px;
-            font-weight: 800;
-            color: #1A1A1A;
-            margin: 0;
+        .reviews-section-v3 .reviews-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--kover-dark);
+            margin: 0 0 8px 0;
+            line-height: 1.2;
         }
 
-        .m-reviews-subtitle {
-            font-size: 14px;
-            color: #666;
-            margin-top: 8px;
+        .reviews-section-v3 .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFF4E5;
+            color: #B34010;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
 
-        /* Stories-like Loop */
-        .m-reviews-scroll {
-            display: flex;
-            gap: 16px;
+        .reviews-section-v3 .rating-star {
+            fill: #FFC107;
+            width: 16px;
+            height: 16px;
+        }
+
+        .reviews-section-v3 .reviews-track-wrapper {
+            margin-left: max(0px, calc((100% - 1200px) / 2));
+            padding: 0 var(--container-padding) 30px;
             overflow-x: auto;
-            padding: 0 20px 40px;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            display: flex;
+            gap: var(--gap);
             scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
         }
 
-        .m-reviews-scroll::-webkit-scrollbar {
+        .reviews-section-v3 .reviews-track-wrapper::-webkit-scrollbar {
             display: none;
         }
 
-        /* === КАРТОЧКА ВИДЕО === */
-        .m-review-card {
-            min-width: 280px;
-            width: 280px;
-            height: 400px;
-            background: #000;
-            border-radius: 20px;
+        /* CARDS */
+        .reviews-section-v3 .review-card,
+        .reviews-section-v3 .review-column,
+        .reviews-section-v3 .review-card--hybrid-split,
+        .reviews-section-v3 .review-card--video,
+        .reviews-section-v3 .review-card--apple,
+        .reviews-section-v3 .review-card--scrollable {
+            flex: 0 0 var(--card-width);
+            width: var(--card-width);
+            height: var(--card-height);
+            scroll-snap-align: center;
+            border-radius: var(--card-radius);
             position: relative;
             overflow: hidden;
-            flex-shrink: 0;
-            scroll-snap-align: center;
+            background: var(--kover-white);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            cursor: pointer;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
         }
 
-        /* 1. VIDEO LAYER (Bottom) */
-        .m-review-video {
+        /* === TYPE 1: VIDEO === */
+        .reviews-section-v3 .review-card--video {
+            background: #000;
+            cursor: pointer;
+        }
+
+        .reviews-section-v3 .review-video,
+        .reviews-section-v3 .video-poster-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -1184,26 +1235,17 @@
             position: absolute;
             top: 0;
             left: 0;
+        }
+
+        .reviews-section-v3 .video-poster-img {
             z-index: 1;
         }
 
-        /* 2. POSTER IMAGE LAYER (Middle) - Using IMG tag for reliable loading */
-        .m-review-poster-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
+        .reviews-section-v3 .review-video {
             z-index: 2;
-            transition: opacity 0.3s;
-            background: #222;
-            /* Fallback color */
         }
 
-        /* 3. OVERLAY GRADIENT (Top) */
-        .m-review-overlay {
+        .reviews-section-v3 .video-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -1211,56 +1253,11 @@
             height: 60%;
             background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
             pointer-events: none;
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 20px;
             transition: opacity 0.3s;
+            z-index: 3;
         }
 
-        .m-review-author {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .m-review-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #BA68C8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .m-review-name {
-            font-weight: 700;
-            font-size: 15px;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .m-review-quote {
-            font-size: 13px;
-            line-height: 1.4;
-            color: #ddd;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        /* 4. PLAY BUTTON (Top) */
-        .m-review-play {
+        .reviews-section-v3 .play-btn-centered {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -1274,26 +1271,431 @@
             align-items: center;
             justify-content: center;
             z-index: 4;
-            /* Highest */
             pointer-events: none;
             transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .m-play-icon {
+        .reviews-section-v3 .play-icon {
             width: 20px;
             height: 20px;
             fill: white;
+            margin-left: 3px;
+        }
+
+        .reviews-section-v3 .video-info {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            z-index: 5;
+            color: white;
+            pointer-events: none;
+        }
+
+        .reviews-section-v3 .video-info a {
+            pointer-events: auto;
+        }
+
+        .reviews-section-v3 .video-info h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 0;
+        }
+
+        .reviews-section-v3 .review-card--video.is-playing .play-btn-centered,
+        .reviews-section-v3 .review-card--video.is-playing .video-overlay,
+        .reviews-section-v3 .review-card--video.is-playing .video-poster-img {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* === TYPE 2: HYBRID SPLIT === */
+        .reviews-section-v3 .review-card--hybrid-split {
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+            box-shadow: none;
+            gap: 12px;
+        }
+
+        .reviews-section-v3 .hybrid-video-section {
+            width: 100%;
+            flex: 1;
+            background: #000;
+            position: relative;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+        }
+
+        .reviews-section-v3 .hybrid-overlay-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .reviews-section-v3 .hybrid-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .reviews-section-v3 .hybrid-tour-name {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap .play-btn-centered {
+            width: 44px;
+            height: 44px;
+            z-index: 4;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap.is-playing .play-btn-centered {
+            opacity: 0;
+        }
+
+        .reviews-section-v3 .hybrid-stats-section {
+            flex: 1;
+            padding: 16px;
+            background: var(--kover-white);
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .reviews-section-v3 .hybrid-stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--kover-accent), #FF8F6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 8px;
+            letter-spacing: -2px;
+        }
+
+        .reviews-section-v3 .hybrid-stat-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+            font-weight: 500;
+            text-wrap: balance;
+        }
+
+        /* === TYPE 3: APPLE AUDIO === */
+        .reviews-section-v3 .review-card--apple {
+            background: var(--kover-white);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .reviews-section-v3 .apple-image-section {
+            height: 240px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--card-radius) var(--card-radius) 0 0;
+            background-color: #f0f0f0;
+        }
+
+        .reviews-section-v3 .apple-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .apple-content-section {
+            flex: 1;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .reviews-section-v3 .apple-content-section::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 24px;
+            width: 12px;
+            height: 12px;
+            background: var(--kover-white);
+            transform: rotate(45deg);
+            z-index: 2;
+        }
+
+        .reviews-section-v3 .apple-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #000;
+        }
+
+        .reviews-section-v3 .apple-tour {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .reviews-section-v3 .apple-player-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #F4F5F7;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .reviews-section-v3 .apple-play-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--kover-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .reviews-section-v3 .apple-icon {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
             margin-left: 2px;
         }
 
-        /* STATE: PLAYING */
-        /* Hide poster, overlay, and button when playing */
-        .m-review-card.playing .m-review-poster-img,
-        .m-review-card.playing .m-review-overlay,
-        .m-review-card.playing .m-review-play {
-            opacity: 0 !important;
+        .reviews-section-v3 .apple-pause {
+            display: none;
+            width: 12px;
+            height: 12px;
+            fill: #fff;
+        }
+
+        .reviews-section-v3 .review-card--apple.is-playing .apple-icon {
+            display: none;
+        }
+
+        .reviews-section-v3 .review-card--apple.is-playing .apple-pause {
+            display: block;
+        }
+
+        .reviews-section-v3 .apple-waveform-stack {
+            flex-grow: 1;
+            height: 20px;
+            position: relative;
+        }
+
+        .reviews-section-v3 .apple-layer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .reviews-section-v3 .apple-bar {
+            flex: 1;
+            border-radius: 2px;
+        }
+
+        .reviews-section-v3 .apple-layer-gray .apple-bar {
+            background: #D1D5DB;
+        }
+
+        .reviews-section-v3 .apple-layer-black .apple-bar {
+            background: var(--kover-accent);
+        }
+
+        .reviews-section-v3 .apple-layer-black {
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 0.1s linear;
+        }
+
+        .reviews-section-v3 .apple-bar:nth-child(odd) {
+            height: 40%;
+        }
+
+        .reviews-section-v3 .apple-bar:nth-child(2n) {
+            height: 70%;
+        }
+
+        .reviews-section-v3 .apple-time {
+            font-size: 0.7rem;
+            color: #999;
+            min-width: 28px;
+            text-align: right;
+        }
+
+        /* === TYPE 4: SCROLLABLE LIST === */
+        .reviews-section-v3 .review-card--scrollable {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reviews-section-v3 .review-card--scrollable::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, var(--kover-white));
             pointer-events: none;
+        }
+
+        .reviews-section-v3 .scroll-track {
+            overflow-y: auto;
+            height: 100%;
+            padding: 20px 16px 80px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reviews-section-v3 .review-item-scroll {
+            background: #F9FAFB;
+            padding: 14px;
+            border-radius: 16px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .reviews-section-v3 .review-text-body {
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: var(--text-main);
+        }
+
+        .reviews-section-v3 .mini-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+        .reviews-section-v3 .mini-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .mini-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--kover-dark);
+        }
+
+        .reviews-section-v3 .sc-insta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #fff;
+            border: 1px solid #eaeaea;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #666;
+            text-decoration: none;
+            margin-left: auto;
+        }
+
+        .reviews-section-v3 .insta-icon-mini {
+            width: 11px;
+            height: 11px;
+            fill: #E1306C;
+        }
+
+        .reviews-section-v3 .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .reviews-section-v3 .sc-rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--kover-dark);
+            background: #FFF4E5;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .reviews-section-v3 .sc-rating-badge svg {
+            width: 12px;
+            height: 12px;
+            fill: #FFC107;
+            margin-bottom: 1px;
+        }
+
+        /* CTA */
+        .reviews-section-v3 .cta-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .reviews-section-v3 .btn-primary {
+            display: inline-block;
+            background-color: var(--kover-accent);
+            color: white !important;
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(24, 183, 234, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .reviews-section-v3 {
+                --card-width: 80vw;
+            }
+
+            .reviews-section-v3 .reviews-track-wrapper {
+                padding-left: 20px;
+                padding-right: 20px;
+                margin-left: 0;
+            }
         }
     
 
@@ -2529,65 +2931,116 @@
     /* Connecting Line (Pseudo-element for desktop, but here mostly individual cards) */
 
 
-        /* --- БАЗОВЫЕ СТИЛИ --- */
-        .m-reviews-section {
-            background: #F4F5F7;
+        /* --- 1. БАЗОВЫЕ СТИЛИ (SCOPED) --- */
+        .reviews-section-v3 {
+            --kover-accent: #18B7EA;
+            --kover-dark: #1A1A1A;
+            --kover-gray: #F4F5F7;
+            --kover-white: #FFFFFF;
+            --text-main: #2C2C2C;
+            --text-secondary: #666666;
+
+            --card-radius: 20px;
+            --container-padding: 20px;
+            --gap: 16px;
+            --card-height: 415px;
+            --card-width: 280px;
+
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
             padding: 40px 0;
             overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            background-color: var(--kover-gray);
+            position: relative;
+            color: var(--text-main);
         }
 
-        .m-reviews-header {
-            padding: 0 20px;
+        .reviews-section-v3 *,
+        .reviews-section-v3 *::before,
+        .reviews-section-v3 *::after {
+            box-sizing: border-box;
+        }
+
+        .reviews-section-v3 .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+            position: relative;
+        }
+
+        .reviews-section-v3 .reviews-header {
+            text-align: center;
             margin-bottom: 24px;
         }
 
-        .m-reviews-title {
-            font-size: 28px;
-            font-weight: 800;
-            color: #1A1A1A;
-            margin: 0;
+        .reviews-section-v3 .reviews-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--kover-dark);
+            margin: 0 0 8px 0;
+            line-height: 1.2;
         }
 
-        .m-reviews-subtitle {
-            font-size: 14px;
-            color: #666;
-            margin-top: 8px;
+        .reviews-section-v3 .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFF4E5;
+            color: #B34010;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
 
-        /* Stories-like Loop */
-        .m-reviews-scroll {
-            display: flex;
-            gap: 16px;
+        .reviews-section-v3 .rating-star {
+            fill: #FFC107;
+            width: 16px;
+            height: 16px;
+        }
+
+        .reviews-section-v3 .reviews-track-wrapper {
+            margin-left: max(0px, calc((100% - 1200px) / 2));
+            padding: 0 var(--container-padding) 30px;
             overflow-x: auto;
-            padding: 0 20px 40px;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            display: flex;
+            gap: var(--gap);
             scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
         }
 
-        .m-reviews-scroll::-webkit-scrollbar {
+        .reviews-section-v3 .reviews-track-wrapper::-webkit-scrollbar {
             display: none;
         }
 
-        /* === КАРТОЧКА ВИДЕО === */
-        .m-review-card {
-            min-width: 280px;
-            width: 280px;
-            height: 400px;
-            background: #000;
-            border-radius: 20px;
+        /* CARDS */
+        .reviews-section-v3 .review-card,
+        .reviews-section-v3 .review-column,
+        .reviews-section-v3 .review-card--hybrid-split,
+        .reviews-section-v3 .review-card--video,
+        .reviews-section-v3 .review-card--apple,
+        .reviews-section-v3 .review-card--scrollable {
+            flex: 0 0 var(--card-width);
+            width: var(--card-width);
+            height: var(--card-height);
+            scroll-snap-align: center;
+            border-radius: var(--card-radius);
             position: relative;
             overflow: hidden;
-            flex-shrink: 0;
-            scroll-snap-align: center;
+            background: var(--kover-white);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            cursor: pointer;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
         }
 
-        /* 1. VIDEO LAYER (Bottom) */
-        .m-review-video {
+        /* === TYPE 1: VIDEO === */
+        .reviews-section-v3 .review-card--video {
+            background: #000;
+            cursor: pointer;
+        }
+
+        .reviews-section-v3 .review-video,
+        .reviews-section-v3 .video-poster-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -2595,26 +3048,17 @@
             position: absolute;
             top: 0;
             left: 0;
+        }
+
+        .reviews-section-v3 .video-poster-img {
             z-index: 1;
         }
 
-        /* 2. POSTER IMAGE LAYER (Middle) - Using IMG tag for reliable loading */
-        .m-review-poster-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
+        .reviews-section-v3 .review-video {
             z-index: 2;
-            transition: opacity 0.3s;
-            background: #222;
-            /* Fallback color */
         }
 
-        /* 3. OVERLAY GRADIENT (Top) */
-        .m-review-overlay {
+        .reviews-section-v3 .video-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -2622,56 +3066,11 @@
             height: 60%;
             background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
             pointer-events: none;
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 20px;
             transition: opacity 0.3s;
+            z-index: 3;
         }
 
-        .m-review-author {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .m-review-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #BA68C8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .m-review-name {
-            font-weight: 700;
-            font-size: 15px;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .m-review-quote {
-            font-size: 13px;
-            line-height: 1.4;
-            color: #ddd;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        /* 4. PLAY BUTTON (Top) */
-        .m-review-play {
+        .reviews-section-v3 .play-btn-centered {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -2685,26 +3084,431 @@
             align-items: center;
             justify-content: center;
             z-index: 4;
-            /* Highest */
             pointer-events: none;
             transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .m-play-icon {
+        .reviews-section-v3 .play-icon {
             width: 20px;
             height: 20px;
             fill: white;
+            margin-left: 3px;
+        }
+
+        .reviews-section-v3 .video-info {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            z-index: 5;
+            color: white;
+            pointer-events: none;
+        }
+
+        .reviews-section-v3 .video-info a {
+            pointer-events: auto;
+        }
+
+        .reviews-section-v3 .video-info h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 0;
+        }
+
+        .reviews-section-v3 .review-card--video.is-playing .play-btn-centered,
+        .reviews-section-v3 .review-card--video.is-playing .video-overlay,
+        .reviews-section-v3 .review-card--video.is-playing .video-poster-img {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* === TYPE 2: HYBRID SPLIT === */
+        .reviews-section-v3 .review-card--hybrid-split {
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+            box-shadow: none;
+            gap: 12px;
+        }
+
+        .reviews-section-v3 .hybrid-video-section {
+            width: 100%;
+            flex: 1;
+            background: #000;
+            position: relative;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+        }
+
+        .reviews-section-v3 .hybrid-overlay-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .reviews-section-v3 .hybrid-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .reviews-section-v3 .hybrid-tour-name {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap .play-btn-centered {
+            width: 44px;
+            height: 44px;
+            z-index: 4;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap.is-playing .play-btn-centered {
+            opacity: 0;
+        }
+
+        .reviews-section-v3 .hybrid-stats-section {
+            flex: 1;
+            padding: 16px;
+            background: var(--kover-white);
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .reviews-section-v3 .hybrid-stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--kover-accent), #FF8F6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 8px;
+            letter-spacing: -2px;
+        }
+
+        .reviews-section-v3 .hybrid-stat-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+            font-weight: 500;
+            text-wrap: balance;
+        }
+
+        /* === TYPE 3: APPLE AUDIO === */
+        .reviews-section-v3 .review-card--apple {
+            background: var(--kover-white);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .reviews-section-v3 .apple-image-section {
+            height: 240px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--card-radius) var(--card-radius) 0 0;
+            background-color: #f0f0f0;
+        }
+
+        .reviews-section-v3 .apple-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .apple-content-section {
+            flex: 1;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .reviews-section-v3 .apple-content-section::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 24px;
+            width: 12px;
+            height: 12px;
+            background: var(--kover-white);
+            transform: rotate(45deg);
+            z-index: 2;
+        }
+
+        .reviews-section-v3 .apple-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #000;
+        }
+
+        .reviews-section-v3 .apple-tour {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .reviews-section-v3 .apple-player-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #F4F5F7;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .reviews-section-v3 .apple-play-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--kover-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .reviews-section-v3 .apple-icon {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
             margin-left: 2px;
         }
 
-        /* STATE: PLAYING */
-        /* Hide poster, overlay, and button when playing */
-        .m-review-card.playing .m-review-poster-img,
-        .m-review-card.playing .m-review-overlay,
-        .m-review-card.playing .m-review-play {
-            opacity: 0 !important;
+        .reviews-section-v3 .apple-pause {
+            display: none;
+            width: 12px;
+            height: 12px;
+            fill: #fff;
+        }
+
+        .reviews-section-v3 .review-card--apple.is-playing .apple-icon {
+            display: none;
+        }
+
+        .reviews-section-v3 .review-card--apple.is-playing .apple-pause {
+            display: block;
+        }
+
+        .reviews-section-v3 .apple-waveform-stack {
+            flex-grow: 1;
+            height: 20px;
+            position: relative;
+        }
+
+        .reviews-section-v3 .apple-layer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .reviews-section-v3 .apple-bar {
+            flex: 1;
+            border-radius: 2px;
+        }
+
+        .reviews-section-v3 .apple-layer-gray .apple-bar {
+            background: #D1D5DB;
+        }
+
+        .reviews-section-v3 .apple-layer-black .apple-bar {
+            background: var(--kover-accent);
+        }
+
+        .reviews-section-v3 .apple-layer-black {
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 0.1s linear;
+        }
+
+        .reviews-section-v3 .apple-bar:nth-child(odd) {
+            height: 40%;
+        }
+
+        .reviews-section-v3 .apple-bar:nth-child(2n) {
+            height: 70%;
+        }
+
+        .reviews-section-v3 .apple-time {
+            font-size: 0.7rem;
+            color: #999;
+            min-width: 28px;
+            text-align: right;
+        }
+
+        /* === TYPE 4: SCROLLABLE LIST === */
+        .reviews-section-v3 .review-card--scrollable {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reviews-section-v3 .review-card--scrollable::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, var(--kover-white));
             pointer-events: none;
+        }
+
+        .reviews-section-v3 .scroll-track {
+            overflow-y: auto;
+            height: 100%;
+            padding: 20px 16px 80px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reviews-section-v3 .review-item-scroll {
+            background: #F9FAFB;
+            padding: 14px;
+            border-radius: 16px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .reviews-section-v3 .review-text-body {
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: var(--text-main);
+        }
+
+        .reviews-section-v3 .mini-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+        .reviews-section-v3 .mini-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .mini-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--kover-dark);
+        }
+
+        .reviews-section-v3 .sc-insta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #fff;
+            border: 1px solid #eaeaea;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #666;
+            text-decoration: none;
+            margin-left: auto;
+        }
+
+        .reviews-section-v3 .insta-icon-mini {
+            width: 11px;
+            height: 11px;
+            fill: #E1306C;
+        }
+
+        .reviews-section-v3 .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .reviews-section-v3 .sc-rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--kover-dark);
+            background: #FFF4E5;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .reviews-section-v3 .sc-rating-badge svg {
+            width: 12px;
+            height: 12px;
+            fill: #FFC107;
+            margin-bottom: 1px;
+        }
+
+        /* CTA */
+        .reviews-section-v3 .cta-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .reviews-section-v3 .btn-primary {
+            display: inline-block;
+            background-color: var(--kover-accent);
+            color: white !important;
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(24, 183, 234, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .reviews-section-v3 {
+                --card-width: 80vw;
+            }
+
+            .reviews-section-v3 .reviews-track-wrapper {
+                padding-left: 20px;
+                padding-right: 20px;
+                margin-left: 0;
+            }
         }
     
 
