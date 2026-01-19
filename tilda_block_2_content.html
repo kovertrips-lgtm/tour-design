@@ -498,7 +498,7 @@
 
             const container = document.getElementById('reviewsContainerV3');
             const icons = {
-                play: '<svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                play: '<svg class="rv-play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
                 insta: '<svg class="insta-icon" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>',
                 star: '<svg class="star-small" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
                 applePlay: '<svg class="apple-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -536,16 +536,15 @@
                     <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
                         <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
                         <div class="video-overlay"></div>
-                        <div class="play-btn-centered">${icons.play}</div>
+                        <div class="rv-play-btn">${icons.play}</div>
                     </div>`;
                 } else if (item.type === 'hybrid_split') {
                     cardHtml = `
                     <div class="review-card review-card--hybrid-split">
                         <div class="hybrid-video-section">
-                            <div class="hybrid-overlay-header"><span class="hybrid-author-name">${item.author}</span><span class="hybrid-tour-name">${item.tourName}</span></div>
                             <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
                                 <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
-                                <div class="play-btn-centered">${icons.play}</div>
+                                <div class="rv-play-btn">${icons.play}</div>
                             </div>
                         </div>
                         <div class="hybrid-stats-section"><div class="hybrid-stat-number">${item.statNumber}</div><div class="hybrid-stat-desc">${item.statDesc}</div></div>
@@ -1352,7 +1351,7 @@
 
             const container = document.getElementById('reviewsContainerV3');
             const icons = {
-                play: '<svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                play: '<svg class="rv-play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
                 insta: '<svg class="insta-icon" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>',
                 star: '<svg class="star-small" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
                 applePlay: '<svg class="apple-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -1390,16 +1389,15 @@
                     <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
                         <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
                         <div class="video-overlay"></div>
-                        <div class="play-btn-centered">${icons.play}</div>
+                        <div class="rv-play-btn">${icons.play}</div>
                     </div>`;
                 } else if (item.type === 'hybrid_split') {
                     cardHtml = `
                     <div class="review-card review-card--hybrid-split">
                         <div class="hybrid-video-section">
-                            <div class="hybrid-overlay-header"><span class="hybrid-author-name">${item.author}</span><span class="hybrid-tour-name">${item.tourName}</span></div>
                             <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
                                 <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
-                                <div class="play-btn-centered">${icons.play}</div>
+                                <div class="rv-play-btn">${icons.play}</div>
                             </div>
                         </div>
                         <div class="hybrid-stats-section"><div class="hybrid-stat-number">${item.statNumber}</div><div class="hybrid-stat-desc">${item.statDesc}</div></div>
