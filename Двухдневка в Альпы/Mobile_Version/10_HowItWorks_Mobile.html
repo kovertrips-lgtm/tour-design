@@ -1,201 +1,128 @@
 <style>
-    /* Mobile How It Works Section */
+    /* Mobile How It Works Section - Vertical Compact Redesign */
     .m-how-section {
         background-color: #111;
-        padding: 40px 0;
-        /* Full width for scrollers */
+        padding: 40px 20px 60px;
         font-family: 'Montserrat', sans-serif;
         color: #fff;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        overflow: hidden;
-    }
-
-    .m-how-header {
-        padding: 0 20px;
-        margin-bottom: 30px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .m-how-title {
         font-size: 28px;
         font-weight: 800;
-        margin: 0 0 10px 0;
+        margin-bottom: 32px;
         color: #fff;
+        /* text-align: center; Optional */
     }
 
-    .m-how-sub {
-        font-size: 15px;
-        color: #aaa;
-        line-height: 1.5;
-    }
-
-    /* VISUAL STEPS SCROLLER */
-    .m-steps-scroll {
-        display: flex;
-        gap: 16px;
-        overflow-x: auto;
-        padding: 0 20px 40px;
-        /* Padding for shadow */
-        scroll-snap-type: x mandatory;
-        scrollbar-width: none;
-    }
-
-    .m-steps-scroll::-webkit-scrollbar {
-        display: none;
-    }
-
-    .m-step-card {
-        flex: 0 0 260px;
-        height: 320px;
-        background: #1a1a1a;
-        border-radius: 20px;
-        scroll-snap-align: center;
-        padding: 24px;
+    .m-how-list {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        gap: 24px;
     }
 
-    /* Step Number Background */
-    .m-step-bg-num {
-        position: absolute;
-        top: -20px;
-        right: -20px;
-        font-size: 120px;
-        font-weight: 900;
-        color: rgba(255, 255, 255, 0.03);
-        line-height: 1;
-        pointer-events: none;
-    }
-
-    /* Visual Icon Area */
-    .m-step-visual {
-        flex: 1;
+    .m-how-item {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
+        align-items: flex-start;
+        gap: 16px;
     }
 
-    .m-visual-circle {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: rgba(41, 182, 246, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-
-    .m-step-card:nth-child(2) .m-visual-circle {
-        background: rgba(189, 255, 0, 0.1);
-    }
-
-    .m-step-card:nth-child(3) .m-visual-circle {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .m-visual-icon {
+    .m-how-icon-box {
+        flex-shrink: 0;
         width: 48px;
         height: 48px;
-        stroke-width: 1.5;
-        stroke: #29B6F6;
+        background: rgba(41, 182, 246, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #29B6F6;
+        border: 1px solid rgba(41, 182, 246, 0.2);
+    }
+
+    .m-how-icon-box svg {
+        width: 24px;
+        height: 24px;
+        stroke: currentColor;
+        stroke-width: 2;
         fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
     }
 
-    .m-step-card:nth-child(2) .m-visual-icon {
-        stroke: #BDFF00;
+    .m-how-content {
+        padding-top: 2px;
     }
 
-    .m-step-card:nth-child(3) .m-visual-icon {
-        stroke: #fff;
-    }
-
-
-    /* Content */
-    .m-step-info h3 {
-        font-size: 20px;
-        font-weight: 800;
+    .m-how-content h3 {
+        font-size: 16px;
+        font-weight: 700;
         color: #fff;
-        margin: 0 0 8px 0;
+        margin: 0 0 6px 0;
     }
 
-    .m-step-info p {
+    .m-how-content p {
         font-size: 14px;
         color: #aaa;
-        line-height: 1.5;
         margin: 0;
+        line-height: 1.5;
     }
-
-    /* Connecting Line (Pseudo-element for desktop, but here mostly individual cards) */
 </style>
 
 <div class="m-how-section">
+    <h2 class="m-how-title">Как это работает</h2>
 
-    <div class="m-how-header">
-        <h2 class="m-how-title">Как это работает</h2>
-        <p class="m-how-sub">Максимально простой процесс. Никакой бюрократии.</p>
+    <div class="m-how-list">
+        <!-- Customer Journey Mapping -->
+
+        <!-- Step 1 -->
+        <div class="m-how-item">
+            <div class="m-how-icon-box">
+                <!-- Credit Card Icon -->
+                <svg viewBox="0 0 24 24">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+            </div>
+            <div class="m-how-content">
+                <h3>1. Забронируй</h3>
+                <p>Оплата картой (Apple Pay / Google Pay). Место закрепится за тобой моментально.</p>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="m-how-item">
+            <div class="m-how-icon-box"
+                style="background: rgba(189, 255, 0, 0.1); color: #BDFF00; border-color: rgba(189, 255, 0, 0.2);">
+                <!-- Chat Icon -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+            <div class="m-how-content">
+                <h3>2. Вступай в чат</h3>
+                <p>Сразу после оплаты ты получишь ссылку на Telegram-чат тура. Там вся тусовка и организаторы.</p>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="m-how-item">
+            <div class="m-how-icon-box"
+                style="background: rgba(255, 255, 255, 0.1); color: #fff; border-color: rgba(255, 255, 255, 0.2);">
+                <!-- Bus Icon -->
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+                    <circle cx="7" cy="17" r="2" />
+                    <circle cx="17" cy="17" r="2" />
+                    <path d="M5 17h2v-6h10v6h2" />
+                </svg>
+            </div>
+            <div class="m-how-content">
+                <h3>3. Погнали!</h3>
+                <p>В ночь с пятницы на субботу встречаемся у автобуса. Загружаемся и мчим в Альпы.</p>
+            </div>
+        </div>
     </div>
-
-    <div class="m-steps-scroll">
-
-        <!-- STEP 1 -->
-        <div class="m-step-card">
-            <div class="m-step-bg-num">1</div>
-            <div class="m-step-visual">
-                <div class="m-visual-circle">
-                    <svg class="m-visual-icon" viewBox="0 0 24 24">
-                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                        <line x1="2" y1="10" x2="22" y2="10"></line>
-                    </svg>
-                </div>
-            </div>
-            <div class="m-step-info">
-                <h3>Забронируй</h3>
-                <p>Оплати тур картой (Apple Pay / Google Pay). Место закрепится за тобой мгновенно.</p>
-            </div>
-        </div>
-
-        <!-- STEP 2 -->
-        <div class="m-step-card">
-            <div class="m-step-bg-num">2</div>
-            <div class="m-step-visual">
-                <div class="m-visual-circle">
-                    <svg class="m-visual-icon" viewBox="0 0 24 24">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="m-step-info">
-                <h3>Вступай в чат</h3>
-                <p>После оплаты тебя перекинет в Telegram-чат. Там — тусовка, знакомства и организаторы.</p>
-            </div>
-        </div>
-
-        <!-- STEP 3 -->
-        <div class="m-step-card">
-            <div class="m-step-bg-num">3</div>
-            <div class="m-step-visual">
-                <div class="m-visual-circle">
-                    <!-- Bus Icon -->
-                    <svg class="m-visual-icon" viewBox="0 0 24 24">
-                        <path
-                            d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
-                        <circle cx="7" cy="17" r="2" />
-                        <circle cx="17" cy="17" r="2" />
-                        <path d="M5 17h2v-6h10v6h2" />
-                    </svg>
-                </div>
-            </div>
-            <div class="m-step-info">
-                <h3>Стартуем</h3>
-                <p>В ночь с пятницы на субботу приходи к автобусу. Загружаемся и мчим в Альпы!</p>
-            </div>
-        </div>
-
-    </div>
-
 </div>
