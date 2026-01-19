@@ -32,7 +32,13 @@ def extract_content(filepath):
         
     # Extract Body Content (everything inside body)
     body_match = re.search(r'<body[^>]*>(.*?)</body>', content, re.DOTALL)
-    body_content = body_match.group(1) if body_match else ""
+    if body_match:
+        body_content = body_match.group(1)
+    else:
+        # If no body tag found, assume the whole file is content (e.g. Widget_Config.html)
+        # But we still want to exclude <style> tags that were extracted above?
+        # The logic below 'body_content = re.sub...' will handle style removal from body_content.
+        body_content = content
     
     # Remove script tags from body to move them to end? 
     # Actually, keep them in place or move them? 
