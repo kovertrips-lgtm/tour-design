@@ -5,14 +5,9 @@ import re
 DESKTOP_FILES = [
     "Двухдневка в Альпы/01_Hero.html",
     "Двухдневка в Альпы/02_Program.html",
-    "Двухдневка в Альпы/03_Hallstatt.html",
-    "Двухдневка в Альпы/04_Sledding.html",
-    "Двухдневка в Альпы/05_Hotel.html",
-    "Двухдневка в Альпы/06_RedBull.html",
-    "Двухдневка в Альпы/07_Salzburg.html",
     "Двухдневка в Альпы/08_Timeline.html",
-    "Двухдневка в Альпы/Mobile_Version/03_Reviews_Mobile.html",
-    "Двухдневка в Альпы/09_OrgDetails.html"
+    "Двухдневка в Альпы/09_OrgDetails.html",
+    "Двухдневка в Альпы/10_Reviews_Desktop.html"
 ]
 
 MOBILE_FILES = [
