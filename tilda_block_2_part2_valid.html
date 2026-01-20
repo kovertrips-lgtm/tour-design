@@ -1,0 +1,1203 @@
+<div class="kover-mobile-wrapper"><!-- Start of Part 2 -->
+    <style>
+        /* --- 1. &#1041;&#1040;&#1047;&#1054;&#1042;&#1067;&#1045; &#1057;&#1058;&#1048;&#1051;&#1048; (SCOPED) --- */
+        .reviews-section-v3 {
+            --kover-accent: #18B7EA;
+            --kover-dark: #1A1A1A;
+            --kover-gray: #F4F5F7;
+            --kover-white: #FFFFFF;
+            --text-main: #2C2C2C;
+            --text-secondary: #666666;
+
+            --card-radius: 20px;
+            --container-padding: 20px;
+            --gap: 16px;
+            --card-height: 415px;
+            --card-width: 280px;
+
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            padding: 40px 0;
+            overflow: hidden;
+            background-color: var(--kover-gray);
+            position: relative;
+            color: var(--text-main);
+        }
+
+        .reviews-section-v3 *,
+        .reviews-section-v3 *::before,
+        .reviews-section-v3 *::after {
+            box-sizing: border-box;
+        }
+
+        .reviews-section-v3 .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+            position: relative;
+        }
+
+        .reviews-section-v3 .reviews-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .reviews-section-v3 .reviews-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--kover-dark);
+            margin: 0 0 8px 0;
+            line-height: 1.2;
+        }
+
+        .reviews-section-v3 .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFF4E5;
+            color: #B34010;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .reviews-section-v3 .rating-star {
+            fill: #FFC107;
+            width: 16px;
+            height: 16px;
+        }
+
+        .reviews-section-v3 .reviews-track-wrapper {
+            margin-left: max(0px, calc((100% - 1200px) / 2));
+            padding: 0 var(--container-padding) 30px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            display: flex;
+            gap: var(--gap);
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+        }
+
+        .reviews-section-v3 .reviews-track-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* CARDS */
+        .reviews-section-v3 .review-card,
+        .reviews-section-v3 .review-column,
+        .reviews-section-v3 .review-card--hybrid-split,
+        .reviews-section-v3 .review-card--video,
+        .reviews-section-v3 .review-card--apple,
+        .reviews-section-v3 .review-card--scrollable {
+            flex: 0 0 var(--card-width);
+            width: var(--card-width);
+            height: var(--card-height);
+            scroll-snap-align: center;
+            border-radius: var(--card-radius);
+            position: relative;
+            overflow: hidden;
+            background: var(--kover-white);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: transform 0.3s ease;
+        }
+
+        /* === TYPE 1: VIDEO === */
+        .reviews-section-v3 .review-card--video {
+            background: #000;
+            cursor: pointer;
+        }
+
+        .reviews-section-v3 .review-video,
+        .reviews-section-v3 .video-poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .reviews-section-v3 .video-poster-img {
+            z-index: 1;
+        }
+
+        .reviews-section-v3 .review-video {
+            z-index: 2;
+        }
+
+        .reviews-section-v3 .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 3;
+        }
+
+        .reviews-section-v3 .video-badge-bottom {
+            position: absolute;
+            top: auto;
+            bottom: 12px;
+            left: 12px;
+            right: auto;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+            z-index: 5;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            pointer-events: none;
+        }
+
+        .reviews-section-v3 .rv-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            background: var(--kover-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+            pointer-events: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(24, 183, 234, 0.4);
+        }
+
+        .reviews-section-v3 .rv-play-icon {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            margin-left: 3px;
+        }
+
+        .reviews-section-v3 .video-info {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            z-index: 5;
+            color: white;
+            pointer-events: none;
+        }
+
+        .reviews-section-v3 .video-info a {
+            pointer-events: auto;
+        }
+
+        .reviews-section-v3 .video-info h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 0;
+        }
+
+        .reviews-section-v3 .review-card--video.is-playing .rv-play-btn,
+        .reviews-section-v3 .review-card--video.is-playing .video-overlay,
+        .reviews-section-v3 .review-card--video.is-playing .video-poster-img {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* === TYPE 2: HYBRID SPLIT === */
+        .reviews-section-v3 .review-card--hybrid-split {
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+            box-shadow: none;
+            gap: 12px;
+        }
+
+        .m-list li.check::before {
+            background: transparent;
+            content: '\2713';
+            color: #29B6F6;
+        }
+
+        .reviews-section-v3 .hybrid-video-section {
+            width: 100%;
+            flex: 1;
+            background: #000;
+            position: relative;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+        }
+
+        .reviews-section-v3 .hybrid-overlay-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .reviews-section-v3 .hybrid-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .reviews-section-v3 .hybrid-tour-name {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap .rv-play-btn {
+            width: 44px;
+            height: 44px;
+            z-index: 4;
+        }
+
+        .reviews-section-v3 .hybrid-video-wrap.is-playing .rv-play-btn {
+            opacity: 0;
+        }
+
+        .reviews-section-v3 .hybrid-stats-section {
+            flex: 1;
+            padding: 16px;
+            background: var(--kover-white);
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .reviews-section-v3 .hybrid-stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--kover-accent), #FF8F6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 8px;
+            letter-spacing: -2px;
+        }
+
+        .reviews-section-v3 .hybrid-stat-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+            font-weight: 500;
+            text-wrap: balance;
+        }
+
+        /* === TYPE 3: APPLE AUDIO === */
+        .reviews-section-v3 .review-card--apple {
+            background: var(--kover-white);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .reviews-section-v3 .apple-image-section {
+            height: 240px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--card-radius) var(--card-radius) 0 0;
+            background-color: #f0f0f0;
+        }
+
+        .reviews-section-v3 .apple-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .apple-content-section {
+            flex: 1;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .reviews-section-v3 .apple-content-section::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 24px;
+            width: 12px;
+            height: 12px;
+            background: var(--kover-white);
+            transform: rotate(45deg);
+            z-index: 2;
+        }
+
+        .reviews-section-v3 .apple-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #000;
+        }
+
+        .reviews-section-v3 .apple-tour {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .reviews-section-v3 .apple-player-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #F4F5F7;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .reviews-section-v3 .apple-play-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--kover-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .reviews-section-v3 .apple-icon {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
+            margin-left: 2px;
+        }
+
+        .reviews-section-v3 .apple-pause {
+            display: none;
+            width: 12px;
+            height: 12px;
+            fill: #fff;
+        }
+
+        .reviews-section-v3 .review-card--apple.is-playing .apple-icon {
+            display: none;
+        }
+
+        .reviews-section-v3 .review-card--apple.is-playing .apple-pause {
+            display: block;
+        }
+
+        .reviews-section-v3 .apple-waveform-stack {
+            flex-grow: 1;
+            height: 20px;
+            position: relative;
+        }
+
+        .reviews-section-v3 .apple-layer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .reviews-section-v3 .apple-bar {
+            flex: 1;
+            border-radius: 2px;
+        }
+
+        .reviews-section-v3 .apple-layer-gray .apple-bar {
+            background: #D1D5DB;
+        }
+
+        .reviews-section-v3 .apple-layer-black .apple-bar {
+            background: var(--kover-accent);
+        }
+
+        .reviews-section-v3 .apple-layer-black {
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 0.1s linear;
+        }
+
+        .reviews-section-v3 .apple-bar:nth-child(odd) {
+            height: 40%;
+        }
+
+        .reviews-section-v3 .apple-bar:nth-child(2n) {
+            height: 70%;
+        }
+
+        .reviews-section-v3 .apple-time {
+            font-size: 0.7rem;
+            color: #999;
+            min-width: 28px;
+            text-align: right;
+        }
+
+        /* === TYPE 4: SCROLLABLE LIST === */
+        .reviews-section-v3 .review-card--scrollable {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reviews-section-v3 .review-card--scrollable::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, var(--kover-white));
+            pointer-events: none;
+        }
+
+        .reviews-section-v3 .scroll-track {
+            overflow-y: auto;
+            height: 100%;
+            padding: 20px 16px 80px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reviews-section-v3 .review-item-scroll {
+            background: #F9FAFB;
+            padding: 14px;
+            border-radius: 16px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .reviews-section-v3 .review-text-body {
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: var(--text-main);
+        }
+
+        .reviews-section-v3 .mini-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+        .reviews-section-v3 .mini-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .reviews-section-v3 .mini-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--kover-dark);
+        }
+
+        .reviews-section-v3 .sc-insta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #fff;
+            border: 1px solid #eaeaea;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #666;
+            text-decoration: none;
+            margin-left: auto;
+        }
+
+        .reviews-section-v3 .insta-icon-mini {
+            width: 11px;
+            height: 11px;
+            fill: #E1306C;
+        }
+
+        .reviews-section-v3 .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .reviews-section-v3 .sc-rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--kover-dark);
+            background: #FFF4E5;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .reviews-section-v3 .sc-rating-badge svg {
+            width: 12px;
+            height: 12px;
+            fill: #FFC107;
+            margin-bottom: 1px;
+        }
+
+        /* CTA */
+        .reviews-section-v3 .cta-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .reviews-section-v3 .btn-primary {
+            display: inline-block;
+            background-color: var(--kover-accent);
+            color: white !important;
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(24, 183, 234, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .reviews-section-v3 {
+                --card-width: 80vw;
+            }
+
+            .reviews-section-v3 .reviews-track-wrapper {
+                padding-left: 20px;
+                padding-right: 20px;
+                margin-left: 0;
+            }
+        }
+    </style>
+    </head>
+
+    <body>
+
+        <section class="reviews-section-v3">
+            <div class="container">
+                <header class="reviews-header">
+                    <h2 class="reviews-title">&#1063;&#1090;&#1086; &#1075;&#1086;&#1074;&#1086;&#1088;&#1103;&#1090;
+                        &#1085;&#1072;&#1096;&#1080;
+                        &#1087;&#1091;&#1090;&#1077;&#1096;&#1077;&#1089;&#1090;&#1074;&#1077;&#1085;&#1085;&#1080;&#1082;&#1080;
+                    </h2>
+                    <div class="rating-badge">
+                        <svg class="rating-star" viewBox="0 0 24 24">
+                            <path
+                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        <span>&#1054;&#1094;&#1077;&#1085;&#1082;&#1072; 9.5 &#1080;&#1079; 10 (250+
+                            &#1090;&#1091;&#1088;&#1086;&#1074;)</span>
+                    </div>
+                </header>
+            </div>
+
+            <div class="reviews-track-wrapper" id="reviewsContainerV3"></div>
+            <div class="cta-container"><a href="#tour" class="btn-primary">&#1061;&#1086;&#1095;&#1091;
+                    &#1087;&#1086;&#1077;&#1093;&#1072;&#1090;&#1100; &#1089; &#1074;&#1072;&#1084;&#1080;</a></div>
+        </section>
+
+        <script>
+            (function () {
+                const reviewsData = [
+                    {
+                        type: 'video',
+                        videoUrl: 'https://vz-244f7910-31a.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/play_720p.mp4',
+                        posterUrl: 'https://581522.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/thumbnail.jpg',
+                        author: '&#1055;&#1091;&#1090;&#1077;&#1096;&#1077;&#1089;&#1090;&#1074;&#1077;&#1085;&#1085;&#1080;&#1082;',
+                        tourName: '&#1058;&#1091;&#1088;: &#1043;&#1072;&#1083;&#1100;&#1096;&#1090;&#1072;&#1090; &#1080; &#1057;&#1072;&#1085;&#1080;',
+                        instagram: '',
+                        instagramLink: '#'
+                    },
+                    {
+                        type: 'hybrid_split',
+                        videoUrl: 'https://vz-244f7910-31a.b-cdn.net/e3e6f8c6-04d5-4068-b0d1-6bfa2e163c37/play_720p.mp4',
+                        author: '&#1055;&#1091;&#1090;&#1077;&#1096;&#1077;&#1089;&#1090;&#1074;&#1077;&#1085;&#1085;&#1080;&#1082;',
+                        tourName: '&#1058;&#1091;&#1088;: &#1043;&#1072;&#1083;&#1100;&#1096;&#1090;&#1072;&#1090; &#1080; &#1057;&#1072;&#1085;&#1080;',
+                        statNumber: '100%',
+                        statDesc: '&#1074;&#1086;&#1089;&#1090;&#1086;&#1088;&#1075;&#1072; &#1080; &#1101;&#1084;&#1086;&#1094;&#1080;&#1081; &#1086;&#1090; &#1087;&#1091;&#1090;&#1077;&#1096;&#1077;&#1089;&#1090;&#1074;&#1080;&#1103;'
+                    },
+                    {
+                        type: 'video',
+                        videoUrl: 'https://vz-244f7910-31a.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/play_720p.mp4',
+                        posterUrl: 'https://581522.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/thumbnail.jpg',
+                        author: '&#1055;&#1091;&#1090;&#1077;&#1096;&#1077;&#1089;&#1090;&#1074;&#1077;&#1085;&#1085;&#1080;&#1082;',
+                        tourName: '&#1058;&#1091;&#1088;: &#1043;&#1072;&#1083;&#1100;&#1096;&#1090;&#1072;&#1090; &#1080; &#1057;&#1072;&#1085;&#1080;',
+                        instagram: '',
+                        instagramLink: '#'
+                    }
+                ];
+
+                const container = document.getElementById('reviewsContainerV3');
+                const icons = {
+                    play: '<svg class="rv-play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                    insta: '<svg class="insta-icon" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>',
+                    star: '<svg class="star-small" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
+                    applePlay: '<svg class="apple-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                    applePause: '<svg class="apple-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'
+                };
+
+                const appleBarsHtml = Array(40).fill('<div class="apple-bar"></div>').join('');
+
+                function createScrollItem(data) {
+                    let infoRight = '';
+                    if (data.instagram) {
+                        const handle = data.instagram.replace('@', '');
+                        infoRight = `
+                    <a href="https://instagram.com/${handle}" target="_blank" class="sc-insta-pill">
+                        <svg class="insta-icon-mini" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>
+                        <span>${handle}</span>
+                    </a>`;
+                    }
+                    const ratingVal = data.rating || '10/10';
+                    const dynamicRating = `<div class="sc-rating-badge"><span>${ratingVal}</span>${icons.star}</div>`;
+                    return `
+                <div class="review-item-scroll">
+                    <div class="mini-header"><img src="${data.avatarUrl}" class="mini-avatar"><div class="mini-name">${data.author}</div>${infoRight}</div>
+                    <div class="review-text-body">${data.text}</div>
+                    <div class="review-footer">${dynamicRating}<div class="mini-tour">${data.tourName}</div></div>
+                </div>`;
+                }
+
+                reviewsData.forEach(item => {
+                    let cardHtml = '';
+                    const videoUrlWithTime = item.videoUrl ? item.videoUrl + '#t=0.1' : '';
+
+                    if (item.type === 'video') {
+                        cardHtml = `
+                    <div class="review-card review-card--video" onclick="window.reviewsV3.toggleVideo(this)">
+                        <video class="review-video" src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                        <div class="video-overlay"></div>
+                        <div class="video-badge-bottom">${item.tourName || '&#1058;&#1091;&#1088;: &#1043;&#1072;&#1083;&#1100;&#1096;&#1090;&#1072;&#1090; &#1080; &#1057;&#1072;&#1085;&#1080;'}</div>
+                        <div class="rv-play-btn">${icons.play}</div>
+                    </div>`;
+                    } else if (item.type === 'hybrid_split') {
+                        cardHtml = `
+                    <div class="review-card review-card--hybrid-split">
+                        <div class="hybrid-video-section">
+                            <div class="hybrid-video-wrap" onclick="window.reviewsV3.toggleHybridVideo(this)">
+                                <video src="${videoUrlWithTime}" playsinline loop muted preload="metadata"></video>
+                                <div class="video-badge-bottom">${item.tourName || '&#1058;&#1091;&#1088;: &#1043;&#1072;&#1083;&#1100;&#1096;&#1090;&#1072;&#1090; &#1080; &#1057;&#1072;&#1085;&#1080;'}</div>
+                                <div class="rv-play-btn">${icons.play}</div>
+                            </div>
+                        </div>
+                        <div class="hybrid-stats-section"><div class="hybrid-stat-number">${item.statNumber}</div><div class="hybrid-stat-desc">${item.statDesc}</div></div>
+                    </div>`;
+                    } else if (item.type === 'apple_audio') {
+                        cardHtml = `
+                    <div class="review-card review-card--apple">
+                        <div class="apple-image-section"><img src="${item.photoUrl}" class="apple-photo" alt="${item.author}"></div>
+                        <div class="apple-content-section">
+                            <div class="apple-header"><div><div class="apple-name">${item.author}</div><div class="apple-tour">${item.tourName}</div></div></div>
+                            <div class="apple-player-row">
+                                <div class="apple-play-btn" onclick="window.reviewsV3.toggleAudio(this, '${item.audioUrl}')">${icons.applePlay}${icons.applePause}</div>
+                                <div class="apple-waveform-stack"><div class="apple-layer apple-layer-gray">${appleBarsHtml}</div><div class="apple-layer apple-layer-black">${appleBarsHtml}</div></div>
+                                <div class="apple-time">0:00</div>
+                            </div>
+                        </div>
+                        <audio class="hidden-audio" preload="metadata" ontimeupdate="window.reviewsV3.updateAudioProgress(this)" onloadedmetadata="window.reviewsV3.initAudioDuration(this)"></audio>
+                    </div>`;
+                    } else if (item.type === 'scrollable_text') {
+                        cardHtml = `<div class="review-card--scrollable"><div class="scroll-track">${item.items.map(sub => createScrollItem(sub)).join('')}</div></div>`;
+                    }
+                    container.insertAdjacentHTML('beforeend', cardHtml);
+                });
+                container.insertAdjacentHTML('beforeend', '<div style="flex: 0 0 1px;"></div>');
+
+                // Expose functions safely
+                window.reviewsV3 = {
+                    toggleVideo: function (el) { playPauseLogic(el, el.querySelector('video')); },
+                    toggleHybridVideo: function (el) { playPauseLogic(el, el.querySelector('video')); },
+                    toggleAudio: function (btn, url) {
+                        const card = btn.closest('.review-card--apple');
+                        const audio = card.querySelector('audio');
+                        if (audio.paused) {
+                            pauseAllMedia();
+                            if (!audio.src) audio.src = url;
+                            audio.play(); card.classList.add('is-playing');
+                        } else {
+                            audio.pause(); card.classList.remove('is-playing');
+                        }
+                    },
+                    initAudioDuration: function (audio) {
+                        const card = audio.closest('.review-card--apple');
+                        const timer = card.querySelector('.apple-time');
+                        if (audio.duration) timer.innerText = formatTime(audio.duration);
+                    },
+                    updateAudioProgress: function (audio) {
+                        const card = audio.closest('.review-card--apple');
+                        const blackLayer = card.querySelector('.apple-layer-black');
+                        const timer = card.querySelector('.apple-time');
+                        if (!audio.duration) return;
+                        const percentPlayed = (audio.currentTime / audio.duration) * 100;
+                        blackLayer.style.clipPath = `inset(0 ${100 - percentPlayed}% 0 0)`;
+                        timer.innerText = formatTime(audio.duration - audio.currentTime);
+                        if (audio.ended) {
+                            card.classList.remove('is-playing');
+                            blackLayer.style.clipPath = `inset(0 100% 0 0)`;
+                            timer.innerText = formatTime(audio.duration);
+                        }
+                    }
+                };
+
+                function playPauseLogic(wrapper, video) {
+                    if (event.target.closest('a') || !video) return;
+                    if (video.paused) {
+                        pauseAllMedia(); video.muted = false; video.play(); wrapper.classList.add('is-playing');
+                    } else {
+                        video.pause(); wrapper.classList.remove('is-playing');
+                    }
+                }
+                function pauseAllMedia() {
+                    const section = document.querySelector('.reviews-section-v3');
+                    section.querySelectorAll('video').forEach(v => { v.pause(); v.closest('.review-card--video, .hybrid-video-wrap')?.classList.remove('is-playing'); });
+                    section.querySelectorAll('audio').forEach(a => { a.pause(); a.closest('.review-card--apple')?.classList.remove('is-playing'); });
+                }
+                function formatTime(seconds) {
+                    if (isNaN(seconds)) return "0:00";
+                    const m = Math.floor(seconds / 60);
+                    const s = Math.floor(seconds % 60);
+                    return `${m}:${s < 10 ? '0' : ''}${s}`;
+                }
+
+            })();
+        </script>
+    </body>
+
+    </html>
+    <style>
+        /* Mobile How It Works Section - Vertical Compact Redesign */
+        .m-how-section {
+            background-color: #111;
+            padding: 40px 20px 60px;
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .m-how-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 32px;
+            color: #fff;
+            /* text-align: center; Optional */
+        }
+
+        .m-how-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .m-how-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .m-how-icon-box {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: rgba(41, 182, 246, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #29B6F6;
+            border: 1px solid rgba(41, 182, 246, 0.2);
+        }
+
+        .m-how-icon-box svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .m-how-content {
+            padding-top: 2px;
+        }
+
+        .m-how-content h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 6px 0;
+        }
+
+        .m-how-content p {
+            font-size: 14px;
+            color: #aaa;
+            margin: 0;
+            line-height: 1.5;
+        }
+    </style>
+
+    <div class="m-how-section">
+        <h2 class="m-how-title">&#1050;&#1072;&#1082; &#1101;&#1090;&#1086;
+            &#1088;&#1072;&#1073;&#1086;&#1090;&#1072;&#1077;&#1090;</h2>
+
+        <div class="m-how-list">
+            <!-- Customer Journey Mapping -->
+
+            <!-- Step 1 -->
+            <div class="m-how-item">
+                <div class="m-how-icon-box">
+                    <!-- Credit Card Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                </div>
+                <div class="m-how-content">
+                    <h3>1. &#1047;&#1072;&#1073;&#1088;&#1086;&#1085;&#1080;&#1088;&#1091;&#1081;</h3>
+                    <p>&#1054;&#1087;&#1083;&#1072;&#1090;&#1072; &#1082;&#1072;&#1088;&#1090;&#1086;&#1081; (Apple Pay
+                        / Google Pay). &#1052;&#1077;&#1089;&#1090;&#1086;
+                        &#1079;&#1072;&#1082;&#1088;&#1077;&#1087;&#1080;&#1090;&#1089;&#1103; &#1079;&#1072;
+                        &#1090;&#1086;&#1073;&#1086;&#1081;
+                        &#1084;&#1086;&#1084;&#1077;&#1085;&#1090;&#1072;&#1083;&#1100;&#1085;&#1086;.</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="m-how-item">
+                <div class="m-how-icon-box"
+                    style="background: rgba(189, 255, 0, 0.1); color: #BDFF00; border-color: rgba(189, 255, 0, 0.2);">
+                    <!-- Chat Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <div class="m-how-content">
+                    <h3>2. &#1042;&#1089;&#1090;&#1091;&#1087;&#1072;&#1081; &#1074; &#1095;&#1072;&#1090;</h3>
+                    <p>&#1057;&#1088;&#1072;&#1079;&#1091; &#1087;&#1086;&#1089;&#1083;&#1077;
+                        &#1086;&#1087;&#1083;&#1072;&#1090;&#1099; &#1090;&#1099;
+                        &#1087;&#1086;&#1083;&#1091;&#1095;&#1080;&#1096;&#1100;
+                        &#1089;&#1089;&#1099;&#1083;&#1082;&#1091; &#1085;&#1072; Telegram-&#1095;&#1072;&#1090;
+                        &#1090;&#1091;&#1088;&#1072;. &#1058;&#1072;&#1084; &#1074;&#1089;&#1103;
+                        &#1090;&#1091;&#1089;&#1086;&#1074;&#1082;&#1072; &#1080;
+                        &#1086;&#1088;&#1075;&#1072;&#1085;&#1080;&#1079;&#1072;&#1090;&#1086;&#1088;&#1099;.</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="m-how-item">
+                <div class="m-how-icon-box"
+                    style="background: rgba(255, 255, 255, 0.1); color: #fff; border-color: rgba(255, 255, 255, 0.2);">
+                    <!-- Bus Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+                        <circle cx="7" cy="17" r="2" />
+                        <circle cx="17" cy="17" r="2" />
+                        <path d="M5 17h2v-6h10v6h2" />
+                    </svg>
+                </div>
+                <div class="m-how-content">
+                    <h3>3. &#1055;&#1086;&#1075;&#1085;&#1072;&#1083;&#1080;!</h3>
+                    <p>&#1042; &#1085;&#1086;&#1095;&#1100; &#1089; &#1087;&#1103;&#1090;&#1085;&#1080;&#1094;&#1099;
+                        &#1085;&#1072; &#1089;&#1091;&#1073;&#1073;&#1086;&#1090;&#1091;
+                        &#1074;&#1089;&#1090;&#1088;&#1077;&#1095;&#1072;&#1077;&#1084;&#1089;&#1103; &#1091;
+                        &#1072;&#1074;&#1090;&#1086;&#1073;&#1091;&#1089;&#1072;.
+                        &#1047;&#1072;&#1075;&#1088;&#1091;&#1078;&#1072;&#1077;&#1084;&#1089;&#1103; &#1080;
+                        &#1084;&#1095;&#1080;&#1084; &#1074; &#1040;&#1083;&#1100;&#1087;&#1099;.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .m-cta-section {
+            background-color: #111;
+            padding: 60px 20px 80px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .m-cta-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .m-cta-sub {
+            font-size: 16px;
+            color: #ccc;
+            margin-bottom: 32px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .m-cta-btn {
+            display: inline-block;
+            background: #29B6F6;
+            color: #fff !important;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 20px 40px;
+            border-radius: 100px;
+            font-size: 18px;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(41, 182, 246, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .m-cta-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+
+    <div class="m-cta-section">
+        <h2 class="m-cta-title">&#1043;&#1086;&#1090;&#1086;&#1074; &#1082;
+            &#1087;&#1088;&#1080;&#1082;&#1083;&#1102;&#1095;&#1077;&#1085;&#1080;&#1102;?</h2>
+        <p class="m-cta-sub">&#1052;&#1077;&#1089;&#1090;&#1072; &#1074;
+            &#1072;&#1074;&#1090;&#1086;&#1073;&#1091;&#1089;&#1077;
+            &#1088;&#1072;&#1079;&#1073;&#1080;&#1088;&#1072;&#1102;&#1090; &#1073;&#1099;&#1089;&#1090;&#1088;&#1086;.
+            &#1053;&#1077; &#1086;&#1090;&#1082;&#1083;&#1072;&#1076;&#1099;&#1074;&#1072;&#1081;
+            &#1078;&#1080;&#1079;&#1085;&#1100; &#1085;&#1072; &#1087;&#1086;&#1090;&#1086;&#1084;.</p>
+        <a href="#widget" onclick="openWidget()" class="m-cta-btn">&#1047;&#1072;&#1085;&#1103;&#1090;&#1100;
+            &#1084;&#1077;&#1089;&#1090;&#1086;</a>
+    </div>
+    <style>
+        /* Mobile Team Block */
+        .m-team-section {
+            background-color: #111;
+            padding: 40px 20px 0;
+            /* Important: 0 bottom padding for seamless Marquee */
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+        }
+
+        .m-team-header {
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .m-team-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0 0 16px 0;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .m-tags-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .m-tag {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 6px 10px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+
+        .m-tag.accent {
+            background: #BDFF00;
+            color: #000;
+        }
+
+        .m-team-desc {
+            font-size: 15px;
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .m-highlight {
+            color: #fff;
+            font-weight: 700;
+            border-bottom: 2px solid #29B6F6;
+        }
+
+        /* Marquee Animation */
+        .m-marquee-wrap {
+            width: 100vw;
+            margin-left: -20px;
+            /* Counteract parent padding */
+            overflow: hidden;
+            padding: 30px 0 60px;
+            position: relative;
+            background: #111;
+            /* Match bg */
+            /* Smooth fade sides */
+            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+        }
+
+        .m-marquee-track {
+            display: flex;
+            gap: 16px;
+            width: max-content;
+            animation: mScroll 20s linear infinite;
+            will-change: transform;
+        }
+
+        .m-team-card {
+            width: 180px;
+            height: 240px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 4px solid #fff;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .m-team-card:nth-child(odd) {
+            transform: rotate(-3deg);
+            margin-top: 10px;
+            border-color: #29B6F6;
+        }
+
+        .m-team-card:nth-child(even) {
+            transform: rotate(3deg);
+            margin-bottom: 10px;
+            border-color: #BDFF00;
+        }
+
+        .m-team-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes mScroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+
+            /* Assuming content is duplicated */
+        }
+    </style>
+
+    <div class="m-team-section">
+        <div class="m-team-header">
+            <h2 class="m-team-title">&#1052;&#1099; &#1087;&#1088;&#1086; &#1078;&#1080;&#1079;&#1085;&#1100;, &#1072;
+                &#1085;&#1077; &#1087;&#1088;&#1086;&#1089;&#1090;&#1086;
+                &#1083;&#1086;&#1082;&#1072;&#1094;&#1080;&#1080;</h2>
+
+            <div class="m-tags-row">
+                <span class="m-tag accent">#koverfamily</span>
+                <span class="m-tag">#freedom</span>
+                <span class="m-tag">#emotions</span>
+            </div>
+
+            <div class="m-team-desc">
+                &#1052;&#1099; &#8212; &#1082;&#1086;&#1084;&#1072;&#1085;&#1076;&#1072;
+                &#1083;&#1102;&#1076;&#1077;&#1081;, &#1091; &#1082;&#1086;&#1090;&#1086;&#1088;&#1099;&#1093; &#1074;
+                &#1082;&#1088;&#1086;&#1074;&#1080; &#1076;&#1074;&#1080;&#1078;. Kover Travel
+                &#1088;&#1086;&#1076;&#1080;&#1083;&#1089;&#1103; &#1085;&#1077; &#1074;
+                &#1086;&#1092;&#1080;&#1089;&#1077;, &#1072; &#1074; &#1076;&#1086;&#1088;&#1086;&#1075;&#1077;.
+                <br><br>
+                &#1052;&#1099; &#1089;&#1086;&#1079;&#1076;&#1072;&#1077;&#1084; &#1090;&#1088;&#1080;&#1087;&#1099;,
+                &#1075;&#1076;&#1077; &#1082;&#1072;&#1078;&#1076;&#1099;&#1081; &#1076;&#1077;&#1085;&#1100; &#8212;
+                &#1101;&#1090;&#1086; <span class="m-highlight">&#1082;&#1072;&#1081;&#1092; &#1080;
+                    &#1089;&#1074;&#1086;&#1073;&#1086;&#1076;&#1072;</span>.
+                &#1042;&#1089;&#1105;
+                &#1087;&#1086;-&#1085;&#1072;&#1089;&#1090;&#1086;&#1103;&#1097;&#1077;&#1084;&#1091;:
+                &#1075;&#1086;&#1088;&#1099;, &#1089;&#1082;&#1086;&#1088;&#1086;&#1089;&#1090;&#1100;,
+                &#1089;&#1084;&#1077;&#1093; &#1080; &#1086;&#1097;&#1091;&#1097;&#1077;&#1085;&#1080;&#1077;,
+                &#1095;&#1090;&#1086; &#1090;&#1099; &#1088;&#1077;&#1072;&#1083;&#1100;&#1085;&#1086;
+                &#1078;&#1080;&#1074;&#1105;&#1096;&#1100;.
+            </div>
+        </div>
+
+        <!-- Marquee -->
+        <div class="m-marquee-wrap">
+            <div class="m-marquee-track">
+                <!-- Set 1 -->
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                        class="m-team-img"></div>
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                        class="m-team-img"></div>
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild6163-3438-4331-b161-326264363835/DSCF6813.jpg"
+                        class="m-team-img"></div>
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild3232-3335-4534-b632-643439383466/IMG_3606_1.jpg"
+                        class="m-team-img"></div>
+
+                <!-- Set 2 (Duplicate for loop) -->
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                        class="m-team-img"></div>
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                        class="m-team-img"></div>
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild6163-3438-4331-b161-326264363835/DSCF6813.jpg"
+                        class="m-team-img"></div>
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild3232-3335-4534-b632-643439383466/IMG_3606_1.jpg"
+                        class="m-team-img"></div>
+
+                <!-- Set 3 (To be safe on wide screens) -->
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                        class="m-team-img"></div>
+                <div class="m-team-card"><img
+                        src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                        class="m-team-img"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
