@@ -1,261 +1,151 @@
-<meta charset="UTF-8">
 <style>
-    .emoji-svg {
-        width: 1.25em;
-        height: 1.25em;
-        vertical-align: -0.25em;
-        fill: currentColor;
-        display: inline-block;
-    }
-
-    .org-section {
-        background-color: #fff;
-        padding: 80px 20px;
+    .d-org-section {
+        padding: 100px 0;
+        background: #111;
+        color: white;
         font-family: 'Montserrat', sans-serif;
     }
 
-    .org-container {
-        max-width: 1100px;
+    .d-org-container {
+        max-width: 1200px;
         margin: 0 auto;
-    }
-
-    .org-title {
-        font-size: 32px;
-        font-weight: 800;
-        margin-bottom: 40px;
-        text-align: center;
-    }
-
-    .org-grid {
+        padding: 0 40px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
+        grid-template-columns: 1.2fr 0.8fr;
+        /* Included takes more space */
+        gap: 60px;
     }
 
-    .org-card {
-        background: #F9F9F9;
-        padding: 30px;
-        border-radius: 16px;
-        border-left: 5px solid #29B6F6;
-    }
-
-    .org-card.lime {
-        border-left-color: #BDFF00;
-    }
-
-    .org-card.dark {
-        border-left-color: #333;
-    }
-
-    .org-head {
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .org-price {
-        background: #111;
-        color: #fff;
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 14px;
-        margin-left: auto;
-    }
-
-    .org-text {
-        font-size: 15px;
-        color: #555;
-        line-height: 1.5;
-    }
-
-    .org-note {
-        margin-top: 15px;
-        font-size: 13px;
-        color: #888;
-        font-style: italic;
-    }
-
-    @media (max-width: 600px) {
-        .org-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .price-card {
-        background: #F9F9F9;
-        padding: 30px;
-        border-radius: 16px;
-        border-left: 5px solid #29B6F6;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease;
-    }
-
-    .price-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .price-card.lime {
-        border-left-color: #BDFF00;
-    }
-
-    .price-title {
-        font-size: 20px;
+    .d-org-h2 {
+        grid-column: 1 / -1;
+        text-align: center;
+        font-size: 42px;
         font-weight: 800;
-        margin: 0 0 10px 0;
-        color: #111;
-        text-transform: uppercase;
+        margin-bottom: 60px;
     }
 
-    .price-val {
-        font-size: 32px;
-        font-weight: 900;
+    .d-info-card {
+        background: #1A1A1A;
+        border-radius: 24px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .d-info-card.accent {
+        border: 1px solid rgba(41, 182, 246, 0.3);
+        background: linear-gradient(145deg, #1A1A1A, #151515);
+    }
+
+    .d-info-h {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .d-price-large {
+        font-size: 28px;
         color: #29B6F6;
-        margin: 0 0 20px 0;
+        font-weight: 800;
     }
 
-    .price-card.lime .price-val {
-        color: #8dbd00;
-        /* Darker lime for text visibility */
-    }
-
-    .price-list {
+    .d-list {
         list-style: none;
         padding: 0;
         margin: 0;
     }
 
-    .price-list li {
-        font-size: 15px;
-        color: #555;
-        margin-bottom: 12px;
+    .d-list li {
+        margin-bottom: 16px;
+        font-size: 16px;
+        color: #ddd;
         display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        line-height: 1.4;
+        align-items: center;
+        gap: 12px;
     }
 
-    .check {
+    .d-list li.check::before {
+        content: '✔';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: rgba(41, 182, 246, 0.1);
         color: #29B6F6;
-        font-weight: bold;
+        border-radius: 50%;
+        font-size: 14px;
     }
 
-    .price-card.lime .check {
-        color: #8dbd00;
+    .d-clothing {
+        grid-column: 1 / -1;
+        background: #222;
+        padding: 30px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
     }
 
-    /* Floating CTA Desktop */
-    .d-float-cta {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%) translateY(100px);
-        background: #29B6F6;
-        color: white;
-        padding: 20px 50px;
-        border-radius: 100px;
-        font-size: 18px;
-        font-weight: 800;
-        border: none;
-        cursor: pointer;
-        box-shadow: 0 10px 40px rgba(41, 182, 246, 0.4);
-        z-index: 999;
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        opacity: 0;
-        pointer-events: none;
+    .d-clothing-icon {
+        font-size: 40px;
     }
 
-    .d-float-cta.visible {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .d-float-cta:hover {
-        transform: translateX(-50%) translateY(-5px);
-        box-shadow: 0 20px 50px rgba(41, 182, 246, 0.6);
+    .d-clothing-text {
+        font-size: 16px;
+        color: #ccc;
+        line-height: 1.5;
     }
 </style>
-<div class="org-section">
-    <div class="org-container">
-        <h2 class="org-title">Важно знать</h2>
 
-        <div class="org-grid">
-            <div class="price-card lime">
-                <h3 class="price-title">Все включено</h3>
-                <p class="price-val">4990 KC</p>
-                <ul class="price-list">
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Комфортный трансфер</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Отель *** с завтраком и SPA</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Сопровождение 24/7</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Фотоотчет</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Сюрпризы в дороге</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3 class="price-title">Доп. расходы</h3>
-                <p class="price-val">~100€</p>
-                <ul class="price-list">
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
-                            </svg></span> Прокат саней + подъемник (35€)</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
-                            </svg></span> Обеды и ужины</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
-                            </svg></span> Сувениры</li>
-                </ul>
-            </div>
+<div class="d-org-section">
+    <div class="d-org-container">
+        <h2 class="d-org-h2">Всё включено в стоимость</h2>
 
-            <div class="org-card dark">
-                <div class="org-head">Что надеть?</div>
-                <div class="org-text">
-                    Одевайтесь тепло и удобно! Идеально подойдет лыжный костюм. Возьмите сменную одежду на случай, если
-                    промокнете. Вещи можно оставить в автобусе.
-                </div>
+        <!-- Included -->
+        <div class="d-info-card accent">
+            <div class="d-info-h">
+                <span>Что входит в билет</span>
+                <span class="d-price-large">4990 KC</span>
             </div>
+            <ul class="d-list">
+                <li class="check">Комфортабельный трансфер (Прага - Альпы - Прага)</li>
+                <li class="check">Проживание в отеле 4* (Hotel Römerhof)</li>
+                <li class="check">Фермерский завтрак (шведский стол)</li>
+                <li class="check">Посещение SPA-зоны (бассейн, сауна)</li>
+                <li class="check">Экскурсия по утреннему Гальштату</li>
+                <li class="check">Поездка в музей Hangar-7 (Red Bull)</li>
+                <li class="check">Прогулка по Зальцбургу</li>
+                <li class="check">Сопровождение организаторов 24/7</li>
+                <li class="check">Профессиональный фотоотчет</li>
+            </ul>
         </div>
 
-        <div style="text-align:center; margin-top:50px;">
-            <button onclick="openWidget()"
-                style="background:#29B6F6; color:#fff; border:none; padding:18px 40px; border-radius:100px; font-size:18px; font-weight:700; cursor:pointer; box-shadow:0 10px 20px rgba(41,182,246,0.3);">ПОЕХАЛИ
-                С НАМИ!</button>
+        <!-- Extra -->
+        <div class="d-info-card">
+            <div class="d-info-h">
+                <span>На карманные расходы</span>
+            </div>
+            <ul class="d-list">
+                <li>• Вечерний ски-пасс (подъемник): ~23€</li>
+                <li>• Аренда спортивных саней: ~10€</li>
+                <li>• Обеды и ужины</li>
+                <li>• Личные сувениры</li>
+            </ul>
+        </div>
+
+        <!-- Clothing -->
+        <div class="d-clothing">
+            <div class="d-clothing-icon">❄️</div>
+            <div class="d-clothing-text">
+                <strong>Что надеть?</strong><br>
+                Одевайся удобно и тепло! Идеально — лыжный костюм или непромокаемые штаны + теплая куртка. Не забудь
+                перчатки, шапку и удобную зимнюю обувь.
+            </div>
         </div>
     </div>
-
-    <button onclick="openWidget()" class="d-float-cta" id="d-sticky-cta">
-        ЗАНЯТЬ МЕСТО
-    </button>
-
-    <script>
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('d-sticky-cta');
-            if (window.scrollY > 800) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        });
-    </script>
 </div>

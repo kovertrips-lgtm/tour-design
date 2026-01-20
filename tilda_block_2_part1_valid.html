@@ -57,57 +57,210 @@
 
 
 
-
-<div class="program-section">
-    <div class="program-container">
-        <div class="program-header">
-            <h2 class="program-title">В программе тура</h2>
-            <p class="program-subtitle">Мы позаботились обо всём, чтобы вы просто наслаждались выходными</p>
+<div class="d-program-section">
+    <div class="d-container">
+        <div class="d-section-header">
+            <h2 class="d-title">Программа тура</h2>
+            <p class="d-subtitle">Мы продумали каждую минуту, чтобы вы успели всё, но не устали. Баланс активности и
+                релакса.</p>
         </div>
 
-        <div class="program-grid">
-            <div class="program-card">
-                <div class="card-icon">&#128652;</div>
-                <h3 class="card-title">Комфортный трансфер</h3>
-                <p class="card-desc">Автобус Прага - Гальштат - Wildkogel - Ред Булл музей - Зальцбург - Прага</p>
-            </div>
-            <div class="program-card">
-                <div class="card-icon lime">🥯</div>
-                <h3 class="card-title">Завтрак и напитки</h3>
-                <p class="card-desc">Легкий завтрак в пути, прохладительные и горячительные напитки</p>
-            </div>
-            <div class="program-card">
-                <div class="card-icon">&#129504;</div>
-                <h3 class="card-title">Команда Kover</h3>
-                <p class="card-desc">2 опытных организатора и экскурсия от команды</p>
-            </div>
-            <div class="program-card">
-                <div class="card-icon lime">&#128247;</div>
-                <h3 class="card-title">Профессиональные фото</h3>
-                <p class="card-desc">Красивые кадры от нашего фотографа, чтобы запомнить эти эмоции</p>
-            </div>
-            <div class="program-card">
-                <div class="card-icon">🚡</div>
-                <h3 class="card-title">Саночный спуск</h3>
-                <p class="card-desc">Катание на самой длинной саночной трассе в мире — 14 км драйва!</p>
-            </div>
-            <div class="program-card">
-                <div class="card-icon lime">&#9992;️</div>
-                <h3 class="card-title">Музей Red Bull</h3>
-                <p class="card-desc">Посещение легендарного Hangar-7 с коллекцией самолетов и болидов</p>
-            </div>
-            <div class="program-card">
-                <div class="card-icon">&#127873;</div>
-                <h3 class="card-title">Розыгрыш призов</h3>
-                <p class="card-desc">Приятные бонусы и подарки для участников тура</p>
-            </div>
-        </div>
+        <div class="d-program-grid">
 
-        <button onclick="openWidget()" class="prog-btn"
-            style="background:#29B6F6; color:#fff; border:none; padding:18px 40px; border-radius:100px; font-weight:700; font-size:16px; text-transform:uppercase; box-shadow:0 10px 30px rgba(41, 182, 246, 0.4); cursor:pointer;">Забронировать
-            место</button>
+            <!-- 1. Hallstatt -->
+            <div class="d-card" onclick="openDesktopModal('hallstatt')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/hallstatt_best/IMG_8703.jpg"
+                    class="d-card-img">
+                <div class="d-card-tags">
+                    <span class="d-tag">Экскурсия</span>
+                    <span class="d-tag">Фото</span>
+                </div>
+                <div class="d-card-overlay">
+                    <div class="d-card-title">Гальштат</div>
+                    <div class="d-card-desc">Знаменитая "открытка" без толп туристов. Утренний эксклюзив.</div>
+                    <div class="d-card-btn">Подробнее &rarr;</div>
+                </div>
+                <!-- Data for JS -->
+                <div class="d-hidden-data" id="d-data-hallstatt" style="display:none;">
+                    <div class="img-src">
+                        https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/Hallstatt/hall8.jpg
+                    </div>
+                    <div class="title">Магия Гальштата</div>
+                    <div class="subtitle">ЮНЕСКО · История · Фотосессия</div>
+                    <div class="content">
+                        <p class="d-modal-text"><b>Проблема Гальштата — толпы туристов.</b> Обычно здесь не
+                            протолкнуться.<br><br><b>Наше решение:</b> Мы прибываем на рассвете. Весь город принадлежит
+                            тебе. Тишина, туман над озером и лебеди.</p>
+                        <div class="d-modal-h">&#128247; Твой личный фотограф</div>
+                        <p class="d-modal-text">Не трать время на селфи. С нами едет профи, который знает лучшие
+                            ракурсы. Идеальные кадры на фоне истории гарантированы.</p>
+                        <div class="d-modal-h">&#129504; Без скучных лекций</div>
+                        <p class="d-modal-text">Только живые истории: почему соль была дороже золота и как люди жили
+                            здесь 7000 лет назад.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Sledding -->
+            <div class="d-card" onclick="openDesktopModal('sledding')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/%D0%A1%D0%B0%D0%BD%D0%B8/IMG_4037.jpg"
+                    class="d-card-img">
+                <div class="d-card-tags">
+                    <span class="d-tag lime">Экшн</span>
+                    <span class="d-tag lime">Закат</span>
+                </div>
+                <div class="d-card-overlay">
+                    <div class="d-card-title">14 КМ Саней</div>
+                    <div class="d-card-desc">Самая длинная освещенная санная трасса в мире. Чистый адреналин.</div>
+                    <div class="d-card-btn">Подробнее &rarr;</div>
+                </div>
+                <div class="d-hidden-data" id="d-data-sledding" style="display:none;">
+                    <div class="img-src">
+                        https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/%D0%A1%D0%B0%D0%BD%D0%B8/Hallstatt%20(70).jpg
+                    </div>
+                    <div class="title">14 КМ Адреналина</div>
+                    <div class="subtitle">Wildkogel Arena · Катание на закате</div>
+                    <div class="content">
+                        <p class="d-modal-text"><b>Новый взгляд на зимние развлечения.</b> Это не детская горка. Это
+                            Wildkogel Arena — 14 километров чистого драйва. Спуск длится почти час!</p>
+                        <div class="d-modal-h">&#128640; Безопасно и круто</div>
+                        <p class="d-modal-text">Трасса подготовлена ратраками, как горнолыжный склон. Уклоны плавные,
+                            повороты широкие. Мы стартуем с высоты 2200м с потрясающим видом на Альпы.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Hotel -->
+            <div class="d-card" onclick="openDesktopModal('hotel')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/Hotel/804959505.jpg"
+                    class="d-card-img">
+                <div class="d-card-tags">
+                    <span class="d-tag">4* Hotel</span>
+                    <span class="d-tag">SPA</span>
+                </div>
+                <div class="d-card-overlay">
+                    <div class="d-card-title">Отель & SPA</div>
+                    <div class="d-card-desc">Открытый бассейн с подогревом и видом на горы.</div>
+                    <div class="d-card-btn">Подробнее &rarr;</div>
+                </div>
+                <div class="d-hidden-data" id="d-data-hotel" style="display:none;">
+                    <div class="img-src">
+                        https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/Hotel/2.jpg
+                    </div>
+                    <div class="title">Альпийский Комфорт</div>
+                    <div class="subtitle">Hotel Römerhof 4* · Рейтинг 8.9</div>
+                    <div class="content">
+                        <p class="d-modal-text">После дня в горах телу нужен отдых. Мы выбрали <b>Hotel Römerhof</b> за
+                            лучшую SPA-зону.</p>
+                        <div class="d-modal-h">&#10052;️ Контраст ощущений</div>
+                        <p class="d-modal-text">Представь: на улице -5°C, идет снег, а ты плаваешь в горячем открытом
+                            бассейне (+32°C). Это ощущение полной перезагрузки.</p>
+                        <div class="d-modal-h">🛏 Комфорт 4*</div>
+                        <p class="d-modal-text">Просторные номера, ортопедические матрасы и знаменитый фермерский
+                            завтрак.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Red Bull -->
+            <div class="d-card" onclick="openDesktopModal('redbull')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/RedBull/bull1.jpg"
+                    class="d-card-img">
+                <div class="d-card-tags">
+                    <span class="d-tag lime">Музей</span>
+                    <span class="d-tag lime">F1</span>
+                </div>
+                <div class="d-card-overlay">
+                    <div class="d-card-title">Hangar-7</div>
+                    <div class="d-card-desc">Легендарные болиды и самолеты в стеклянном ангаре.</div>
+                    <div class="d-card-btn">Подробнее &rarr;</div>
+                </div>
+                <div class="d-hidden-data" id="d-data-redbull" style="display:none;">
+                    <div class="img-src">
+                        https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/RedBull/redbull_hangar.png
+                    </div>
+                    <div class="title">Легендарный Hangar-7</div>
+                    <div class="subtitle">Авиация · F1 · Искусство</div>
+                    <div class="content">
+                        <p class="d-modal-text">Живой музей энергии и скорости. Даже если ты не фанат гонок, это место
+                            впечатляет.</p>
+                        <div class="d-modal-h">&#127950; Прикоснись к легенде</div>
+                        <p class="d-modal-text">Болиды Формулы-1, стоящие здесь, выигрывали чемпионаты. Это место
+                            заряжает энергией достижения.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Salzburg -->
+            <div class="d-card" onclick="openDesktopModal('salzburg')">
+                <img src="https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/Salzburg/salzburg%20(19).jpg"
+                    class="d-card-img">
+                <div class="d-card-tags">
+                    <span class="d-tag">Город</span>
+                    <span class="d-tag">История</span>
+                </div>
+                <div class="d-card-overlay">
+                    <div class="d-card-title">Зальцбург</div>
+                    <div class="d-card-desc">Эстетика старой Европы, кофе и музыка Моцарта.</div>
+                    <div class="d-card-btn">Подробнее &rarr;</div>
+                </div>
+                <div class="d-hidden-data" id="d-data-salzburg" style="display:none;">
+                    <div class="img-src">
+                        https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/AutoSync/Salzburg/IMG_6045.jpg
+                    </div>
+                    <div class="title">Классика и Стиль</div>
+                    <div class="subtitle">UNESCO · Моцарт · Кофе</div>
+                    <div class="content">
+                        <div class="d-modal-h">☕ Dolce Vita по-австрийски</div>
+                        <p class="d-modal-text">Пройдемся по садам Мирабель и заглянем в старейшую кофейню Tomaselli.
+                            Попробуем настоящий "Захер" или конфеты Mozartkugel. Стильная финальная точка путешествия.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
+
+<!-- DESKTOP MODAL HTML -->
+<div class="d-modal-overlay" id="desktopModal" onclick="closeDesktopModal()">
+    <div class="d-modal-container" onclick="event.stopPropagation()">
+        <div class="d-modal-close" onclick="closeDesktopModal()">&times;</div>
+        <div class="d-modal-left">
+            <img src="" class="d-modal-img" id="d-modal-img">
+        </div>
+        <div class="d-modal-right">
+            <h3 class="d-modal-title" id="d-modal-title">Title</h3>
+            <div class="d-modal-subtitle" id="d-modal-subtitle">Subtitle</div>
+            <div id="d-modal-content"></div>
+
+            <button onclick="openWidget()"
+                style="background:#29B6F6; color:white; border:none; padding:15px 30px; border-radius:100px; font-weight:800; cursor:pointer; margin-top:30px; width:100%; font-size:16px; text-transform:uppercase;">ХОЧУ
+                СЮДА!</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDesktopModal(id) {
+        const data = document.getElementById('d-data-' + id);
+        if (!data) return;
+
+        document.getElementById('d-modal-img').src = data.querySelector('.img-src').innerText;
+        document.getElementById('d-modal-title').innerText = data.querySelector('.title').innerText;
+        document.getElementById('d-modal-subtitle').innerText = data.querySelector('.subtitle').innerText;
+        document.getElementById('d-modal-content').innerHTML = data.querySelector('.content').innerHTML;
+
+        document.getElementById('desktopModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDesktopModal() {
+        document.getElementById('desktopModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+</script>
 
 <!-- DESKTOP SOURCE: Двухдневка в Альпы/03_Hallstatt.html -->
 
@@ -346,90 +499,73 @@
 
 
 
-
-<div class="time-section">
-    <div class="time-header">
-        <h2 class="time-title">Тайминг путешествия</h2>
+<div class="d-time-section">
+    <div class="d-time-header">
+        <h2 class="d-time-title">Тайминг путешествия</h2>
     </div>
 
-    <div class="days-grid">
+    <div class="d-days-grid">
         <!-- DAY 1 -->
-        <div class="day-col">
-            <div class="day-header">&#128197; Суббота, 28.02</div>
+        <div class="d-day-col">
+            <div class="d-day-header">&#128197; Суббота, 28.02</div>
 
-            <div class="t-item">
-                <div class="t-time">02:45</div>
-                <div class="t-desc"><strong>Сбор</strong> Hlavní Nádraží, выезд</div>
+            <div class="d-t-item">
+                <div class="d-t-time">02:45</div>
+                <div class="d-t-desc"><strong>Встреча и старт</strong> Hlavní Nádraží, посадка в комфортный автобус.
+                </div>
             </div>
-            <div class="t-item">
-                <div class="t-time">09:00</div>
-                <div class="t-desc"><strong>Гальштат</strong> Прибытие и экскурсия</div>
+            <div class="d-t-item">
+                <div class="d-t-time">09:00</div>
+                <div class="d-t-desc"><strong>Гальштат</strong> Прибытие на рассвете. Экскурсия без толп.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">11:00</div>
-                <div class="t-desc">Свободное время в Гальштате</div>
+            <div class="d-t-item">
+                <div class="d-t-time">12:00</div>
+                <div class="d-t-desc"><strong>Выезд в горы</strong> Переезд живописной дорогой к Wildkogel Arena.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">12:00</div>
-                <div class="t-desc">Выезд в Wildkogel Arena</div>
+            <div class="d-t-item">
+                <div class="d-t-time">15:00</div>
+                <div class="d-t-desc"><strong>САНИ (14 км)</strong> Подъем на 2200м и легендарный спуск (почти час
+                    драйва).</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">15:00</div>
-                <div class="t-desc"><strong>Сани!</strong> Аренда и начало катания</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">18:00</div>
-                <div class="t-desc">Сбор и выезд в отель</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">19:00</div>
-                <div class="t-desc">Заселение и ужин</div>
+            <div class="d-t-item">
+                <div class="d-t-time">19:00</div>
+                <div class="d-t-desc"><strong>Отель & Ужин</strong> Заселение в 4* отель, ужин и SPA.</div>
             </div>
         </div>
 
         <!-- DAY 2 -->
-        <div class="day-col">
-            <div class="day-header">&#128197; Воскресенье, 01.03</div>
+        <div class="d-day-col">
+            <div class="d-day-header">&#128197; Воскресенье, 01.03</div>
 
-            <div class="t-item">
-                <div class="t-time">07:30</div>
-                <div class="t-desc">Завтрак</div>
+            <div class="d-t-item">
+                <div class="d-t-time">07:30</div>
+                <div class="d-t-desc"><strong>Завтрак</strong> Фермерский шведский стол в отеле.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">08:45</div>
-                <div class="t-desc">Выселение, выезд в Hangar-7</div>
+            <div class="d-t-item">
+                <div class="d-t-time">11:00</div>
+                <div class="d-t-desc"><strong>Hangar-7</strong> Посещение музея Red Bull: болиды F1 и самолеты.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">11:00</div>
-                <div class="t-desc"><strong>Музей Red Bull</strong> Экскурсия</div>
+            <div class="d-t-item">
+                <div class="d-t-time">13:30</div>
+                <div class="d-t-desc"><strong>Зальцбург</strong> Прибытие, прогулка по старому городу, свободное время.
+                </div>
             </div>
-            <div class="t-item">
-                <div class="t-time">13:00</div>
-                <div class="t-desc">Выезд в Зальцбург</div>
+            <div class="d-t-item">
+                <div class="d-t-time">18:00</div>
+                <div class="d-t-desc"><strong>Выезд домой</strong> Отправление в Прагу.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">13:30</div>
-                <div class="t-desc"><strong>Зальцбург</strong> Прибытие и прогулка</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">15:00</div>
-                <div class="t-desc">Свободное время</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">18:00</div>
-                <div class="t-desc">Выезд в Прагу</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">23:00</div>
-                <div class="t-desc">Возвращение в Прагу</div>
+            <div class="d-t-item">
+                <div class="d-t-time">23:00</div>
+                <div class="d-t-desc"><strong>Прибытие</strong> Мы дома (ориентировочно).</div>
             </div>
         </div>
     </div>
 
-    <div style="text-align:center; margin-top:40px;">
+    <div style="text-align:center; margin-top:60px;">
         <button onclick="openWidget()"
-            style="background:#29B6F6; color:#fff; border:none; padding:15px 30px; border-radius:100px; font-size:16px; font-weight:700; cursor:pointer;">ЗАБРОНИРОВАТЬ
-            ТУР</button>
+            style="background:#29B6F6; color:#fff !important; border:none; padding:18px 40px; border-radius:100px; font-size:16px; font-weight:800; cursor:pointer; text-transform:uppercase; box-shadow: 0 10px 30px rgba(41, 182, 246, 0.4); transition: transform 0.2s;">
+            ЗАБРОНИРОВАТЬ ТУР
+        </button>
     </div>
 </div>
 
@@ -626,85 +762,51 @@
 
 
 
-<div class="org-section">
-    <div class="org-container">
-        <h2 class="org-title">Важно знать</h2>
+<div class="d-org-section">
+    <div class="d-org-container">
+        <h2 class="d-org-h2">Всё включено в стоимость</h2>
 
-        <div class="org-grid">
-            <div class="price-card lime">
-                <h3 class="price-title">Все включено</h3>
-                <p class="price-val">4990 KC</p>
-                <ul class="price-list">
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Комфортный трансфер</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Отель *** с завтраком и SPA</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Сопровождение 24/7</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Фотоотчет</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24" style="color:#29B6F6;">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg></span> Сюрпризы в дороге</li>
-                </ul>
+        <!-- Included -->
+        <div class="d-info-card accent">
+            <div class="d-info-h">
+                <span>Что входит в билет</span>
+                <span class="d-price-large">4990 KC</span>
             </div>
-            <div class="price-card">
-                <h3 class="price-title">Доп. расходы</h3>
-                <p class="price-val">~100€</p>
-                <ul class="price-list">
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
-                            </svg></span> Прокат саней + подъемник (35€)</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
-                            </svg></span> Обеды и ужины</li>
-                    <li><span class="check"><svg class="emoji-svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
-                            </svg></span> Сувениры</li>
-                </ul>
-            </div>
-
-            <div class="org-card dark">
-                <div class="org-head">Что надеть?</div>
-                <div class="org-text">
-                    Одевайтесь тепло и удобно! Идеально подойдет лыжный костюм. Возьмите сменную одежду на случай, если
-                    промокнете. Вещи можно оставить в автобусе.
-                </div>
-            </div>
+            <ul class="d-list">
+                <li class="check">Комфортабельный трансфер (Прага - Альпы - Прага)</li>
+                <li class="check">Проживание в отеле 4* (Hotel Römerhof)</li>
+                <li class="check">Фермерский завтрак (шведский стол)</li>
+                <li class="check">Посещение SPA-зоны (бассейн, сауна)</li>
+                <li class="check">Экскурсия по утреннему Гальштату</li>
+                <li class="check">Поездка в музей Hangar-7 (Red Bull)</li>
+                <li class="check">Прогулка по Зальцбургу</li>
+                <li class="check">Сопровождение организаторов 24/7</li>
+                <li class="check">Профессиональный фотоотчет</li>
+            </ul>
         </div>
 
-        <div style="text-align:center; margin-top:50px;">
-            <button onclick="openWidget()"
-                style="background:#29B6F6; color:#fff; border:none; padding:18px 40px; border-radius:100px; font-size:18px; font-weight:700; cursor:pointer; box-shadow:0 10px 20px rgba(41,182,246,0.3);">ПОЕХАЛИ
-                С НАМИ!</button>
+        <!-- Extra -->
+        <div class="d-info-card">
+            <div class="d-info-h">
+                <span>На карманные расходы</span>
+            </div>
+            <ul class="d-list">
+                <li>• Вечерний ски-пасс (подъемник): ~23€</li>
+                <li>• Аренда спортивных саней: ~10€</li>
+                <li>• Обеды и ужины</li>
+                <li>• Личные сувениры</li>
+            </ul>
+        </div>
+
+        <!-- Clothing -->
+        <div class="d-clothing">
+            <div class="d-clothing-icon">&#10052;️</div>
+            <div class="d-clothing-text">
+                <strong>Что надеть?</strong><br>
+                Одевайся удобно и тепло! Идеально — лыжный костюм или непромокаемые штаны + теплая куртка. Не забудь
+                перчатки, шапку и удобную зимнюю обувь.
+            </div>
         </div>
     </div>
-
-    <button onclick="openWidget()" class="d-float-cta" id="d-sticky-cta">
-        ЗАНЯТЬ МЕСТО
-    </button>
-
-    <script>
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('d-sticky-cta');
-            if (window.scrollY > 800) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        });
-    </script>
 </div>
 </div><!-- END DESKTOP -->
