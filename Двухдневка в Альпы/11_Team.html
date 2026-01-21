@@ -1,0 +1,173 @@
+<style>
+    /* Desktop Team Block */
+    .d-team-section {
+        background-color: #111;
+        padding: 80px 0 0;
+        font-family: 'Montserrat', sans-serif;
+        color: #fff;
+        overflow: hidden;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .d-team-container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 40px;
+        text-align: center;
+    }
+
+    .d-team-title {
+        font-size: 56px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+    }
+
+    .d-team-subtitle {
+        font-size: 18px;
+        color: #aaa;
+        max-width: 800px;
+        margin: 0 auto 50px;
+        line-height: 1.6;
+    }
+
+    .d-team-tags {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 60px;
+    }
+
+    .d-team-tag {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 14px;
+        color: #ddd;
+    }
+
+    .d-team-tag.accent {
+        background: #BDFF00;
+        color: black;
+    }
+
+    /* DESKTOP MARQUEE */
+    .d-marquee-wrap {
+        width: 100%;
+        overflow: hidden;
+        padding: 40px 0 80px;
+        position: relative;
+        /* Fade sides */
+        mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+    }
+
+    .d-marquee-track {
+        display: flex;
+        gap: 30px;
+        width: max-content;
+        animation: dScroll 40s linear infinite;
+        /* Slower on desktop */
+    }
+
+    .d-team-card {
+        width: 300px;
+        height: 400px;
+        flex-shrink: 0;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        border: 4px solid #fff;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .d-team-card:nth-child(odd) {
+        transform: rotate(-3deg);
+        margin-top: 20px;
+        border-color: #29B6F6;
+    }
+
+    .d-team-card:nth-child(even) {
+        transform: rotate(3deg);
+        margin-bottom: 20px;
+        border-color: #BDFF00;
+    }
+
+    .d-team-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* grayscale filter optional, maybe too sad */
+    }
+
+    @keyframes dScroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+</style>
+
+<div class="d-team-section">
+    <div class="d-team-container">
+        <h2 class="d-team-title">Мы про жизнь, а не просто локации</h2>
+
+        <div class="d-team-tags">
+            <span class="d-team-tag accent">#koverfamily</span>
+            <span class="d-team-tag">#freedom</span>
+            <span class="d-team-tag">#emotions</span>
+        </div>
+
+        <p class="d-team-subtitle">
+            Мы — команда людей, у которых в крови движ. Kover Travel родился не в офисе, а в дороге.<br>
+            Мы создаем трипы, где каждый день — это <b style="color:white; border-bottom: 2px solid #29B6F6;">кайф и
+                свобода</b>.
+            Всё по-настоящему: горы, скорость, смех и ощущение, что ты реально живёшь.
+        </p>
+    </div>
+
+    <!-- Marquee -->
+    <div class="d-marquee-wrap">
+        <div class="d-marquee-track">
+            <!-- Set 1 -->
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6163-3438-4331-b161-326264363835/DSCF6813.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3232-3335-4534-b632-643439383466/IMG_3606_1.jpg"
+                    class="d-team-img"></div>
+            <!-- Set 2 (Duplicate) -->
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6163-3438-4331-b161-326264363835/DSCF6813.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3232-3335-4534-b632-643439383466/IMG_3606_1.jpg"
+                    class="d-team-img"></div>
+            <!-- Set 3 -->
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="d-team-img"></div>
+        </div>
+    </div>
+</div>

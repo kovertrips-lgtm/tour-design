@@ -377,6 +377,108 @@
     }
 </script>
 
+<!-- DESKTOP SOURCE: Двухдневка в Альпы/10_Reviews_Desktop.html -->
+
+
+
+<div class="d-reviews-section">
+    <div class="d-reviews-container">
+        <header class="d-reviews-header">
+            <h2 class="d-reviews-title">Что говорят наши путешественники</h2>
+            <div class="d-reviews-badge">
+                <span>⭐ Оценка 9.5 из 10 (250+ туров)</span>
+            </div>
+        </header>
+
+        <div class="d-reviews-grid" id="dReviewsGrid">
+            <!-- Items injected by JS -->
+        </div>
+
+        <div class="d-cta-wrap">
+            <a href="javascript:openWidget()" class="d-btn-primary">Хочу поехать с вами</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const dReviews = [
+            {
+                type: 'video',
+                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/play_720p.mp4',
+                posterUrl: 'https://581522.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/thumbnail.jpg',
+                tourName: 'Тур: Гальштат и Сани'
+            },
+            {
+                type: 'hybrid',
+                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/e3e6f8c6-04d5-4068-b0d1-6bfa2e163c37/play_720p.mp4',
+                statNumber: '100%',
+                statDesc: 'восторга и эмоций от путешествия',
+                tourName: 'Эмоции бесценны'
+            },
+            {
+                type: 'video',
+                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/play_720p.mp4',
+                posterUrl: 'https://581522.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/thumbnail.jpg',
+                tourName: 'Атмосфера тура'
+            }
+        ];
+
+        const container = document.getElementById('dReviewsGrid');
+        const playIcon = '<svg class="d-play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+
+        dReviews.forEach(item => {
+            let html = '';
+            if (item.type === 'video') {
+                html = `
+                <div class="d-review-card d-card-video" onclick="dToggleVideo(this)">
+                    <video class="d-rv-video" src="${item.videoUrl}#t=0.1" playsinline loop muted preload="metadata"></video>
+                    <div class="d-rv-overlay"></div>
+                    <div class="d-badg-bottom">${item.tourName}</div>
+                    <div class="d-rv-play-btn">${playIcon}</div>
+                </div>`;
+            } else if (item.type === 'hybrid') {
+                html = `
+                <div class="d-review-card d-card-hybrid">
+                    <div class="d-hybrid-video" onclick="dToggleVideo(this)">
+                        <video style="width:100%; height:100%; object-fit:cover;" src="${item.videoUrl}#t=0.1" playsinline loop muted preload="metadata"></video>
+                         <div class="d-rv-play-btn" style="width:50px; height:50px;">${playIcon}</div>
+                    </div>
+                    <div class="d-hybrid-stat">
+                        <div class="d-stat-num">${item.statNumber}</div>
+                        <div class="d-stat-text">${item.statDesc}</div>
+                    </div>
+                </div>`;
+            }
+            container.insertAdjacentHTML('beforeend', html);
+        });
+
+        window.dToggleVideo = function (el) {
+            const vid = el.querySelector('video');
+            if (!vid) return;
+
+            // Pause all others
+            document.querySelectorAll('.d-review-card video').forEach(v => {
+                if (v !== vid) {
+                    v.pause();
+                    v.closest('.d-review-card')?.classList.remove('is-playing');
+                    v.closest('.d-hybrid-video')?.classList.remove('is-playing');
+                }
+            });
+
+            if (vid.paused) {
+                vid.muted = false;
+                vid.play();
+                el.classList.add('is-playing');
+            } else {
+                vid.pause();
+                el.classList.remove('is-playing');
+            }
+        }
+
+    })();
+</script>
+
 <!-- DESKTOP SOURCE: Двухдневка в Альпы/08_Timeline.html -->
 
 
@@ -502,107 +604,130 @@
     </div>
 </div>
 
-<!-- DESKTOP SOURCE: Двухдневка в Альпы/10_Reviews_Desktop.html -->
+<!-- DESKTOP SOURCE: Двухдневка в Альпы/10_HowItWorks.html -->
 
 
 
-<div class="d-reviews-section">
-    <div class="d-reviews-container">
-        <header class="d-reviews-header">
-            <h2 class="d-reviews-title">Что говорят наши путешественники</h2>
-            <div class="d-reviews-badge">
-                <span>⭐ Оценка 9.5 из 10 (250+ туров)</span>
-            </div>
-        </header>
-
-        <div class="d-reviews-grid" id="dReviewsGrid">
-            <!-- Items injected by JS -->
+<div class="d-how-section">
+    <div class="d-how-container">
+        <div class="d-how-header">
+            <h2 class="d-how-title">Как это работает</h2>
         </div>
 
-        <div class="d-cta-wrap">
-            <a href="javascript:openWidget()" class="d-btn-primary">Хочу поехать с вами</a>
+        <div class="d-how-grid">
+            <!-- Step 1 -->
+            <div class="d-how-item">
+                <div class="d-how-icon-box">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                </div>
+                <h3 class="d-how-h3">1. Забронируй</h3>
+                <p class="d-how-p">Оплата картой (Apple Pay / Google Pay). Место закрепится за тобой моментально.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="d-how-item">
+                <div class="d-how-icon-box">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="d-how-h3">2. Вступай в чат</h3>
+                <p class="d-how-p">Сразу после оплаты ты получишь ссылку на Telegram-чат тура. Там вся тусовка и
+                    организаторы.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="d-how-item">
+                <div class="d-how-icon-box">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+                        <circle cx="7" cy="17" r="2" />
+                        <circle cx="17" cy="17" r="2" />
+                        <path d="M5 17h2v-6h10v6h2" />
+                    </svg>
+                </div>
+                <h3 class="d-how-h3">3. Погнали!</h3>
+                <p class="d-how-p">В ночь с пятницы на субботу встречаемся у автобуса. Загружаемся и мчим в Альпы.</p>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    (function () {
-        const dReviews = [
-            {
-                type: 'video',
-                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/play_720p.mp4',
-                posterUrl: 'https://581522.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/thumbnail.jpg',
-                tourName: 'Тур: Гальштат и Сани'
-            },
-            {
-                type: 'hybrid',
-                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/e3e6f8c6-04d5-4068-b0d1-6bfa2e163c37/play_720p.mp4',
-                statNumber: '100%',
-                statDesc: 'восторга и эмоций от путешествия',
-                tourName: 'Эмоции бесценны'
-            },
-            {
-                type: 'video',
-                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/play_720p.mp4',
-                posterUrl: 'https://581522.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/thumbnail.jpg',
-                tourName: 'Атмосфера тура'
-            }
-        ];
+<!-- DESKTOP SOURCE: Двухдневка в Альпы/11_Team.html -->
 
-        const container = document.getElementById('dReviewsGrid');
-        const playIcon = '<svg class="d-play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
 
-        dReviews.forEach(item => {
-            let html = '';
-            if (item.type === 'video') {
-                html = `
-                <div class="d-review-card d-card-video" onclick="dToggleVideo(this)">
-                    <video class="d-rv-video" src="${item.videoUrl}#t=0.1" playsinline loop muted preload="metadata"></video>
-                    <div class="d-rv-overlay"></div>
-                    <div class="d-badg-bottom">${item.tourName}</div>
-                    <div class="d-rv-play-btn">${playIcon}</div>
-                </div>`;
-            } else if (item.type === 'hybrid') {
-                html = `
-                <div class="d-review-card d-card-hybrid">
-                    <div class="d-hybrid-video" onclick="dToggleVideo(this)">
-                        <video style="width:100%; height:100%; object-fit:cover;" src="${item.videoUrl}#t=0.1" playsinline loop muted preload="metadata"></video>
-                         <div class="d-rv-play-btn" style="width:50px; height:50px;">${playIcon}</div>
-                    </div>
-                    <div class="d-hybrid-stat">
-                        <div class="d-stat-num">${item.statNumber}</div>
-                        <div class="d-stat-text">${item.statDesc}</div>
-                    </div>
-                </div>`;
-            }
-            container.insertAdjacentHTML('beforeend', html);
-        });
 
-        window.dToggleVideo = function (el) {
-            const vid = el.querySelector('video');
-            if (!vid) return;
+<div class="d-team-section">
+    <div class="d-team-container">
+        <h2 class="d-team-title">Мы про жизнь, а не просто локации</h2>
 
-            // Pause all others
-            document.querySelectorAll('.d-review-card video').forEach(v => {
-                if (v !== vid) {
-                    v.pause();
-                    v.closest('.d-review-card')?.classList.remove('is-playing');
-                    v.closest('.d-hybrid-video')?.classList.remove('is-playing');
-                }
-            });
+        <div class="d-team-tags">
+            <span class="d-team-tag accent">#koverfamily</span>
+            <span class="d-team-tag">#freedom</span>
+            <span class="d-team-tag">#emotions</span>
+        </div>
 
-            if (vid.paused) {
-                vid.muted = false;
-                vid.play();
-                el.classList.add('is-playing');
-            } else {
-                vid.pause();
-                el.classList.remove('is-playing');
-            }
-        }
+        <p class="d-team-subtitle">
+            Мы — команда людей, у которых в крови движ. Kover Travel родился не в офисе, а в дороге.<br>
+            Мы создаем трипы, где каждый день — это <b style="color:white; border-bottom: 2px solid #29B6F6;">кайф и
+                свобода</b>.
+            Всё по-настоящему: горы, скорость, смех и ощущение, что ты реально живёшь.
+        </p>
+    </div>
 
-    })();
-</script>
+    <!-- Marquee -->
+    <div class="d-marquee-wrap">
+        <div class="d-marquee-track">
+            <!-- Set 1 -->
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6163-3438-4331-b161-326264363835/DSCF6813.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3232-3335-4534-b632-643439383466/IMG_3606_1.jpg"
+                    class="d-team-img"></div>
+            <!-- Set 2 (Duplicate) -->
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6163-3438-4331-b161-326264363835/DSCF6813.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3232-3335-4534-b632-643439383466/IMG_3606_1.jpg"
+                    class="d-team-img"></div>
+            <!-- Set 3 -->
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild6639-3338-4839-b762-653938316663/DSCF7839-74.jpg"
+                    class="d-team-img"></div>
+            <div class="d-team-card"><img
+                    src="https://static.tildacdn.com/tild3639-3634-4235-b231-353239666166/KOVERStaff_ParisEtre.jpg"
+                    class="d-team-img"></div>
+        </div>
+    </div>
+</div>
+
+<!-- DESKTOP SOURCE: Двухдневка в Альпы/10b_CTA.html -->
+
+
+
+<div class="d-cta-section">
+    <h2 class="d-cta-title">Готов к приключению?</h2>
+    <p class="d-cta-sub">Места в автобусе разбирают быстро. Не откладывай жизнь на потом.</p>
+    <a href="#widget" onclick="openWidget()" class="d-cta-btn">Занять место</a>
+</div>
 </div><!-- END DESKTOP -->
 <div class="mobile-view">
 
@@ -644,9 +769,7 @@
     <div class="m-program-section">
         <div class="m-section-header">
             <h2 class="m-h2">Программа тура</h2>
-            <div class="m-sub">
-                <span class="m-sub-icon">👇</span> Тапни, чтобы открыть
-            </div>
+            <!-- Removed Tap hint -->
         </div>
 
         <div class="m-prog-scroll">
@@ -1114,147 +1237,6 @@
 
 
 
-<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/08_Timeline_Mobile.html -->
-
-
-
-<div class="m-time-section">
-    <div class="m-time-header">
-        <h2 class="m-time-title">Тайминг</h2>
-        <div class="m-time-sub">План наших приключений</div>
-    </div>
-
-    <!-- DAY 1 -->
-    <div class="m-day-block">
-        <div class="m-day-header">
-            <span class="m-day-icon">📅</span> Суббота, 28.02
-        </div>
-
-        <div class="m-t-item">
-            <div class="m-t-time">02:45</div>
-            <div class="m-t-desc"><strong>Встреча и старт</strong>Hlavní Nádraží, посадка в автобус.</div>
-        </div>
-        <div class="m-t-item">
-            <div class="m-t-time">09:00</div>
-            <div class="m-t-desc"><strong>Гальштат</strong>Прибытие, пока город спит. Фотосессия.</div>
-        </div>
-        <div class="m-t-item">
-            <div class="m-t-time">12:00</div>
-            <div class="m-t-desc"><strong>Выезд в горы</strong>Переезд к Wildkogel Arena.</div>
-        </div>
-        <div class="m-t-item">
-            <div class="m-t-time">15:00</div>
-            <div class="m-t-desc"><strong>САНИ (14 км)</strong>Подъем на гору и легендарный спуск.</div>
-        </div>
-        <div class="m-t-item">
-            <div class="m-t-time">19:00</div>
-            <div class="m-t-desc"><strong>Отель & Ужин</strong>Заселение, релакс и вкусная еда.</div>
-        </div>
-    </div>
-
-    <!-- DAY 2 -->
-    <div class="m-day-block">
-        <div class="m-day-header">
-            <span class="m-day-icon">📅</span> Воскресенье, 01.03
-        </div>
-
-        <div class="m-t-item">
-            <div class="m-t-time">07:30</div>
-            <div class="m-t-desc"><strong>Завтрак</strong>Шведский стол в отеле.</div>
-        </div>
-        <div class="m-t-item">
-            <div class="m-t-time">11:00</div>
-            <div class="m-t-desc"><strong>Hangar-7</strong>Музей Red Bull: болиды и самолеты.</div>
-        </div>
-        <div class="m-t-item">
-            <div class="m-t-time">13:30</div>
-            <div class="m-t-desc"><strong>Зальцбург</strong>Прогулка по старому городу, кофе.</div>
-        </div>
-        <div class="m-t-item">
-            <div class="m-t-time">18:00</div>
-            <div class="m-t-desc"><strong>Домой</strong>Выезд в Прагу.</div>
-        </div>
-        <div class="m-t-item">
-            <div class="m-t-time">23:00</div>
-            <div class="m-t-desc"><strong>Прибытие</strong>Мы дома.</div>
-        </div>
-    </div>
-
-</div>
-
-<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/09_OrgDetails_Mobile.html -->
-
-
-
-    <div class="m-org-section">
-        <div class="m-org-header">
-            <h2 class="m-org-title">Стоимость:</h2>
-        </div>
-
-        <!-- Included -->
-        <div class="m-info-card accent">
-            <div class="m-info-h">
-                <span>Включено</span>
-                <div style="text-align:right;">
-                    <span class="m-price-tag">4990 KC</span>
-                    <div style="font-size:10px; color:#888; margin-top:4px;">В 2 раза выгоднее, чем самому</div>
-                </div>
-            </div>
-            <ul class="m-list">
-                <li class="check">Комфортный трансфер туда-обратно</li>
-                <li class="check">Проживание в отеле 4*</li>
-                <li class="check">Завтрак (фермерский шведский стол)</li>
-                <li class="check">3 экскурсии (Гальштат, Зальцбург, Музей)</li>
-                <li class="check">SPA зона (бассейн, сауна)</li>
-                <li class="check">Сопровождение гидов 24/7</li>
-                <li class="check">Фотоотчет поездки</li>
-            </ul>
-        </div>
-
-        <!-- Extra -->
-        <div class="m-info-card">
-            <div class="m-info-h">
-                <span>Не включено</span>
-            </div>
-            <ul class="m-list">
-                <li>Подъемник: 23€</li>
-                <li>Аренда саней: 11€</li>
-                <li>Обеды и ужины</li>
-            </ul>
-        </div>
-
-        <!-- Clothing -->
-        <div class="m-info-card">
-            <div class="m-info-h">
-                <span>Что надеть?</span>
-            </div>
-            <p class="m-info-text">
-                Одевайся удобно и тепло! Идеально — лыжный костюм или непромокаемые штаны + куртка.
-                <br><br>
-                Обязательно: перчатки, шапка, шарф и удобная зимняя обувь.
-            </p>
-        </div>
-
-        <div class="m-float-spacer"></div>
-    </div>
-
-    <button onclick="openWidget()" class="m-float-cta" id="sticky-cta">
-        Занять место
-    </button>
-
-    <script>
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('sticky-cta');
-            if (window.scrollY > 600) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        });
-    </script>
-
-
-
 <!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/03_Reviews_Mobile.html -->
 
 
@@ -1444,6 +1426,147 @@
     </script>
 
 
+<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/08_Timeline_Mobile.html -->
+
+
+
+<div class="m-time-section">
+    <div class="m-time-header">
+        <h2 class="m-time-title">Тайминг</h2>
+        <div class="m-time-sub">План наших приключений</div>
+    </div>
+
+    <!-- DAY 1 -->
+    <div class="m-day-block">
+        <div class="m-day-header">
+            <span class="m-day-icon">📅</span> Суббота, 28.02
+        </div>
+
+        <div class="m-t-item">
+            <div class="m-t-time">02:45</div>
+            <div class="m-t-desc"><strong>Встреча и старт</strong>Hlavní Nádraží, посадка в автобус.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">09:00</div>
+            <div class="m-t-desc"><strong>Гальштат</strong>Прибытие, пока город спит. Фотосессия.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">12:00</div>
+            <div class="m-t-desc"><strong>Выезд в горы</strong>Переезд к Wildkogel Arena.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">15:00</div>
+            <div class="m-t-desc"><strong>САНИ (14 км)</strong>Подъем на гору и легендарный спуск.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">19:00</div>
+            <div class="m-t-desc"><strong>Отель & Ужин</strong>Заселение, релакс и вкусная еда.</div>
+        </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="m-day-block">
+        <div class="m-day-header">
+            <span class="m-day-icon">📅</span> Воскресенье, 01.03
+        </div>
+
+        <div class="m-t-item">
+            <div class="m-t-time">07:30</div>
+            <div class="m-t-desc"><strong>Завтрак</strong>Шведский стол в отеле.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">11:00</div>
+            <div class="m-t-desc"><strong>Hangar-7</strong>Музей Red Bull: болиды и самолеты.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">13:30</div>
+            <div class="m-t-desc"><strong>Зальцбург</strong>Прогулка по старому городу, кофе.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">18:00</div>
+            <div class="m-t-desc"><strong>Домой</strong>Выезд в Прагу.</div>
+        </div>
+        <div class="m-t-item">
+            <div class="m-t-time">23:00</div>
+            <div class="m-t-desc"><strong>Прибытие</strong>Мы дома.</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/09_OrgDetails_Mobile.html -->
+
+
+
+    <div class="m-org-section">
+        <div class="m-org-header">
+            <h2 class="m-org-title">Стоимость:</h2>
+        </div>
+
+        <!-- Included -->
+        <div class="m-info-card accent">
+            <div class="m-info-h">
+                <span>Включено</span>
+                <div style="text-align:right;">
+                    <span class="m-price-tag">4990 KC</span>
+                    <div style="font-size:10px; color:#888; margin-top:4px;">В 2 раза выгоднее, чем самому</div>
+                </div>
+            </div>
+            <ul class="m-list">
+                <li class="check">Комфортный трансфер туда-обратно</li>
+                <li class="check">Проживание в отеле 4*</li>
+                <li class="check">Завтрак (фермерский шведский стол)</li>
+                <li class="check">3 экскурсии (Гальштат, Зальцбург, Музей)</li>
+                <li class="check">SPA зона (бассейн, сауна)</li>
+                <li class="check">Сопровождение гидов 24/7</li>
+                <li class="check">Фотоотчет поездки</li>
+            </ul>
+        </div>
+
+        <!-- Extra -->
+        <div class="m-info-card">
+            <div class="m-info-h">
+                <span>Не включено</span>
+            </div>
+            <ul class="m-list">
+                <li>Подъемник: 23€</li>
+                <li>Аренда саней: 11€</li>
+                <li>Обеды и ужины</li>
+            </ul>
+        </div>
+
+        <!-- Clothing -->
+        <div class="m-info-card">
+            <div class="m-info-h">
+                <span>Что надеть?</span>
+            </div>
+            <p class="m-info-text">
+                Одевайся удобно и тепло! Идеально — лыжный костюм или непромокаемые штаны + куртка.
+                <br><br>
+                Обязательно: перчатки, шапка, шарф и удобная зимняя обувь.
+            </p>
+        </div>
+
+        <div class="m-float-spacer"></div>
+    </div>
+
+    <button onclick="openWidget()" class="m-float-cta" id="sticky-cta">
+        Занять место
+    </button>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('sticky-cta');
+            if (window.scrollY > 600) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+    </script>
+
+
+
 <!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/10_HowItWorks_Mobile.html -->
 
 
@@ -1503,16 +1626,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/10b_CTA_Mobile.html -->
-
-
-
-<div class="m-cta-section">
-    <h2 class="m-cta-title">Готов к приключению?</h2>
-    <p class="m-cta-sub">Места в автобусе разбирают быстро. Не откладывай жизнь на потом.</p>
-    <a href="#widget" onclick="openWidget()" class="m-cta-btn">Занять место</a>
 </div>
 
 <!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/11_Team_Mobile.html -->
@@ -1578,5 +1691,15 @@
         </div>
     </div>
 
+</div>
+
+<!-- MOBILE SOURCE: Двухдневка в Альпы/Mobile_Version/10b_CTA_Mobile.html -->
+
+
+
+<div class="m-cta-section">
+    <h2 class="m-cta-title">Готов к приключению?</h2>
+    <p class="m-cta-sub">Места в автобусе разбирают быстро. Не откладывай жизнь на потом.</p>
+    <a href="#widget" onclick="openWidget()" class="m-cta-btn">Занять место</a>
 </div>
 </div><!-- END MOBILE -->
