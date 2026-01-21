@@ -1,0 +1,16 @@
+DEPLOYMENT INSTRUCTIONS FOR TILDA:
+
+1. Open your Tilda page editor.
+2. Add a new block: Select "Other" -> "T123" (HTML Code).
+3. Open the file `tilda_block_1_css.html` from this folder.
+4. Copy ALL the text (including <style> tags).
+5. Paste it into the "Content" of the T123 block.
+6. Add ANOTHER new block: "Other" -> "T123".
+7. Open the file `tilda_block_2_html.html` from this folder.
+8. Copy ALL the text.
+9. Paste it into the "Content" of the second T123 block.
+10. Click "Save and Close" and then "Publish".
+
+Note: 
+- Emojis have been converted to HTML codes (e.g. &#128247;) to prevent Tilda form breaking them.
+- The background color is set to dark (#050505) in the CSS file. This will affect the block container.
