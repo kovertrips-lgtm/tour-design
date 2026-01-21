@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Polina! | Onboarding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d3436;
+            --secondary: #636e72;
+            --accent: #0984e3;
+            /* Soft blue/azure */
+            --accent-light: #e6f3fb;
+            --bg-body: #ffffff;
+            --bg-section: #f9f9f9;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+            --font-main: 'Outfit', sans-serif;
+        }
+
+        /* Reset & Base */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+            border-radius: var(--radius-md);
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            letter-spacing: -0.01em;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+            font-size: 1.125rem;
+        }
+
+        /* Utilities */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-py {
+            padding: 100px 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Header / Hero */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            background: radial-gradient(circle at top right, #fff5f5 0%, #fff 40%);
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero-title span {
+            color: var(--accent);
+            display: block;
+        }
+
+        .hero-img-float {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%) translateX(20%);
+            width: 50vw;
+            height: 80vh;
+            object-fit: cover;
+            border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+            box-shadow: var(--shadow);
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        /* Timeline / Journey */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid var(--accent-light);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 4rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -2.6rem;
+            top: 0;
+            width: 1.2rem;
+            height: 1.2rem;
+            background: var(--accent);
+            border: 4px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px var(--accent-light);
+        }
+
+        .timeline-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Tools Grid */
+        .tool-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid #eee;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .tool-card:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Content Plan Cards */
+        .plan-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .plan-header {
+            background: var(--primary);
+            color: #fff;
+            padding: 1.5rem;
+        }
+
+        .plan-body {
+            padding: 1.5rem;
+        }
+
+        .plan-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .plan-item::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 0.75rem;
+        }
+
+        /* Images Section */
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 250px 250px;
+            gap: 24px;
+        }
+
+        .vibe-item-1 {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+        }
+
+        .vibe-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Motivation Footer */
+        .motivation {
+            background: var(--primary);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .motivation p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .motivation-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('assets/tour_scenery.png') center/cover;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .motivation-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-img-float {
+                display: none;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 100px 0;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .vibe-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+
+            .vibe-item-1 {
+                grid-column: auto;
+                grid-row: auto;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-up {
+            animation: fadeIn 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <span class="badge animate-up">SMM TEAM ONBOARDING</span>
+                <h1 class="animate-up delay-1">Привет, Полина! <br><span>Добро пожаловать в команду!</span></h1>
+                <p class="animate-up delay-2">
+                    Мы подготовили для тебя план, чтобы ты максимально быстро и комфортно влилась в наши процессы.
+                    Мы — это драйв, путешествия и креатив. Готова начать наше совместное приключение?
+                </p>
+            </div>
+        </div>
+        <img src="assets/team_vibe.png" alt="Team Vibe" class="hero-img-float animate-up delay-3">
+    </section>
+
+    <!-- The Journey / Roadmap -->
+    <section class="section-py" style="background: var(--bg-section);">
+        <div class="container">
+            <h2 class="text-center">Твой путь онбординга</h2>
+            <p class="text-center" style="max-width: 600px; margin: 0 auto 4rem;">
+                Четкий план на ближайшие несколько недель, чтобы ты почувствовала себя "своей" и начала создавать крутой
+                контент.
+            </p>
+
+            <div class="timeline">
+                <!-- Step 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-card">
+                        <h3>1. Обучение и Погружение (Эта неделя)</h3>
+                        <p>Доступ к курсу в Telegram уже у тебя. Твоя задача — погрузиться в материал, вдохновиться и
+                            понять базу.</p>
+                        <div class="grid-2" style="gap: 1rem; margin-top: 1rem;">
+                            <div class="plan-item">Смотрим курс в Telegram</div>
+                            <div class="plan-item">Изучаем подходы</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-card">
+                        <h3>2. Стратегический Созвон (Понедельник)</h3>
+                        <p>Встречаемся с Димой и Дашей. Обсуждаем стратегии, воронки продаж и Tone of Voice.</p>
+                        <div class="grid-2" style="gap: 1rem; margin-top: 1rem;">
+                            <div class="plan-item">Маркетинг: Воронки и Продажи (Дима)</div>
+                            <div class="plan-item">Дизайн: Брендбук и Tone of Voice (Даша)</div>
+                            <div class="plan-item">Обсуждаем идеи контента</div>
+                            <div class="plan-item">Фиксация оплаты и условий</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-card">
+                        <h3>3. Стажировка и Контент (2 недели)</h3>
+                        <p>Переходим к практике! Создаем 10-12 единиц контента. Это твой шанс проявить себя.</p>
+                        <a href="#tasks" style="color: var(--accent); font-weight: 600;">Смотреть список задач
+                            &darr;</a>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-card" style="border-left: 4px solid var(--accent);">
+                        <h3>4. Твой Первый Тур! 🏔️</h3>
+                        <p>После успешной стажировки — едем в тур! Ты будешь прописывать сценарии и снимать контент
+                            прямо в поездке.</p>
+                        <img src="assets/tour_scenery.png" alt="Tour"
+                            style="margin-top: 1rem; height: 200px; width: 100%; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tasks Detail -->
+    <section id="tasks" class="section-py">
+        <div class="container">
+            <h2 class="text-center">Задачи на стажировку</h2>
+            <p class="text-center" style="margin-bottom: 3rem;">Итого 10 единиц контента. Дедлайн: Вторник-Среда
+                (через 2 недели).</p>
+
+            <div class="grid-3">
+                <div class="plan-card">
+                    <div class="plan-header" style="background: #e17055;">
+                        <h3>Reels (3 шт)</h3>
+                    </div>
+                    <div class="plan-body">
+                        <div class="plan-item">1. На Охваты (Виральный)</div>
+                        <div class="plan-item">2. На Лояльность/Доверие (Отзывы, Ценности, Команда)</div>
+                        <div class="plan-item">3. Продающий (Конкретный тур)</div>
+                    </div>
+                </div>
+
+                <div class="plan-card">
+                    <div class="plan-header" style="background: #0984e3;">
+                        <h3>Posts & Stories</h3>
+                    </div>
+                    <div class="plan-body">
+                        <div class="plan-item">Пост: Охват</div>
+                        <div class="plan-item">Пост: Лояльность</div>
+                        <div class="plan-item">Пост: Продажа</div>
+                        <div class="plan-item">Stories: Лояльность + Продажа (2 шт)</div>
+                    </div>
+                </div>
+
+                <div class="plan-card">
+                    <div class="plan-header" style="background: #6c5ce7;">
+                        <h3>Telegram & Extra</h3>
+                    </div>
+                    <div class="plan-body">
+                        <div class="plan-item">2 Поста в Telegram (Текст + Визуал)</div>
+                        <div class="plan-item"><b>Важно:</b> В одном ролике ты в кадре (Интервью/Ведущая)</div>
+                        <div class="plan-item">Подготовить идеи к понедельнику</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools & Access -->
+    <section class="section-py" style="background: var(--bg-section);">
+        <div class="container">
+            <div class="grid-2">
+                <div>
+                    <h2>Твои инструменты</h2>
+                    <p>Мы предоставим доступы ко всем необходимым сервисам. Файл с паролями будет у тебя в ЛС (от Леры).
+                    </p>
+                    <p><b>Дизайн-контакт:</b> Даша Киселева (Брендбук, Цвета, Шрифты).</p>
+                </div>
+                <div class="grid-3" style="font-weight: 500; font-size: 0.9rem;">
+                    <div class="tool-card">
+                        <span>📸</span> Instagram<br><small style="color:var(--secondary); font-size:0.75rem;">Cover
+                            Travel, Discoverying</small>
+                    </div>
+                    <div class="tool-card">
+                        <span>✈️</span> Telegram
+                    </div>
+                    <div class="tool-card">
+                        <span>📩</span> SendPulse
+                    </div>
+                    <div class="tool-card">
+                        <span>📝</span> Notion
+                    </div>
+                    <div class="tool-card">
+                        <span>🔍</span> ZoomSphere
+                    </div>
+                    <div class="tool-card">
+                        <span>🎨</span> Sigma
+                    </div>
+                    <div class="tool-card" style="opacity: 0.6;">
+                        <span>💬</span> Mark. Chat<br><small style="font-size:0.7em;">Позже</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vibe / Motivation -->
+    <section class="section-py motivation">
+        <div class="motivation-bg"></div>
+        <div class="container motivation-content text-center">
+            <div style="max-width: 700px; margin: 0 auto;">
+                <h2 style="font-size: 3rem;">Мы — Команда!</h2>
+                <div class="vibe-grid" style="margin: 3rem 0; height: auto;">
+                    <div class="vibe-item vibe-item-1"><img src="assets/content_creation_moment.png" alt="Creating">
+                    </div>
+                    <div class="vibe-item"><img src="assets/team_vibe.png" style="object-position: center;" alt="Team">
+                    </div>
+                    <div class="vibe-item"><img src="assets/tour_scenery.png" alt="Nature"></div>
+                </div>
+                <p style="font-size: 1.5rem; color: #fff;">
+                    Мы молодые, современные и всегда на пике трендов. <br>
+                    У нас круто работать, круто отдыхать и круто создавать. <br>
+                    Рады, что ты теперь с нами! 🚀
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Simple entry animation trigger
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            // Add animation classes manually for elements below fold if needed
+            // For now, hero is animated by CSS. 
+        });
+    </script>
+</body>
+
+</html>
