@@ -4,572 +4,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Polina! | Onboarding</title>
+    <title>Onboarding Protocol: Polina</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --primary: #2d3436;
-            --secondary: #636e72;
-            --accent: #0984e3;
-            /* Soft blue/azure */
-            --accent-light: #e6f3fb;
-            --bg-body: #ffffff;
-            --bg-section: #f9f9f9;
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
-            --radius-lg: 24px;
-            --radius-md: 16px;
-            --shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-            --font-main: 'Outfit', sans-serif;
+            --bg: #050505;
+            --surface: #111111;
+            --surface-hover: #1a1a1a;
+            --border: #333;
+            --primary: #d4d4d8;
+            /* Zinc 300 */
+            --secondary: #71717a;
+            /* Zinc 500 */
+            --accent: #3b82f6;
+            /* Blue 500 */
+            --accent-glow: rgba(59, 130, 246, 0.2);
+            --success: #10b981;
+
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
-        /* Reset & Base */
+        /* Reset */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            outline: none;
         }
 
         body {
+            background-color: var(--bg);
+            color: var(--primary);
             font-family: var(--font-main);
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: 0.3s;
+        /* Layout */
+        .wrapper {
+            width: 100%;
+            max-width: 900px;
         }
 
-        ul {
-            list-style: none;
+        /* Header / Meta Data */
+        .header {
+            margin-bottom: 60px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
         }
 
-        img {
-            max-width: 100%;
-            display: block;
-            border-radius: var(--radius-md);
+        .title-block h1 {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--secondary);
+            margin-bottom: 12px;
         }
 
-        /* Typography */
-        h1,
-        h2,
-        h3,
-        h4 {
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 0.5em;
+        .title-block .headline {
+            font-size: 32px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: #fff;
         }
 
-        h1 {
-            font-size: 3.5rem;
-            letter-spacing: -0.02em;
+        .meta-tags {
+            display: flex;
+            gap: 12px;
         }
 
-        h2 {
-            font-size: 2.5rem;
-            letter-spacing: -0.01em;
-            margin-bottom: 1rem;
-        }
-
-        h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        p {
-            margin-bottom: 1.5rem;
-            color: var(--text-muted);
-            font-size: 1.125rem;
-        }
-
-        /* Utilities */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .section-py {
-            padding: 100px 0;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .grid {
-            display: grid;
-            gap: 24px;
-        }
-
-        .grid-2 {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .grid-4 {
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        .badge {
-            display: inline-block;
+        .tag {
+            background: var(--surface);
+            border: 1px solid var(--border);
             padding: 6px 12px;
-            background: var(--accent-light);
-            color: var(--accent);
-            border-radius: 100px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        /* Header / Hero */
-        .hero {
-            min-height: 90vh;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--secondary);
             display: flex;
             align-items: center;
-            background: radial-gradient(circle at top right, #fff5f5 0%, #fff 40%);
-            position: relative;
+            gap: 6px;
         }
 
-        .hero-content {
-            max-width: 800px;
+        .tag.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .pulse {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        /* Roadmap Container */
+        .roadmap {
+            position: relative;
+            padding-left: 20px;
+            border-left: 1px solid var(--border);
+        }
+
+        /* Timeline Items */
+        .step {
+            position: relative;
+            padding-left: 40px;
+            padding-bottom: 60px;
+        }
+
+        .step:last-child {
+            padding-bottom: 0;
+        }
+
+        /* Timeline Dot */
+        .step::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            /* Adjust based on padding/border */
+            top: 0;
+            width: 9px;
+            height: 9px;
+            background: var(--bg);
+            border: 1px solid var(--secondary);
+            border-radius: 50%;
             z-index: 2;
         }
 
-        .hero-title span {
-            color: var(--accent);
-            display: block;
-        }
-
-        .hero-img-float {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%) translateX(20%);
-            width: 50vw;
-            height: 80vh;
-            object-fit: cover;
-            border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-            box-shadow: var(--shadow);
-            z-index: 1;
-            opacity: 0.9;
-        }
-
-        /* Timeline / Journey */
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-            border-left: 2px solid var(--accent-light);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 4rem;
-        }
-
-        .timeline-marker {
-            position: absolute;
-            left: -2.6rem;
-            top: 0;
-            width: 1.2rem;
-            height: 1.2rem;
+        .step.current::before {
             background: var(--accent);
-            border: 4px solid #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 0 2px var(--accent-light);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
         }
 
-        .timeline-card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0, 0, 0, 0.03);
-            transition: transform 0.3s ease;
+        .step-header {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        .timeline-card:hover {
-            transform: translateY(-5px);
+        .step-time {
+            font-family: var(--font-mono);
+            color: var(--accent);
+            font-size: 12px;
         }
 
-        /* Tools Grid */
-        .tool-card {
-            background: #fff;
-            padding: 1.5rem;
-            border-radius: var(--radius-md);
-            border: 1px solid #eee;
-            text-align: center;
+        .step-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        /* Content Blocks (Bento-ish) */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
             transition: 0.2s;
         }
 
-        .tool-card:hover {
-            border-color: var(--accent);
-            background: var(--accent-light);
+        .card:hover {
+            border-color: #444;
+            background: var(--surface-hover);
         }
 
-        .tool-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            display: block;
+        .card h4 {
+            font-size: 13px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            font-weight: 600;
         }
 
-        /* Content Plan Cards */
-        .plan-card {
-            background: #fff;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow);
+        /* Lists inside cards */
+        .check-list {
+            list-style: none;
         }
 
-        .plan-header {
-            background: var(--primary);
-            color: #fff;
-            padding: 1.5rem;
+        .check-list li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        .plan-body {
-            padding: 1.5rem;
+        .check-list li:last-child {
+            border: none;
+            margin: 0;
+            padding: 0;
         }
 
-        .plan-item {
+        .check-list li span {
+            color: #e4e4e7;
+        }
+
+        .check-list li small {
+            color: var(--secondary);
+            margin-left: 10px;
+            text-align: right;
+        }
+
+        /* Tools Row */
+        .tools-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .tool-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #ccc;
             display: flex;
             align-items: center;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
+            gap: 8px;
         }
 
-        .plan-item::before {
-            content: "✓";
-            color: var(--accent);
-            font-weight: bold;
-            margin-right: 0.75rem;
+        /* Status Indicators */
+        .status-badge {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--secondary);
         }
 
-        /* Images Section */
-        .vibe-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            grid-template-rows: 250px 250px;
-            gap: 24px;
+        .status-badge.pending {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
         }
 
-        .vibe-item-1 {
-            grid-column: 1 / 2;
-            grid-row: 1 / 3;
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            font-family: var(--font-mono);
+            color: var(--secondary);
+            font-size: 11px;
+            text-align: right;
         }
 
-        .vibe-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Motivation Footer */
-        .motivation {
-            background: var(--primary);
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .motivation p {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .motivation-bg {
+        /* Glitch/Tech Decoration */
+        .deco-line {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('assets/tour_scenery.png') center/cover;
-            opacity: 0.1;
-            z-index: 0;
-        }
-
-        .motivation-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-img-float {
-                display: none;
-            }
-
-            .hero {
-                min-height: auto;
-                padding: 100px 0;
-            }
-
-            .grid-2,
-            .grid-3,
-            .grid-4 {
-                grid-template-columns: 1fr;
-            }
-
-            .vibe-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
-            }
-
-            .vibe-item-1 {
-                grid-column: auto;
-                grid-row: auto;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-up {
-            animation: fadeIn 0.8s ease forwards;
+            left: -21px;
+            /* Overlap border */
+            top: 50%;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--accent) 0%, transparent 100%);
             opacity: 0;
         }
 
-        .delay-1 {
-            animation-delay: 0.1s;
-        }
-
-        .delay-2 {
-            animation-delay: 0.2s;
-        }
-
-        .delay-3 {
-            animation-delay: 0.3s;
+        .step.current .deco-line {
+            opacity: 1;
+            height: 100px;
+            top: 10px;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <span class="badge animate-up">SMM TEAM ONBOARDING</span>
-                <h1 class="animate-up delay-1">Привет, Полина! <br><span>Добро пожаловать в команду!</span></h1>
-                <p class="animate-up delay-2">
-                    Мы подготовили для тебя план, чтобы ты максимально быстро и комфортно влилась в наши процессы.
-                    Мы — это драйв, путешествия и креатив. Готова начать наше совместное приключение?
-                </p>
+    <div class="wrapper">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="title-block">
+                <h1>Deployment Protocol // v.1.0</h1>
+                <div class="headline">Polina_Onboarding</div>
             </div>
-        </div>
-        <img src="assets/team_vibe.png" alt="Team Vibe" class="hero-img-float animate-up delay-3">
-    </section>
+            <div class="meta-tags">
+                <div class="tag active"><span class="pulse"></span> STATUS: INITIATED</div>
+                <div class="tag">ROLE: SMM CREATOR</div>
+                <div class="tag">UNIT: MARKETING</div>
+            </div>
+        </header>
 
-    <!-- The Journey / Roadmap -->
-    <section class="section-py" style="background: var(--bg-section);">
-        <div class="container">
-            <h2 class="text-center">Твой путь онбординга</h2>
-            <p class="text-center" style="max-width: 600px; margin: 0 auto 4rem;">
-                Четкий план на ближайшие несколько недель, чтобы ты почувствовала себя "своей" и начала создавать крутой
-                контент.
-            </p>
+        <!-- Timeline / Process -->
+        <div class="roadmap">
 
-            <div class="timeline">
-                <!-- Step 1 -->
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-card">
-                        <h3>1. Обучение и Погружение (Эта неделя)</h3>
-                        <p>Доступ к курсу в Telegram уже у тебя. Твоя задача — погрузиться в материал, вдохновиться и
-                            понять базу.</p>
-                        <div class="grid-2" style="gap: 1rem; margin-top: 1rem;">
-                            <div class="plan-item">Смотрим курс в Telegram</div>
-                            <div class="plan-item">Изучаем подходы</div>
+            <!-- Phase 1 -->
+            <div class="step current">
+                <div class="deco-line"></div>
+                <div class="step-header">
+                    <span class="step-time">PHASE 01 // CURRENT</span>
+                    <h2 class="step-title">Knowledge & Access</h2>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h4>Resources</h4>
+                        <ul class="check-list">
+                            <li><span>Telegram Course</span> <small>Access Sent</small></li>
+                            <li><span>Brand Guidelines</span> <small>Prepare</small></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>System Access</h4>
+                        <div class="tools-row">
+                            <div class="tool-chip">📸 Instagram</div>
+                            <div class="tool-chip">🚀 Telegram</div>
+                            <div class="tool-chip">📬 SendPulse</div>
+                            <div class="tool-chip">📝 Notion</div>
+                            <div class="tool-chip">📊 ZoomSphere</div>
+                            <div class="tool-chip">🎨 Sigma</div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Step 2 -->
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-card">
-                        <h3>2. Стратегический Созвон (Понедельник)</h3>
-                        <p>Встречаемся с Димой и Дашей. Обсуждаем стратегии, воронки продаж и Tone of Voice.</p>
-                        <div class="grid-2" style="gap: 1rem; margin-top: 1rem;">
-                            <div class="plan-item">Маркетинг: Воронки и Продажи (Дима)</div>
-                            <div class="plan-item">Дизайн: Брендбук и Tone of Voice (Даша)</div>
-                            <div class="plan-item">Обсуждаем идеи контента</div>
-                            <div class="plan-item">Фиксация оплаты и условий</div>
+            <!-- Phase 2 -->
+            <div class="step">
+                <div class="step-header">
+                    <span class="step-time">PHASE 02 // MONDAY</span>
+                    <h2 class="step-title">Briefing & Strategy</h2>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h4>Sync Agenda</h4>
+                        <ul class="check-list">
+                            <li><span>Marketing Funnels</span> <small>w/ Dima</small></li>
+                            <li><span>Tone of Voice & Visuals</span> <small>w/ Dasha</small></li>
+                            <li><span>Content Ideation</span> <small>Structuring</small></li>
+                            <li><span>Contract & Payment</span> <small>Finalize</small></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="step">
+                <div class="step-header">
+                    <span class="step-time">PHASE 03 // 2 WEEKS</span>
+                    <h2 class="step-title">Execution Cycle</h2>
+                </div>
+                <div class="content-grid">
+                    <!-- Reels -->
+                    <div class="card">
+                        <h4>Reels Protocol (3)</h4>
+                        <ul class="check-list">
+                            <li><span>Viral Reach</span> <span class="status-badge pending">Pending</span></li>
+                            <li><span>Loyalty / Trust</span> <span class="status-badge pending">Pending</span></li>
+                            <li><span>Sales Conversion</span> <span class="status-badge pending">Pending</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Posts -->
+                    <div class="card">
+                        <h4>Static Content (5)</h4>
+                        <ul class="check-list">
+                            <li><span>3x Posts</span> <small>Reach, Loyalty, Sales</small></li>
+                            <li><span>2x Telegram</span> <small>Text + Visual</small></li>
+                        </ul>
+                    </div>
+
+                    <!-- Stories -->
+                    <div class="card">
+                        <h4>Stories (2)</h4>
+                        <ul class="check-list">
+                            <li><span>Loyalty Sequence</span> <small>Story 1</small></li>
+                            <li><span>Sales Sequence</span> <small>Story 2</small></li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--secondary);">
+                    Requirement: Must appear on camera in at least 1 unit.
+                </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="step">
+                <div class="step-header">
+                    <span class="step-time">PHASE 04 // FUTURE</span>
+                    <h2 class="step-title">Field Operations</h2>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h4>First Tour Deployment</h4>
+                        <div style="color: #888; font-size: 13px;">
+                            Full integration into tour logistics. Script wiring, live content production, and on-site
+                            filming.
                         </div>
                     </div>
                 </div>
-
-                <!-- Step 3 -->
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-card">
-                        <h3>3. Стажировка и Контент (2 недели)</h3>
-                        <p>Переходим к практике! Создаем 10-12 единиц контента. Это твой шанс проявить себя.</p>
-                        <a href="#tasks" style="color: var(--accent); font-weight: 600;">Смотреть список задач
-                            &darr;</a>
-                    </div>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-card" style="border-left: 4px solid var(--accent);">
-                        <h3>4. Твой Первый Тур! 🏔️</h3>
-                        <p>После успешной стажировки — едем в тур! Ты будешь прописывать сценарии и снимать контент
-                            прямо в поездке.</p>
-                        <img src="assets/tour_scenery.png" alt="Tour"
-                            style="margin-top: 1rem; height: 200px; width: 100%; object-fit: cover;">
-                    </div>
-                </div>
             </div>
+
         </div>
-    </section>
 
-    <!-- Tasks Detail -->
-    <section id="tasks" class="section-py">
-        <div class="container">
-            <h2 class="text-center">Задачи на стажировку</h2>
-            <p class="text-center" style="margin-bottom: 3rem;">Итого 10 единиц контента. Дедлайн: Вторник-Среда
-                (через 2 недели).</p>
-
-            <div class="grid-3">
-                <div class="plan-card">
-                    <div class="plan-header" style="background: #e17055;">
-                        <h3>Reels (3 шт)</h3>
-                    </div>
-                    <div class="plan-body">
-                        <div class="plan-item">1. На Охваты (Виральный)</div>
-                        <div class="plan-item">2. На Лояльность/Доверие (Отзывы, Ценности, Команда)</div>
-                        <div class="plan-item">3. Продающий (Конкретный тур)</div>
-                    </div>
-                </div>
-
-                <div class="plan-card">
-                    <div class="plan-header" style="background: #0984e3;">
-                        <h3>Posts & Stories</h3>
-                    </div>
-                    <div class="plan-body">
-                        <div class="plan-item">Пост: Охват</div>
-                        <div class="plan-item">Пост: Лояльность</div>
-                        <div class="plan-item">Пост: Продажа</div>
-                        <div class="plan-item">Stories: Лояльность + Продажа (2 шт)</div>
-                    </div>
-                </div>
-
-                <div class="plan-card">
-                    <div class="plan-header" style="background: #6c5ce7;">
-                        <h3>Telegram & Extra</h3>
-                    </div>
-                    <div class="plan-body">
-                        <div class="plan-item">2 Поста в Telegram (Текст + Визуал)</div>
-                        <div class="plan-item"><b>Важно:</b> В одном ролике ты в кадре (Интервью/Ведущая)</div>
-                        <div class="plan-item">Подготовить идеи к понедельнику</div>
-                    </div>
-                </div>
-            </div>
+        <div class="footer">
+            KOVER_ANTIGRAVITY // SYS_ID: 994-22 // AUTH: ADMIN
         </div>
-    </section>
 
-    <!-- Tools & Access -->
-    <section class="section-py" style="background: var(--bg-section);">
-        <div class="container">
-            <div class="grid-2">
-                <div>
-                    <h2>Твои инструменты</h2>
-                    <p>Мы предоставим доступы ко всем необходимым сервисам. Файл с паролями будет у тебя в ЛС (от Леры).
-                    </p>
-                    <p><b>Дизайн-контакт:</b> Даша Киселева (Брендбук, Цвета, Шрифты).</p>
-                </div>
-                <div class="grid-3" style="font-weight: 500; font-size: 0.9rem;">
-                    <div class="tool-card">
-                        <span>📸</span> Instagram<br><small style="color:var(--secondary); font-size:0.75rem;">Cover
-                            Travel, Discoverying</small>
-                    </div>
-                    <div class="tool-card">
-                        <span>✈️</span> Telegram
-                    </div>
-                    <div class="tool-card">
-                        <span>📩</span> SendPulse
-                    </div>
-                    <div class="tool-card">
-                        <span>📝</span> Notion
-                    </div>
-                    <div class="tool-card">
-                        <span>🔍</span> ZoomSphere
-                    </div>
-                    <div class="tool-card">
-                        <span>🎨</span> Sigma
-                    </div>
-                    <div class="tool-card" style="opacity: 0.6;">
-                        <span>💬</span> Mark. Chat<br><small style="font-size:0.7em;">Позже</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 
-    <!-- Vibe / Motivation -->
-    <section class="section-py motivation">
-        <div class="motivation-bg"></div>
-        <div class="container motivation-content text-center">
-            <div style="max-width: 700px; margin: 0 auto;">
-                <h2 style="font-size: 3rem;">Мы — Команда!</h2>
-                <div class="vibe-grid" style="margin: 3rem 0; height: auto;">
-                    <div class="vibe-item vibe-item-1"><img src="assets/content_creation_moment.png" alt="Creating">
-                    </div>
-                    <div class="vibe-item"><img src="assets/team_vibe.png" style="object-position: center;" alt="Team">
-                    </div>
-                    <div class="vibe-item"><img src="assets/tour_scenery.png" alt="Nature"></div>
-                </div>
-                <p style="font-size: 1.5rem; color: #fff;">
-                    Мы молодые, современные и всегда на пике трендов. <br>
-                    У нас круто работать, круто отдыхать и круто создавать. <br>
-                    Рады, что ты теперь с нами! 🚀
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <script>
-        // Simple entry animation trigger
-        document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            });
-
-            // Add animation classes manually for elements below fold if needed
-            // For now, hero is animated by CSS. 
-        });
-    </script>
 </body>
 
 </html>
