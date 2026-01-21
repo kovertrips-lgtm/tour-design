@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Натальная Карта & Еда | Cosmic Nutrition</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="description"
+        content="Узнай свой идеальный рацион по натальной карте и найди партнера, который будет готовить для тебя.">
+</head>
+
+<body>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <p class="tagline">Звёзды • Еда • Любовь</p>
+            <h1>Вселенная в твоей тарелке</h1>
+            <p>Мы разберем твою натальную карту, подберем идеальное питание для твоего знака и найдем партнера-повара,
+                который мечтает готовить именно для тебя.</p>
+            <a href="#experts" class="btn-primary">Выбрать эксперта</a>
+        </div>
+    </header>
+
+    <!-- Concept Section -->
+    <section>
+        <h2>Как это работает?</h2>
+        <div class="concept-grid">
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>1. Натальный разбор</h3>
+                <p>Наши астрологи составят вашу карту и выявят скрытые потребности вашего организма.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🥑</div>
+                <h3>2. Космическое меню</h3>
+                <p>Получите список продуктов и блюд, которые усиливают вашу энергию и привлекательность.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">❤️</div>
+                <h3>3. Идеальный мэтч</h3>
+                <p>Мы найдем человека, чья натальная карта говорит: "Я хочу готовить именно это для неё/него".</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experts Section -->
+    <section id="experts">
+        <h2>Выберите своего проводника</h2>
+        <p style="text-align: center; margin-bottom: 2rem;">Наши 5 звездных экспертов готовы раскрыть ваши тайны</p>
+
+        <div class="team-grid">
+            <!-- Anna -->
+            <div class="expert-card" onclick="selectExpert('Anna')">
+                <img src="assets/expert_anna.png" alt="Анна">
+                <div class="expert-info">
+                    <div class="expert-name">Анна</div>
+                    <div class="expert-role">Астролог Души</div>
+                </div>
+            </div>
+
+            <!-- Elena -->
+            <div class="expert-card" onclick="selectExpert('Elena')">
+                <img src="assets/expert_elena.png" alt="Елена">
+                <div class="expert-info">
+                    <div class="expert-name">Елена</div>
+                    <div class="expert-role">Нутрициолог</div>
+                </div>
+            </div>
+
+            <!-- Maria -->
+            <div class="expert-card" onclick="selectExpert('Maria')">
+                <img src="assets/expert_maria.png" alt="Мария">
+                <div class="expert-info">
+                    <div class="expert-name">Мария</div>
+                    <div class="expert-role">Шеф любви</div>
+                </div>
+            </div>
+
+            <!-- Olga -->
+            <div class="expert-card" onclick="selectExpert('Olga')">
+                <img src="assets/expert_olga.png" alt="Ольга">
+                <div class="expert-info">
+                    <div class="expert-name">Ольга</div>
+                    <div class="expert-role">Психолог</div>
+                </div>
+            </div>
+
+            <!-- Kate -->
+            <div class="expert-card" onclick="selectExpert('Kate')">
+                <img src="assets/expert_kate.png" alt="Катя">
+                <div class="expert-info">
+                    <div class="expert-name">Катя</div>
+                    <div class="expert-role">Дейтинг-коуч</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section (Instagram Style) -->
+    <section class="testimonials">
+        <h2>Что говорят звезды (и люди)</h2>
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div class="review-card">
+                <p>"Я никогда не думала, что мне нужно есть именно корнеплоды, чтобы привлечь Козерога! Это магия."</p>
+                <br>
+                <a href="#" class="insta-link">📸 Смотреть сторис в Instagram @alina_stars</a>
+            </div>
+            <div class="review-card" style="border-left-color: var(--accent-purple);">
+                <p>"Мой новый парень реально обожает готовить то, что мне прописали. Мы просто созданы друг для друга."
+                </p>
+                <br>
+                <a href="#" class="insta-link">📸 Видео-отзыв @viktor_foodie</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+        style="text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--glass-border); color: var(--text-muted);">
+        <p>&copy; 2024 Cosmic Nutrition. Все права защищены звездами.</p>
+    </footer>
+
+    <!-- Simple Modal -->
+    <div id="modal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <h3 id="modal-title">Заявка</h3>
+            <p>Вы выбрали <span id="selected-expert" style="color: var(--accent-purple); font-weight: bold;"></span>.
+            </p>
+            <p style="margin: 1rem 0;">Оставьте свои данные, и мы свяжемся с вами для разбора.</p>
+            <form
+                onsubmit="event.preventDefault(); alert('Заявка отправлена в космос! 🚀'); closeModal({target: document.getElementById('modal')});">
+                <input type="text" placeholder="Ваше имя"
+                    style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white;">
+                <input type="text" placeholder="Instagram / Telegram"
+                    style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white;">
+                <button class="btn-primary" style="width: 100%;">Отправить</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function selectExpert(name) {
+            document.getElementById('selected-expert').textContent = name;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal(e) {
+            if (e.target.id === 'modal') {
+                document.getElementById('modal').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
