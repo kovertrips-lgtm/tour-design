@@ -154,14 +154,14 @@
                             повороты широкие. Мы стартуем с высоты 2200м с потрясающим видом на Альпы.</p>
 
                         <!-- Video Placeholder Style -->
+                        <!-- Video Embed -->
                         <div
-                            style="margin-top:20px; padding:20px; background:#222; border-radius:12px; border:1px solid #333;">
-                            <div style="display:flex; align-items:center; gap:15px;">
-                                <div
-                                    style="width:40px; height:40px; background:#BDFF00; border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                                    ▶</div>
-                                <div style="color:#aaa; font-size:14px;">Посмотрите видео спуска в наших Stories</div>
-                            </div>
+                            style="margin-top:20px; width:100%; border-radius:12px; overflow:hidden; aspect-ratio:9/16; background:#000;">
+                            <iframe
+                                src="https://player.mediadelivery.net/embed/581522/028796b4-9dc9-4831-8d81-6ad81d91bded?autoplay=false&loop=true&muted=false&preload=true&responsive=true"
+                                style="border:0; width:100%; height:100%; object-fit: cover;"
+                                allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+                                allowfullscreen="true"></iframe>
                         </div>
                         <div class="d-modal-h">⭐ Отзывы</div>
                         <p class="d-modal-text"><i>"Это было лучшее впечатление за всю поездку! Думал будет страшно, но
@@ -377,6 +377,80 @@
     }
 </script>
 
+<!-- DESKTOP SOURCE: Двухдневка в Альпы/08_Timeline.html -->
+
+
+
+<div class="d-time-section">
+    <div class="d-time-header">
+        <h2 class="d-time-title">Тайминг путешествия</h2>
+    </div>
+
+    <div class="d-days-grid">
+        <!-- DAY 1 -->
+        <div class="d-day-col">
+            <div class="d-day-header">📅 Суббота, 28.02</div>
+
+            <div class="d-t-item">
+                <div class="d-t-time">02:45</div>
+                <div class="d-t-desc"><strong>Встреча и старт</strong> Hlavní Nádraží, посадка в комфортный автобус.
+                </div>
+            </div>
+            <div class="d-t-item">
+                <div class="d-t-time">09:00</div>
+                <div class="d-t-desc"><strong>Гальштат</strong> Прибытие на рассвете. Экскурсия без толп.</div>
+            </div>
+            <div class="d-t-item">
+                <div class="d-t-time">12:00</div>
+                <div class="d-t-desc"><strong>Выезд в горы</strong> Переезд живописной дорогой к Wildkogel Arena.</div>
+            </div>
+            <div class="d-t-item">
+                <div class="d-t-time">15:00</div>
+                <div class="d-t-desc"><strong>САНИ (14 км)</strong> Подъем на 2200м и легендарный спуск (почти час
+                    драйва).</div>
+            </div>
+            <div class="d-t-item">
+                <div class="d-t-time">19:00</div>
+                <div class="d-t-desc"><strong>Отель & Ужин</strong> Заселение в 4* отель, ужин и SPA.</div>
+            </div>
+        </div>
+
+        <!-- DAY 2 -->
+        <div class="d-day-col">
+            <div class="d-day-header">📅 Воскресенье, 01.03</div>
+
+            <div class="d-t-item">
+                <div class="d-t-time">07:30</div>
+                <div class="d-t-desc"><strong>Завтрак</strong> Фермерский шведский стол в отеле.</div>
+            </div>
+            <div class="d-t-item">
+                <div class="d-t-time">11:00</div>
+                <div class="d-t-desc"><strong>Hangar-7</strong> Посещение музея Red Bull: болиды F1 и самолеты.</div>
+            </div>
+            <div class="d-t-item">
+                <div class="d-t-time">13:30</div>
+                <div class="d-t-desc"><strong>Зальцбург</strong> Прибытие, прогулка по старому городу, свободное время.
+                </div>
+            </div>
+            <div class="d-t-item">
+                <div class="d-t-time">18:00</div>
+                <div class="d-t-desc"><strong>Выезд домой</strong> Отправление в Прагу.</div>
+            </div>
+            <div class="d-t-item">
+                <div class="d-t-time">23:00</div>
+                <div class="d-t-desc"><strong>Прибытие</strong> Мы дома (ориентировочно).</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:60px;">
+        <button onclick="openWidget()"
+            style="background:#29B6F6; color:#fff !important; border:none; padding:18px 40px; border-radius:100px; font-size:16px; font-weight:800; cursor:pointer; text-transform:uppercase; box-shadow: 0 10px 30px rgba(41, 182, 246, 0.4); transition: transform 0.2s;">
+            ЗАБРОНИРОВАТЬ ТУР
+        </button>
+    </div>
+</div>
+
 <!-- DESKTOP SOURCE: Двухдневка в Альпы/10_Reviews_Desktop.html -->
 
 
@@ -478,80 +552,6 @@
 
     })();
 </script>
-
-<!-- DESKTOP SOURCE: Двухдневка в Альпы/08_Timeline.html -->
-
-
-
-<div class="d-time-section">
-    <div class="d-time-header">
-        <h2 class="d-time-title">Тайминг путешествия</h2>
-    </div>
-
-    <div class="d-days-grid">
-        <!-- DAY 1 -->
-        <div class="d-day-col">
-            <div class="d-day-header">📅 Суббота, 28.02</div>
-
-            <div class="d-t-item">
-                <div class="d-t-time">02:45</div>
-                <div class="d-t-desc"><strong>Встреча и старт</strong> Hlavní Nádraží, посадка в комфортный автобус.
-                </div>
-            </div>
-            <div class="d-t-item">
-                <div class="d-t-time">09:00</div>
-                <div class="d-t-desc"><strong>Гальштат</strong> Прибытие на рассвете. Экскурсия без толп.</div>
-            </div>
-            <div class="d-t-item">
-                <div class="d-t-time">12:00</div>
-                <div class="d-t-desc"><strong>Выезд в горы</strong> Переезд живописной дорогой к Wildkogel Arena.</div>
-            </div>
-            <div class="d-t-item">
-                <div class="d-t-time">15:00</div>
-                <div class="d-t-desc"><strong>САНИ (14 км)</strong> Подъем на 2200м и легендарный спуск (почти час
-                    драйва).</div>
-            </div>
-            <div class="d-t-item">
-                <div class="d-t-time">19:00</div>
-                <div class="d-t-desc"><strong>Отель & Ужин</strong> Заселение в 4* отель, ужин и SPA.</div>
-            </div>
-        </div>
-
-        <!-- DAY 2 -->
-        <div class="d-day-col">
-            <div class="d-day-header">📅 Воскресенье, 01.03</div>
-
-            <div class="d-t-item">
-                <div class="d-t-time">07:30</div>
-                <div class="d-t-desc"><strong>Завтрак</strong> Фермерский шведский стол в отеле.</div>
-            </div>
-            <div class="d-t-item">
-                <div class="d-t-time">11:00</div>
-                <div class="d-t-desc"><strong>Hangar-7</strong> Посещение музея Red Bull: болиды F1 и самолеты.</div>
-            </div>
-            <div class="d-t-item">
-                <div class="d-t-time">13:30</div>
-                <div class="d-t-desc"><strong>Зальцбург</strong> Прибытие, прогулка по старому городу, свободное время.
-                </div>
-            </div>
-            <div class="d-t-item">
-                <div class="d-t-time">18:00</div>
-                <div class="d-t-desc"><strong>Выезд домой</strong> Отправление в Прагу.</div>
-            </div>
-            <div class="d-t-item">
-                <div class="d-t-time">23:00</div>
-                <div class="d-t-desc"><strong>Прибытие</strong> Мы дома (ориентировочно).</div>
-            </div>
-        </div>
-    </div>
-
-    <div style="text-align:center; margin-top:60px;">
-        <button onclick="openWidget()"
-            style="background:#29B6F6; color:#fff !important; border:none; padding:18px 40px; border-radius:100px; font-size:16px; font-weight:800; cursor:pointer; text-transform:uppercase; box-shadow: 0 10px 30px rgba(41, 182, 246, 0.4); transition: transform 0.2s;">
-            ЗАБРОНИРОВАТЬ ТУР
-        </button>
-    </div>
-</div>
 
 <!-- DESKTOP SOURCE: Двухдневка в Альпы/09_OrgDetails.html -->
 

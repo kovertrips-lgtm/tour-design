@@ -702,6 +702,111 @@
     }
 
 
+    /* Desktop Timeline Styles */
+    .d-time-section {
+        background-color: #F8F9FA;
+        padding: 100px 20px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .d-time-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .d-time-title {
+        font-size: 42px;
+        font-weight: 800;
+        margin: 0;
+        color: #111;
+        text-transform: uppercase;
+    }
+
+    .d-days-grid {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        position: relative;
+    }
+
+    /* Vertical Divider */
+    .d-days-grid::after {
+        content: '';
+        position: absolute;
+        top: 50px;
+        bottom: 0;
+        left: 50%;
+        width: 1px;
+        background: #E0E0E0;
+        transform: translateX(-50%);
+    }
+
+    .d-day-col {
+        position: relative;
+        z-index: 2;
+    }
+
+    .d-day-header {
+        font-size: 24px;
+        font-weight: 800;
+        color: #29B6F6;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .d-t-item {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        align-items: flex-start;
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s;
+    }
+
+    .d-t-item:hover {
+        transform: translateX(5px);
+    }
+
+    .d-t-time {
+        font-weight: 800;
+        font-size: 16px;
+        color: #29B6F6;
+        min-width: 50px;
+        padding-top: 2px;
+    }
+
+    .d-t-desc {
+        font-size: 15px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .d-t-desc strong {
+        color: #000;
+        display: block;
+        margin-bottom: 4px;
+        font-size: 16px;
+    }
+
+    @media (max-width: 900px) {
+        .d-days-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .d-days-grid::after {
+            display: none;
+        }
+    }
+
+
     /* DESKTOP REVIEWS STYLES */
     .d-reviews-section {
         --kover-accent: #18B7EA;
@@ -709,7 +814,7 @@
         --kover-gray: #F4F5F7;
         --kover-white: #FFFFFF;
 
-        background-color: var(--kover-gray);
+        background-color: #fff;
         padding: 100px 0;
         font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     }
@@ -909,111 +1014,6 @@
     .d-btn-primary:hover {
         transform: translateY(-2px);
         box-shadow: 0 15px 40px rgba(24, 183, 234, 0.4);
-    }
-
-
-    /* Desktop Timeline Styles */
-    .d-time-section {
-        background-color: #F8F9FA;
-        padding: 100px 20px;
-        font-family: 'Montserrat', sans-serif;
-    }
-
-    .d-time-header {
-        text-align: center;
-        margin-bottom: 60px;
-    }
-
-    .d-time-title {
-        font-size: 42px;
-        font-weight: 800;
-        margin: 0;
-        color: #111;
-        text-transform: uppercase;
-    }
-
-    .d-days-grid {
-        max-width: 1100px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
-        position: relative;
-    }
-
-    /* Vertical Divider */
-    .d-days-grid::after {
-        content: '';
-        position: absolute;
-        top: 50px;
-        bottom: 0;
-        left: 50%;
-        width: 1px;
-        background: #E0E0E0;
-        transform: translateX(-50%);
-    }
-
-    .d-day-col {
-        position: relative;
-        z-index: 2;
-    }
-
-    .d-day-header {
-        font-size: 24px;
-        font-weight: 800;
-        color: #29B6F6;
-        margin-bottom: 40px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .d-t-item {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 30px;
-        align-items: flex-start;
-        background: white;
-        padding: 20px;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-        transition: transform 0.2s;
-    }
-
-    .d-t-item:hover {
-        transform: translateX(5px);
-    }
-
-    .d-t-time {
-        font-weight: 800;
-        font-size: 16px;
-        color: #29B6F6;
-        min-width: 50px;
-        padding-top: 2px;
-    }
-
-    .d-t-desc {
-        font-size: 15px;
-        color: #555;
-        line-height: 1.5;
-    }
-
-    .d-t-desc strong {
-        color: #000;
-        display: block;
-        margin-bottom: 4px;
-        font-size: 16px;
-    }
-
-    @media (max-width: 900px) {
-        .d-days-grid {
-            grid-template-columns: 1fr;
-            gap: 40px;
-        }
-
-        .d-days-grid::after {
-            display: none;
-        }
     }
 
 

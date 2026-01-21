@@ -5,8 +5,8 @@ import re
 DESKTOP_FILES = [
     "Двухдневка в Альпы/01_Hero.html",
     "Двухдневка в Альпы/02_Program.html",
-    "Двухдневка в Альпы/10_Reviews_Desktop.html",
     "Двухдневка в Альпы/08_Timeline.html",
+    "Двухдневка в Альпы/10_Reviews_Desktop.html",
     "Двухдневка в Альпы/09_OrgDetails.html",
     "Двухдневка в Альпы/10_HowItWorks.html",
     "Двухдневка в Альпы/11_Team.html",
