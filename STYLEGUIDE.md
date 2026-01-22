@@ -61,3 +61,37 @@ Due to Tilda's character limit per block, the code is generated into **4 parts**
 
 **Note:** Always ensure `part1` comes before `part2` in the page layout.
 
+
+---
+
+## 4. Image Optimization Workflow (CRITICAL for Performance)
+
+**Objective:** Ensure instantaneous page loads by using lightweight, optimized assets served from CDNs.
+
+### Standards:
+1.  **Format:** **WebP** only. (No JPG/PNG in production).
+2.  **Dimensions:** Images must be resized. **Max width/height: 1600px**. 
+    *   *Why?* Original 4K photos (3-4MB) kill mobile performance. Resized WebP is ~150KB.
+3.  **Hosting:** **BunnyCDN** (`https://kovertrip.b-cdn.net/images/`).
+    *   Path must be flat: `/images/filename.webp`. Avoid complex folder structures or spaces.
+
+### The "Magic" Workflow (Automation):
+We have a powerful script: `auto_optimize_all.py`.
+
+**What it does:**
+1.  **Scans** all HTML files in the project.
+2.  **Finds** any image reference (JPG/PNG or un-optimized large URLs).
+3.  **Downloads** the original image.
+4.  **Resizes** it (Thumbnail to 1600px max, Lanczos filter).
+5.  **Converts** to WebP (Quality 75%).
+6.  **Uploads** to BunnyCDN (`/images/`).
+7.  **Updates** the HTML file automatically with the new CDN URL.
+
+**How to run:**
+```bash
+python auto_optimize_all.py
+```
+
+**When to run:**
+*   Anytime you add new content or copy blocks from Tilda that point to `static.tildacdn.com` or raw files.
+*   If the user complains about slow loading speed.
