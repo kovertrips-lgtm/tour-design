@@ -29,8 +29,8 @@ def optimize_and_upload(url):
             return processed_map[url]
 
         # Check if already optimized format
-        if "/images/" in url and url.endswith(".webp"):
-            return url
+        # if "/images/" in url and url.endswith(".webp"):
+        #    return url
 
         print(f"[Processing] {url}")
         
@@ -59,9 +59,13 @@ def optimize_and_upload(url):
 
         local_path = os.path.join(OUTPUT_DIR, webp_filename)
 
-        # Convert
+        # Convert and Resize
         try:
             img = Image.open(BytesIO(resp.content))
+            
+            # Resize if too large (Max 1600x1600, preserves aspect ratio)
+            img.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
+
             if img.mode in ("RGBA", "LA"):
                 fill_color = (255, 255, 255)
                 background = Image.new(img.mode[:-1], img.size, fill_color)
@@ -69,7 +73,7 @@ def optimize_and_upload(url):
                 img = background
             if img.mode != 'RGB':
                 img = img.convert('RGB')
-            img.save(local_path, "WEBP", quality=80)
+            img.save(local_path, "WEBP", quality=75, method=6) # Optimized method
         except Exception as e:
             print(f"  [Error] Image conversion failed: {e}")
             return None
@@ -117,12 +121,11 @@ def process_files():
                 for url in unique_matches:
                     # Ignore if not image or already good
                     ext = os.path.splitext(url)[1].lower()
-                    if ext not in ['.jpg', '.jpeg', '.png']:
+                    if ext not in ['.jpg', '.jpeg', '.png', '.webp']:
                         continue
-                    if "/images/" in url and ext == '.webp':
-                        continue
+                    # Optimize (Even if it is already WebP, we want to Resize it now)
+                    # new_url = optimize_and_upload(url) 
 
-                    # Optimize
                     new_url = optimize_and_upload(url)
                     
                     if new_url and new_url != url:
