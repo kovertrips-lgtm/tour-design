@@ -379,24 +379,51 @@
     }
 
     /* GRID LAYOUT - ONE LINE if possible, or wrapped gracefully */
+    /* HORIZONTAL SCROLL LAYOUT */
     .d-program-grid {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
         gap: 24px;
+        overflow-x: auto;
+        padding: 10px 10px 30px 10px;
+        /* Bottom padding for scrollbar/shadows */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scroll-behavior: smooth;
+    }
+
+    .d-program-grid::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .d-program-grid::-webkit-scrollbar-track {
+        background: #f4f4f4;
+        border-radius: 4px;
+    }
+
+    .d-program-grid::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+    }
+
+    .d-program-grid::-webkit-scrollbar-thumb:hover {
+        background: #29B6F6;
     }
 
     .d-card {
-        flex: 0 0 calc(20% - 20px);
-        /* Try 5 columns */
-        min-width: 250px;
-        height: 420px;
-        border-radius: 20px;
+        flex: 0 0 340px;
+        /* Fixed width for scroll items */
+        width: 340px;
+        min-width: 340px;
+        height: 500px;
+        /* Taller card */
+        border-radius: 24px;
         position: relative;
         overflow: hidden;
         cursor: pointer;
         background: #000;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         border: 1px solid rgba(0, 0, 0, 0.05);
     }
