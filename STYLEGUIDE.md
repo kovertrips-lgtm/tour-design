@@ -95,3 +95,12 @@ python auto_optimize_all.py
 **When to run:**
 *   Anytime you add new content or copy blocks from Tilda that point to `static.tildacdn.com` or raw files.
 *   If the user complains about slow loading speed.
+
+---
+
+## 5. Communication Rules (For AI Assistant)
+
+1.  **Language:** Always respond in **Russian**.
+2.  **Deliverables:** At the end of every response where code is modified, **ALWAYS provide direct GitHub links** to the affected output files (e.g., `tilda_block_...`, `preview.html`, or specific HTML/CSS files).
+    *   Format: `🔗 [filename.html](url)`
+3.  **Confirmation:** Explicitly confirm when tasks like image optimization or text updates are completed.
