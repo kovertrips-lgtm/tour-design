@@ -5,27 +5,66 @@ import {
     DndContext,
     DragOverlay,
     closestCorners,
-    KeyboardSensor,
-    PointerSensor,
     useSensor,
     useSensors,
+    PointerSensor,
     DragStartEvent,
     DragOverEvent,
     DragEndEvent
 } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { MOCK_DEALS, Deal } from '@/types/crm';
-import { Plus, Search, Filter } from 'lucide-react';
-import DealPanel from '@/components/DealPanel';
-import KanbanColumn from '@/components/KanbanColumn';
-import KanbanCard from '@/components/KanbanCard';
+import { SortableContext, useSortable } from '@dnd-kit/sortable';
+import { Deal, MOCK_DEALS, PIPELINE_COLUMNS } from '@/types/crm';
+import AmoKanbanCard from '@/components/AmoKanbanCard';
+import AmoDealPanel from '@/components/AmoDealPanel';
+import { Search, Plus, ListFilter, Settings } from 'lucide-react';
 
-const COLUMNS = [
-    { id: 'new', title: 'New Request', color: '#3b82f6' },
-    { id: 'contacted', title: 'Contacted', color: '#8b5cf6' },
-    { id: 'deposit', title: 'Deposit Paid', color: '#f59e0b' },
-    { id: 'paid', title: 'Fully Paid', color: '#10b981' },
-];
+// Minimal Column Component
+function Column({ id, title, color, deals, onCardClick }: any) {
+    const { setNodeRef } = useSortable({ id, disabled: true }); // Disabled sort for column itself
+
+    const total = deals.reduce((acc: number, d: Deal) => acc + d.price, 0);
+
+    return (
+        <div ref={setNodeRef} style={{
+            minWidth: '280px',
+            maxWidth: '280px',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            background: '#f0f0f0', // Column gap color
+            borderRight: '1px solid #e0e0e0'
+        }}>
+            {/* Header */}
+            <div style={{ padding: '10px 12px', background: '#f5f5fa', borderBottom: '2px solid #ddd' }}>
+                <div style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: '#555', marginBottom: '4px' }}>
+                    {title}
+                </div>
+                <div style={{ fontSize: '11px', color: '#888' }}>
+                    {deals.length} deals: <b style={{ color: '#333' }}>{total.toLocaleString()}</b>
+                </div>
+                <div style={{ height: '3px', width: '100%', background: color, marginTop: '8px' }}></div>
+            </div>
+
+            {/* Content */}
+            <div style={{ flex: 1, padding: '8px', overflowY: 'auto', background: '#eef2f5' }}>
+                <SortableContext items={deals.map((d: Deal) => d.id)}>
+                    {deals.map((deal: Deal) => (
+                        <AmoKanbanCard
+                            key={deal.id}
+                            deal={deal}
+                            onClick={() => onCardClick(deal)}
+                        />
+                    ))}
+                </SortableContext>
+                {deals.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '20px', fontSize: '12px', color: '#aaa', border: '1px dashed #ccc', borderRadius: '4px' }}>
+                        No deals
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
 
 export default function DealsPage() {
     const [deals, setDeals] = useState<Deal[]>(MOCK_DEALS);
@@ -33,127 +72,110 @@ export default function DealsPage() {
     const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }), // Fix for click vs drag
-        useSensor(KeyboardSensor)
+        useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
     );
-
-    // Find container logic (which column is it in?)
-    const findContainer = (id: string) => {
-        if (COLUMNS.find(c => c.id === id)) return id;
-        const deal = deals.find(d => d.id === id);
-        return deal?.status;
-    };
 
     const handleDragStart = (event: DragStartEvent) => {
         setActiveId(event.active.id as string);
     };
 
     const handleDragOver = (event: DragOverEvent) => {
-        const { active, over } = event;
-        if (!over) return;
-
-        // Just visual feedback, actual data update happens in DragEnd for this simple case
+        // Visual placeholder logic handled by SortableContext
     };
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        const activeDealId = active.id;
-        const overId = over?.id; // Could be a column ID or a card ID
-
-        if (!overId) {
+        if (!over) {
             setActiveId(null);
             return;
         }
 
-        // Determine target status
-        let newStatus = '';
-        const isOverColumn = COLUMNS.find(c => c.id === overId);
+        const activeDealId = active.id as string;
+        const overId = over.id as string;
 
-        if (isOverColumn) {
-            newStatus = overId as string;
+        // Find new status
+        let newStatus = '';
+        // Is over a column?
+        if (PIPELINE_COLUMNS.find(c => c.id === overId)) {
+            newStatus = overId;
         } else {
-            // Over another card, find that card's status
+            // Is over a card?
             const overDeal = deals.find(d => d.id === overId);
-            if (overDeal) newStatus = overDeal.status;
+            if (overDeal) newStatus = overDeal.status_column_id;
         }
 
         if (newStatus) {
-            setDeals((prev) => prev.map(deal =>
-                deal.id === activeDealId
-                    ? { ...deal, status: newStatus as any }
-                    : deal
+            setDeals((prev) => prev.map(d =>
+                d.id === activeDealId ? { ...d, status_column_id: newStatus } : d
             ));
         }
-
         setActiveId(null);
     };
 
     return (
-        <div style={{ height: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 
-            {/* Header */}
-            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <h1 style={{ fontSize: '28px', fontWeight: 700 }}>Sales Pipeline</h1>
-                    <div style={{ background: 'var(--bg-card)', padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '8px', width: '300px' }}>
-                        <Search size={16} color="var(--text-muted)" />
-                        <input placeholder="Search deals..." style={{ background: 'transparent', border: 'none', outline: 'none', color: 'white', fontSize: '14px', width: '100%' }} />
+            {/* Top Bar (Amo Style) */}
+            <div style={{
+                height: '56px',
+                background: 'white',
+                borderBottom: '1px solid #dcdcdc',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0 20px',
+                justifyContent: 'space-between',
+                flexShrink: 0
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    <div style={{ fontSize: '18px', fontWeight: 600, color: '#313942' }}>Deals</div>
+                    <div style={{ display: 'flex', background: '#f0f2f5', borderRadius: '3px', padding: '6px 10px', alignItems: 'center', width: '250px' }}>
+                        <Search size={14} color="#8c9fa6" style={{ marginRight: '8px' }} />
+                        <input placeholder="Search and filter" style={{ border: 'none', background: 'transparent', width: '100%', fontSize: '13px', outline: 'none' }} />
                     </div>
                 </div>
+
                 <div style={{ display: 'flex', gap: '12px' }}>
-                    <button style={{ background: 'var(--bg-card)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)', color: 'var(--text-muted)', cursor: 'pointer' }}>
-                        <Filter size={20} />
+                    <button style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 600, color: '#313942', background: 'white', border: '1px solid #cfd8dc', padding: '6px 12px', borderRadius: '3px', cursor: 'pointer' }}>
+                        <ListFilter size={14} /> Pipeline: Main
                     </button>
-                    <button style={{ background: 'var(--primary)', border: 'none', padding: '10px 20px', borderRadius: '8px', color: 'white', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                        <Plus size={18} /> New Deal
+                    <button style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 600, color: 'white', background: '#4c8bf5', border: 'none', padding: '6px 16px', borderRadius: '3px', cursor: 'pointer', textTransform: 'uppercase' }}>
+                        <Plus size={14} /> New Deal
                     </button>
                 </div>
-            </header>
+            </div>
 
-            {/* Kanban Board */}
-            <DndContext
-                sensors={sensors}
-                collisionDetection={closestCorners}
-                onDragStart={handleDragStart}
-                onDragOver={handleDragOver}
-                onDragEnd={handleDragEnd}
-            >
-                <div style={{
-                    display: 'flex',
-                    gap: '16px',
-                    overflowX: 'auto',
-                    paddingBottom: '20px',
-                    flex: 1
-                }}>
-                    {COLUMNS.map(col => (
-                        <KanbanColumn
+            {/* Board Area */}
+            <div style={{ flex: 1, overflowX: 'auto', overflowY: 'hidden', display: 'flex', background: '#eef2f5' }}>
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCorners}
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDragEnd={handleDragEnd}
+                >
+                    {PIPELINE_COLUMNS.map(col => (
+                        <Column
                             key={col.id}
                             id={col.id}
                             title={col.title}
                             color={col.color}
-                            deals={deals.filter(d => d.status === col.id)}
-                            onCardClick={(deal) => setSelectedDeal(deal)}
+                            deals={deals.filter(d => d.status_column_id === col.id)}
+                            onCardClick={(d: Deal) => setSelectedDeal(d)}
                         />
                     ))}
-                </div>
 
-                {/* Drag Overlay for smooth visuals */}
-                <DragOverlay>
-                    {activeId ? (
-                        <KanbanCard
-                            deal={deals.find(d => d.id === activeId)!}
-                            overlay
-                        />
-                    ) : null}
-                </DragOverlay>
-            </DndContext>
+                    <DragOverlay>
+                        {activeId ? (
+                            <AmoKanbanCard deal={deals.find(d => d.id === activeId)!} onClick={() => { }} overlay />
+                        ) : null}
+                    </DragOverlay>
 
-            {/* Modal / Slide-over */}
+                </DndContext>
+            </div>
+
+      /* Slide Over */
             {selectedDeal && (
-                <DealPanel
-                    deal={selectedDeal}
-                    onClose={() => setSelectedDeal(null)}
-                />
+                <AmoDealPanel deal={selectedDeal} onClose={() => setSelectedDeal(null)} />
             )}
         </div>
     );

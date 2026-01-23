@@ -1,31 +1,32 @@
 export interface Tag {
     id: string;
     name: string;
-    color: string;
+    color: string; // Hex
 }
 
 export interface Task {
     id: string;
     text: string;
-    due: string;
-    completed: boolean;
+    due_date: number; // timestamp
+    is_completed: boolean;
+    type: 'call' | 'meeting' | 'todo';
 }
 
-export interface Note {
+export interface Message {
     id: string;
-    text: string;
+    type: 'sms' | 'email' | 'tg' | 'ig' | 'system' | 'note';
     author: string;
-    date: string;
-    type: 'note' | 'call' | 'email' | 'system';
+    text: string;
+    created_at: number; // timestamp
+    direction?: 'in' | 'out';
+    attachments?: string[];
 }
 
-export interface Contact {
-    id: string;
-    name: string;
-    email?: string;
-    phone?: string;
-    position?: string;
-    company?: string;
+export interface DealField {
+    label: string;
+    value: string | number;
+    type: 'text' | 'select' | 'date' | 'money';
+    key: string;
 }
 
 export interface Deal {
@@ -33,53 +34,83 @@ export interface Deal {
     title: string;
     price: number;
     currency: string;
-    status: 'new' | 'contacted' | 'deposit' | 'paid';
-    contact: Contact;
+    status_column_id: string; // Refers to the column
+    contact_name: string;
+    contact_company?: string;
+    contact_phone?: string;
+    contact_email?: string;
+    responsible: string; // e.g., 'Ivan Ivanov'
+    source: string; // e.g., 'Instagram'
+    created_at: number;
     tags: Tag[];
-    tasks: Task[];
-    notes: Note[];
-    created_at: string;
+    fields: DealField[]; // Custom fields
+    history: Message[]; // The Activity Feed
 }
 
+// Columns Configuration
+export const PIPELINE_COLUMNS = [
+    { id: 'new', title: 'New Request', color: '#99ccff' },
+    { id: 'work', title: 'In Progress', color: '#ffff99' },
+    { id: 'answered', title: 'Answered', color: '#ffcc99' },
+    { id: 'details', title: 'Data Received', color: '#ccffcc' },
+    { id: 'invoice', title: 'Invoice Sent', color: '#ccffff' },
+    { id: 'paid', title: 'Payment Received', color: '#ccff99' },
+];
+
+// Mock Data
 export const MOCK_DEALS: Deal[] = [
     {
-        id: '1023',
-        title: 'Alps Tour - Family Smith',
-        price: 2400,
-        currency: 'EUR',
-        status: 'new',
-        contact: { id: 'c1', name: 'John Smith', phone: '+1 234 567 890', email: 'john@gmail.com' },
-        tags: [{ id: 't1', name: 'VIP', color: '#8b5cf6' }, { id: 't2', name: 'Winter', color: '#3b82f6' }],
-        tasks: [{ id: 'tsk1', text: 'Call to confirm dates', due: 'Today', completed: false }],
-        notes: [
-            { id: 'n1', text: 'Created deal from Website Widget', author: 'System', date: '2024-01-23 10:00', type: 'system' }
+        id: '1420392',
+        title: 'Tour to Alps #3284',
+        price: 45000,
+        currency: 'CZK',
+        status_column_id: 'new',
+        contact_name: 'Katusha333',
+        contact_company: 'Instagram',
+        contact_phone: '+420 777 123 456',
+        responsible: 'Manager Alex',
+        source: 'Instagram',
+        created_at: Date.now() - 86400000,
+        tags: [{ id: '1', name: 'VIP', color: '#ff5e5e' }],
+        fields: [
+            { key: 'budget', label: 'Budget', value: 50000, type: 'money' },
+            { key: 'people', label: 'Guests', value: '2 Adults', type: 'text' }
         ],
-        created_at: '2024-01-23'
+        history: [
+            { id: '1', type: 'system', author: 'System', text: 'Deal created', created_at: Date.now() - 86400000 },
+            { id: '2', type: 'ig', author: 'katusha333', direction: 'in', text: 'Hello! How much is the tour?', created_at: Date.now() - 86000000 },
+            { id: '3', type: 'ig', author: 'Manager Alex', direction: 'out', text: 'Hi! It starts from 450 EUR per person.', created_at: Date.now() - 85000000 },
+        ]
     },
     {
-        id: '1024',
-        title: 'Skiing Masterclass',
-        price: 850,
+        id: '1420395',
+        title: 'Skiing / Soelden',
+        price: 1200,
         currency: 'EUR',
-        status: 'contacted',
-        contact: { id: 'c2', name: 'Maria Garcia', phone: '+34 999 888 777' },
-        tags: [{ id: 't3', name: 'Solo', color: '#f59e0b' }],
-        tasks: [],
-        notes: [
-            { id: 'n2', text: 'Client asked about equipment rental', author: 'Alex', date: '2024-01-22 14:30', type: 'call' }
-        ],
-        created_at: '2024-01-22'
+        status_column_id: 'work',
+        contact_name: 'John Doe',
+        contact_company: 'Google Search',
+        contact_phone: '+1 555 0199',
+        responsible: 'Manager Maria',
+        source: 'Website',
+        created_at: Date.now() - 172800000,
+        tags: [{ id: '2', name: 'Sledding', color: '#4c8bf5' }, { id: '3', name: 'Hot', color: '#ff5e5e' }],
+        fields: [],
+        history: []
     },
     {
-        id: '1025',
-        title: 'Hiking Group A (May)',
-        price: 3200,
-        currency: 'EUR',
-        status: 'deposit',
-        contact: { id: 'c3', name: 'Alex K.', company: 'Kover Travel' },
-        tags: [{ id: 't4', name: 'Group', color: '#10b981' }],
-        tasks: [{ id: 'tsk2', text: 'Send final invoice', due: 'Tomorrow', completed: false }],
-        notes: [],
-        created_at: '2024-01-20'
-    },
+        id: '1420396',
+        title: 'Zell am See Group',
+        price: 240000,
+        currency: 'CZK',
+        status_column_id: 'paid',
+        contact_name: 'Big Corp Ltd',
+        contact_company: 'Partner',
+        responsible: 'Manager Ivan',
+        source: 'Referral',
+        created_at: Date.now() - 432000000,
+        tags: [{ id: '4', name: 'B2B', color: '#6ccb5f' }],
+        fields: [],
+        history: []
+    }
 ];

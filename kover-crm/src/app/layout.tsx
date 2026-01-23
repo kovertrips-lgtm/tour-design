@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; // Switch to Inter
+import { Inter } from "next/font/google"; // 
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Kover Antigravity CRM",
-  description: "Internal CRM for Kover Trips",
+  title: "Kover CRM | AmoClone",
+  description: "Internal CRM",
 };
 
 export default function RootLayout({
@@ -23,9 +23,8 @@ export default function RootLayout({
           <main
             style={{
               flex: 1,
-              marginLeft: "260px",
-              padding: "40px",
-              background: "var(--bg-main)",
+              background: "var(--bg-body)",
+              overflow: "hidden"
             }}
           >
             {children}
