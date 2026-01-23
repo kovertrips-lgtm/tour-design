@@ -83,10 +83,10 @@ export const TasksListPage = ({ children }: React.PropsWithChildren) => {
     const unassignedStage = tasks.data.filter((task) => task.stageId === null);
 
     const TITLE_MAP: Record<string, string> = {
-      "TODO": "Новая заявка",
-      "IN PROGRESS": "Взяли в работу",
-      "IN REVIEW": "Выбор тура",
-      "DONE": "Оплачено"
+      "TODO": "Новый лид",
+      "IN PROGRESS": "В работе",
+      "IN REVIEW": "Ожидаем оплату",
+      "DONE": "Оплата получена"
     };
 
     // prepare unassigned stage

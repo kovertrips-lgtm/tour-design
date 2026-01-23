@@ -7,6 +7,7 @@ import {
   AlignLeftOutlined,
   FieldTimeOutlined,
   UsergroupAddOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons";
 import { Modal } from "antd";
 
@@ -21,6 +22,7 @@ import { StageForm } from "./forms/stage/stage-form";
 import { TitleForm } from "./forms/title/title-form";
 import { UsersForm } from "./forms/users/users-form";
 import { UsersHeader } from "./forms/users/users-header";
+import { DealDetailsForm } from "./forms/deal-details-form";
 import { UPDATE_TASK_MUTATION } from "./queries";
 
 export const TasksEditPage = () => {
@@ -55,15 +57,31 @@ export const TasksEditPage = () => {
       footer={
         <DeleteButton
           type="link"
+          confirmTitle="Вы уверены?"
+          confirmOkText="Да"
+          confirmCancelText="Отмена"
           onSuccess={() => {
             list("tasks", "replace");
           }}
         >
-          Delete card
+          Удалить сделку
         </DeleteButton>
       }
     >
       <StageForm isLoading={isLoading} />
+
+      <Accordion
+        accordionKey="details"
+        activeKey={activeKey}
+        setActive={setActiveKey}
+        fallback={<div style={{ padding: "12px 24px", color: "#8c8c8c" }}>Тур, Бюджет, Паспорт...</div>}
+        isLoading={isLoading}
+        icon={<SolutionOutlined />}
+        label="Параметры сделки"
+      >
+        <DealDetailsForm />
+      </Accordion>
+
       <Accordion
         accordionKey="description"
         activeKey={activeKey}
@@ -71,7 +89,7 @@ export const TasksEditPage = () => {
         fallback={<DescriptionHeader description={description} />}
         isLoading={isLoading}
         icon={<AlignLeftOutlined />}
-        label="Description"
+        label="Описание"
       >
         <DescriptionForm
           initialValues={{ description }}
@@ -85,7 +103,7 @@ export const TasksEditPage = () => {
         fallback={<DueDateHeader dueData={dueDate} />}
         isLoading={isLoading}
         icon={<FieldTimeOutlined />}
-        label="Due date"
+        label="Дедлайн"
       >
         <DueDateForm
           initialValues={{ dueDate: dueDate ?? undefined }}
@@ -99,7 +117,7 @@ export const TasksEditPage = () => {
         fallback={<UsersHeader users={users} />}
         isLoading={isLoading}
         icon={<UsergroupAddOutlined />}
-        label="Users"
+        label="Ответственный"
       >
         <UsersForm
           initialValues={{
