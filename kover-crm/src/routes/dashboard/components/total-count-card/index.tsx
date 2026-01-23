@@ -162,7 +162,7 @@ const variants: {
         />
       </IconWrapper>
     ),
-    title: "Number of companies",
+    title: "Всего клиентов",
     data: [
       {
         index: "1",
@@ -199,7 +199,7 @@ const variants: {
         />
       </IconWrapper>
     ),
-    title: "Number of contacts",
+    title: "Активных контактов",
     data: [
       {
         index: "1",
@@ -240,7 +240,7 @@ const variants: {
         />
       </IconWrapper>
     ),
-    title: "Total deals in pipeline",
+    title: "Сделок в работе",
     data: [
       {
         index: "1",

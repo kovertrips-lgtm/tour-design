@@ -56,7 +56,7 @@ export const CalendarUpcomingEvents = () => {
         >
           <CalendarOutlined />
           <Text size="sm" style={{ marginLeft: ".7rem" }}>
-            Upcoming events
+            Ближайшие события
           </Text>
         </div>
       }
@@ -140,6 +140,6 @@ const NoEvent = () => (
       height: "220px",
     }}
   >
-    No Upcoming Event
+    Нет предстоящих событий
   </span>
 );
