@@ -24,6 +24,7 @@ import {
   TasksCreatePage,
   TasksEditPage,
   TasksListPage,
+  FinanceListPage,
 } from "@/routes";
 
 import "@ant-design/v5-patch-for-react-19";
@@ -102,6 +103,8 @@ const App = () => {
                     <Route path="new" element={<CompanyCreatePage />} />
                     <Route path="edit/:id" element={<CompanyEditPage />} />
                   </Route>
+
+                  <Route path="/finance" element={<FinanceListPage />} />
 
                   <Route path="*" element={<ErrorComponent />} />
                 </Route>
