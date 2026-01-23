@@ -1,30 +1,61 @@
 import React, { useState } from 'react';
-import { X, Calendar, Phone, Mail, User, Tag as TagIcon, MoreHorizontal } from 'lucide-react';
+import { X, Calendar, Phone, Mail, User, Tag as TagIcon, MoreHorizontal, Plus } from 'lucide-react';
 import styles from './AmoDealPanel.module.css';
-import { Deal, Message } from '@/types/crm';
+import { Deal, Message, Tag } from '@/types/crm';
 import { format } from 'date-fns';
 
 interface Props {
     deal: Deal;
     onClose: () => void;
+    onUpdate?: (deal: Deal) => void;
 }
 
-export default function AmoDealPanel({ deal, onClose }: Props) {
+export default function AmoDealPanel({ deal, onClose, onUpdate }: Props) {
     const [messages, setMessages] = useState<Message[]>(deal.history || []);
     const [input, setInput] = useState('');
+    const [activeTab, setActiveTab] = useState<'timeline' | 'tasks'>('timeline');
+    const [isNote, setIsNote] = useState(true); // Toggle between Note/Task
+
+    // Tag input state
+    const [isAddingTag, setIsAddingTag] = useState(false);
+    const [newTagName, setNewTagName] = useState('');
+
+    // Fields editing
+    const handleFieldChange = (key: string, value: string) => {
+        // In real app, update deep object. Here we just mock update local state mostly,
+        // but strictly we should call onUpdate.
+    };
+
+    const notifyUpdate = (newHistory: Message[]) => {
+        if (onUpdate) {
+            onUpdate({ ...deal, history: newHistory });
+        }
+    };
 
     const sendMessage = () => {
         if (!input.trim()) return;
         const newMsg: Message = {
             id: Date.now().toString(),
-            type: 'note',
+            type: isNote ? 'note' : 'system',
             author: 'You',
-            text: input,
+            text: isNote ? input : `Task created: ${input}`,
             created_at: Date.now(),
             direction: 'out'
         };
-        setMessages([...messages, newMsg]);
+        const updated = [...messages, newMsg];
+        setMessages(updated);
+        notifyUpdate(updated);
         setInput('');
+    };
+
+    const handleAddTag = () => {
+        if (newTagName) {
+            const newTag: Tag = { id: Date.now().toString(), name: newTagName, color: '#333' };
+            const updatedTags = [...deal.tags, newTag];
+            if (onUpdate) onUpdate({ ...deal, tags: updatedTags });
+            setNewTagName('');
+            setIsAddingTag(false);
+        }
     };
 
     return (
@@ -74,10 +105,24 @@ export default function AmoDealPanel({ deal, onClose }: Props) {
                                         {tag.name}
                                     </span>
                                 ))}
-                                <span style={{ color: '#8c9fa6', fontSize: '11px', cursor: 'pointer', padding: '2px 5px', border: '1px dashed #ccc', borderRadius: '4px' }}>+ add</span>
+                                {!isAddingTag ? (
+                                    <span onClick={() => setIsAddingTag(true)} style={{ color: '#8c9fa6', fontSize: '11px', cursor: 'pointer', padding: '2px 5px', border: '1px dashed #ccc', borderRadius: '4px' }}>+ add</span>
+                                ) : (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        <input
+                                            autoFocus
+                                            style={{ width: '60px', padding: '2px', fontSize: '11px' }}
+                                            value={newTagName}
+                                            onChange={e => setNewTagName(e.target.value)}
+                                            onKeyDown={e => e.key === 'Enter' && handleAddTag()}
+                                        />
+                                        <button onClick={handleAddTag} style={{ fontSize: '10px', padding: '2px' }}>OK</button>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
+                        {/* Contact Section */}
                         <div className={styles.sectionHeader}>Contact</div>
                         <div style={{ background: '#fff', border: '1px solid #e0e6ed', borderRadius: '4px', padding: '10px' }}>
                             <div style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -85,9 +130,9 @@ export default function AmoDealPanel({ deal, onClose }: Props) {
                                 {deal.contact_name}
                             </div>
                             {deal.contact_phone && (
-                                <div style={{ fontSize: '13px', color: '#313942', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <a href={`tel:${deal.contact_phone}`} style={{ textDecoration: 'none', fontSize: '13px', color: '#313942', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                     <Phone size={13} color="#8c9fa6" />{deal.contact_phone}
-                                </div>
+                                </a>
                             )}
                             {deal.contact_company && (
                                 <div style={{ fontSize: '12px', color: '#8c9fa6' }}>{deal.contact_company}</div>
@@ -107,51 +152,67 @@ export default function AmoDealPanel({ deal, onClose }: Props) {
                     {/* Right Main Area (Feed) */}
                     <div className={styles.mainArea}>
                         <div style={{ padding: '0 24px', height: '48px', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', gap: '20px' }}>
-                            <span style={{ fontSize: '13px', fontWeight: 600, color: '#313942', borderBottom: '2px solid #4c8bf5', padding: '14px 0', cursor: 'pointer' }}>Timeline</span>
-                            <span style={{ fontSize: '13px', fontWeight: 500, color: '#8c9fa6', cursor: 'pointer' }}>Tasks (0)</span>
-                            <span style={{ fontSize: '13px', fontWeight: 500, color: '#8c9fa6', cursor: 'pointer' }}>Stats</span>
+                            <span
+                                onClick={() => setActiveTab('timeline')}
+                                style={{ fontSize: '13px', fontWeight: 600, color: activeTab === 'timeline' ? '#313942' : '#8c9fa6', borderBottom: activeTab === 'timeline' ? '2px solid #4c8bf5' : 'none', padding: '14px 0', cursor: 'pointer' }}
+                            >
+                                Timeline
+                            </span>
+                            <span
+                                onClick={() => setActiveTab('tasks')}
+                                style={{ fontSize: '13px', fontWeight: 600, color: activeTab === 'tasks' ? '#313942' : '#8c9fa6', borderBottom: activeTab === 'tasks' ? '2px solid #4c8bf5' : 'none', padding: '14px 0', cursor: 'pointer' }}
+                            >
+                                Tasks
+                            </span>
                         </div>
 
                         <div className={styles.feedScroll}>
-                            {messages.length === 0 && (
-                                <div style={{ textAlign: 'center', color: '#ccc', marginTop: '40px' }}>No history yet</div>
-                            )}
-                            {messages.map((msg, i) => (
-                                <div key={msg.id || i} className={styles.feedItem}>
-                                    {i === 0 || (new Date(messages[i - 1].created_at).getDate() !== new Date(msg.created_at).getDate()) ? (
-                                        <div className={styles.itemDate}>{format(msg.created_at, 'dd MMMM yyyy')}</div>
-                                    ) : null}
-
-                                    {msg.type === 'system' ? (
-                                        <div className={styles.msgSystem}>{msg.text}</div>
-                                    ) : (
-                                        <div style={{ display: 'flex', gap: '10px', flexDirection: msg.direction === 'out' ? 'row-reverse' : 'row' }}>
-                                            <div style={{ width: 24, height: 24, borderRadius: '50%', background: msg.direction === 'out' ? '#6ccb5f' : '#ccc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: 'white', flexShrink: 0 }}>
-                                                {msg.author[0]}
-                                            </div>
-                                            <div className={`${styles.msgBubble} ${msg.direction === 'out' ? styles.msgOut : styles.msgIn}`}>
-                                                <div style={{ fontSize: '11px', fontWeight: 'bold', marginBottom: '2px', color: msg.direction === 'out' ? '#5c8692' : '#313942' }}>{msg.author}</div>
-                                                {msg.text}
-                                                <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>
-                                                    {format(msg.created_at, 'HH:mm')}
-                                                </div>
-                                            </div>
-                                        </div>
+                            {activeTab === 'timeline' ? (
+                                <>
+                                    {messages.length === 0 && (
+                                        <div style={{ textAlign: 'center', color: '#ccc', marginTop: '40px' }}>No history yet</div>
                                     )}
+                                    {messages.map((msg, i) => (
+                                        <div key={msg.id || i} className={styles.feedItem}>
+                                            {i === 0 || (new Date(messages[i - 1].created_at).getDate() !== new Date(msg.created_at).getDate()) ? (
+                                                <div className={styles.itemDate}>{format(msg.created_at, 'dd MMMM yyyy')}</div>
+                                            ) : null}
+
+                                            {msg.type === 'system' ? (
+                                                <div className={styles.msgSystem}>{msg.text}</div>
+                                            ) : (
+                                                <div style={{ display: 'flex', gap: '10px', flexDirection: msg.direction === 'out' ? 'row-reverse' : 'row' }}>
+                                                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: msg.direction === 'out' ? '#6ccb5f' : '#ccc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: 'white', flexShrink: 0 }}>
+                                                        {msg.author[0]}
+                                                    </div>
+                                                    <div className={`${styles.msgBubble} ${msg.direction === 'out' ? styles.msgOut : styles.msgIn}`}>
+                                                        <div style={{ fontSize: '11px', fontWeight: 'bold', marginBottom: '2px', color: msg.direction === 'out' ? '#5c8692' : '#313942' }}>{msg.author}</div>
+                                                        {msg.text}
+                                                        <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>
+                                                            {format(msg.created_at, 'HH:mm')}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </>
+                            ) : (
+                                <div style={{ padding: '20px', color: '#888', textAlign: 'center' }}>
+                                    <div style={{ marginBottom: '10px', fontSize: '40px' }}>✅</div>
+                                    No active tasks. Create one below!
                                 </div>
-                            ))}
+                            )}
                         </div>
 
                         <div className={styles.inputArea}>
                             <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
-                                <span style={{ fontSize: '12px', fontWeight: 600, color: '#4c8bf5', cursor: 'pointer' }}>Note</span>
-                                <span style={{ fontSize: '12px', fontWeight: 600, color: '#313942', cursor: 'pointer' }}>Task</span>
-                                <span style={{ fontSize: '12px', fontWeight: 600, color: '#313942', cursor: 'pointer' }}>SMS</span>
-                                <span style={{ fontSize: '12px', fontWeight: 600, color: '#313942', cursor: 'pointer' }}>Email</span>
+                                <span onClick={() => setIsNote(true)} style={{ fontSize: '12px', fontWeight: 600, color: isNote ? '#4c8bf5' : '#313942', cursor: 'pointer' }}>Note</span>
+                                <span onClick={() => setIsNote(false)} style={{ fontSize: '12px', fontWeight: 600, color: !isNote ? '#4c8bf5' : '#313942', cursor: 'pointer' }}>Task</span>
                             </div>
                             <textarea
                                 className={styles.chatInput}
-                                placeholder="Type your note or message..."
+                                placeholder={isNote ? "Type your note or message..." : "What needs to be done?"}
                                 value={input}
                                 onChange={e => setInput(e.target.value)}
                                 onKeyDown={e => {
@@ -160,8 +221,9 @@ export default function AmoDealPanel({ deal, onClose }: Props) {
                                         sendMessage();
                                     }
                                 }}
+                                style={{ background: isNote ? 'white' : '#fff9e6' }} // Tasks often yellow
                             />
-                            <button className={styles.sendButton} onClick={sendMessage}>Send</button>
+                            <button className={styles.sendButton} onClick={sendMessage}>{isNote ? 'Send' : 'Set Task'}</button>
                         </div>
                     </div>
 
