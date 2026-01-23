@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>CHRONOS | Mobile Singularity</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- External Libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.19/dist/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --c-void: #000000;
+            --c-plasma: #7000ff;
+            --c-cyan: #00fff2;
+            --c-white: #ffffff;
+            --f-head: 'Syncopate', sans-serif;
+            --f-body: 'Rajdhani', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--c-void);
+            color: var(--c-white);
+            font-family: var(--f-body);
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+
+        /* Layout */
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            /* Performant on mobile */
+            will-change: transform;
+        }
+
+        /* Mobile Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: exclusion;
+        }
+
+        .logo {
+            font-family: var(--f-head);
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .mobile-menu-btn {
+            width: 30px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bar {
+            width: 100%;
+            height: 2px;
+            background: #fff;
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            padding: 0 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Hero */
+        h1 {
+            font-family: var(--f-head);
+            font-size: 12vw;
+            line-height: 0.9;
+            text-transform: uppercase;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            margin-top: 2rem;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.8);
+            border-left: 2px solid var(--c-cyan);
+            padding-left: 15px;
+        }
+
+        /* Feature Cards - Mobile Stack */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            /* Single column for mobile */
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+        }
+
+        /* Mobile Start Overlay */
+        #start-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 50000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .start-btn {
+            margin-top: 30px;
+            background: var(--c-cyan);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-family: var(--f-head);
+            font-weight: bold;
+            font-size: 1rem;
+            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+        }
+
+        /* Gyro Indicator */
+        .gyro-icon {
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            animation: tilt 2s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gyro-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--c-cyan);
+            border-radius: 50%;
+        }
+
+        @keyframes tilt {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-15deg);
+            }
+
+            75% {
+                transform: rotate(15deg);
+            }
+        }
+
+        /* UI Hud */
+        .hud-top {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            font-family: monospace;
+            font-size: 10px;
+            color: var(--c-cyan);
+            z-index: 50;
+            pointer-events: none;
+            mix-blend-mode: exclusion;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Mobile Permissions Overlay -->
+    <div id="start-overlay">
+        <div class="gyro-icon">
+            <div class="gyro-dot"></div>
+        </div>
+        <h2 style="font-family: var(--f-head); margin-bottom: 10px;">IMMERSIVE MODE</h2>
+        <p style="color: #888; font-size: 0.9rem; max-width: 300px;">
+            Allow access to device motion sensors for full 3D control.
+        </p>
+        <button class="start-btn" id="start-btn">ENTER SIMULATION</button>
+    </div>
+
+    <!-- Canvas -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- HUD -->
+    <div class="hud-top">
+        <span>GYRO: <span id="gyro-status">OFFLINE</span></span>
+        <span>REC: <span style="color:red">●</span></span>
+    </div>
+
+    <nav>
+        <div class="logo">CHRONOS_M</div>
+        <div class="mobile-menu-btn" onclick="navigator.vibrate(10)">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </nav>
+
+    <main>
+        <section id="hero">
+            <h1 class="scramble-text">POCKET<br>REALITY</h1>
+            <p class="hero-subtitle">
+                Tilt your device to explore the singularity. A full universe in the palm of your hand.
+            </p>
+            <!-- Haptic Button -->
+            <button
+                style="margin-top: 30px; background: transparent; border: 1px solid white; color: white; padding: 15px 30px; font-family: var(--f-head);"
+                onclick="triggerHaptic()">
+                HOLD TO CHARGE
+            </button>
+        </section>
+
+        <section id="features">
+            <h2 style="font-family: var(--f-head); font-size: 2rem; margin-bottom: 2rem;">MOBILE TECH</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">◉</div>
+                    <h3>GYROSCOPE</h3>
+                    <p style="margin-top: 10px; opacity: 0.7;">Physical device movement controls the 3D camera in
+                        real-time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>HAPTICS</h3>
+                    <p style="margin-top: 10px; opacity: 0.7;">Tactile feedback engine synchronized with UI
+                        interactions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚛</div>
+                    <h3>WEBGL 2.0</h3>
+                    <p style="margin-top: 10px; opacity: 0.7;">Optimized GPGPU shaders running smoothly on mobile
+                        silicon.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- App Logic -->
+    <script type="module">
+        import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+        import { DeviceOrientationControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/DeviceOrientationControls.js';
+        import { EffectComposer } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+        // --- INIT ---
+        const startBtn = document.getElementById('start-btn');
+        const overlay = document.getElementById('start-overlay');
+        const gyroStatus = document.getElementById('gyro-status');
+
+        let camera, scene, renderer, composer;
+        let controls;
+        let particles;
+        const clock = new THREE.Clock();
+
+        // --- HAPTICS ---
+        window.triggerHaptic = () => {
+            if (navigator.vibrate) navigator.vibrate(50);
+        };
+
+        // --- START BTN ---
+        startBtn.addEventListener('click', async () => {
+            // 1. Request Fullscreen
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
+
+            // 2. Request Gyro (iOS 13+)
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    const response = await DeviceOrientationEvent.requestPermission();
+                    if (response === 'granted') {
+                        initControls();
+                        gyroStatus.innerText = "ACTIVE";
+                    } else {
+                        gyroStatus.innerText = "DENIED";
+                    }
+                } catch (e) {
+                    console.error(e);
+                    gyroStatus.innerText = "ERROR";
+                }
+            } else {
+                // Non-iOS or older devices
+                initControls();
+                gyroStatus.innerText = "ACTIVE";
+            }
+
+            // 3. Hide Overlay
+            gsap.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => overlay.style.display = 'none' });
+
+            // 4. Init Scene
+            init3D();
+        });
+
+        function initControls() {
+            controls = new DeviceOrientationControls(camera);
+        }
+
+        function init3D() {
+            const canvas = document.querySelector('#webgl-canvas');
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x000000, 0.02);
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5; // Closer for mobile
+
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // --- MOBILE OPTIMIZED SHADER CORE ---
+            // Simplified geometry for mobile perf
+            const sphereGeo = new THREE.IcosahedronGeometry(2, 10);
+            const sphereMat = new THREE.MeshBasicMaterial({
+                color: 0x00fff2,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+            scene.add(sphere);
+
+            // Inner Core (Glowing)
+            const coreGeo = new THREE.IcosahedronGeometry(1, 4);
+            const coreMat = new THREE.MeshBasicMaterial({ color: 0x7000ff });
+            const core = new THREE.Mesh(coreGeo, coreMat);
+            scene.add(core);
+
+            // --- PARTICLES ---
+            const particlesGeo = new THREE.BufferGeometry();
+            const particlesCount = 1000; // Less particles for mobile
+            const posArray = new Float32Array(particlesCount * 3);
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 20;
+            }
+            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMat = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.8
+            });
+            particles = new THREE.Points(particlesGeo, particlesMat);
+            scene.add(particles);
+
+            // --- BLOOM ---
+            composer = new EffectComposer(renderer);
+            composer.addPass(new RenderPass(scene, camera));
+
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+            bloomPass.threshold = 0;
+            bloomPass.strength = 1.2;
+            bloomPass.radius = 0.5;
+            composer.addPass(bloomPass);
+
+            // --- ANIMATION ---
+            function animate() {
+                requestAnimationFrame(animate);
+
+                const dt = clock.getDelta();
+                const et = clock.getElapsedTime();
+
+                // Gyro Update
+                if (controls) {
+                    controls.update();
+                } else {
+                    // Fallback auto-rotation if no gyro
+                    camera.rotation.y += 0.001;
+                }
+
+                // Core Animation
+                sphere.rotation.y += 0.005;
+                sphere.rotation.x += 0.005;
+                core.scale.setScalar(1 + Math.sin(et * 3) * 0.1); // Beat effect
+
+                composer.render();
+            }
+            animate();
+
+            // Resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                composer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // --- TEXT SCRAMBLE (Mobile Optimized) ---
+        // Intersection Observer triggers scramble when text enters view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Simulating scrambler simply
+                    const el = entry.target;
+                    const original = el.innerText;
+                    el.style.opacity = 1;
+                    // (Imagine complex scrambler logic here, simplified for perf)
+
+                    if (navigator.vibrate) navigator.vibrate(5);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.scramble-text').forEach(el => observer.observe(el));
+
+    </script>
+
+    <script>
+        // Init Lenis
+        const lenis = new Lenis({ duration: 1.2, smooth: true });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+    </script>
+
+</body>
+
+</html>
