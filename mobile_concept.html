@@ -301,11 +301,12 @@
 
     <!-- App Logic -->
     <script type="module">
-        import * as THREE from 'https://esm.sh/three@0.160.0';
-        import { DeviceOrientationControls } from 'https://esm.sh/three@0.160.0/examples/jsm/controls/DeviceOrientationControls?deps=three@0.160.0';
-        import { EffectComposer } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer?deps=three@0.160.0';
-        import { RenderPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass?deps=three@0.160.0';
-        import { UnrealBloomPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass?deps=three@0.160.0';
+        // Using Skypack for better dependency resolution and bundling
+        import * as THREE from 'https://cdn.skypack.dev/three@0.160.0?min';
+        import { DeviceOrientationControls } from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/controls/DeviceOrientationControls.js?min';
+        import { EffectComposer } from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js?min';
+        import { RenderPass } from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/postprocessing/RenderPass.js?min';
+        import { UnrealBloomPass } from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js?min';
 
         // --- INIT ---
         const startBtn = document.getElementById('start-btn');
