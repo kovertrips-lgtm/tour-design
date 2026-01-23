@@ -152,6 +152,7 @@
             justify-content: center;
             text-align: center;
             padding: 20px;
+            cursor: default;
         }
 
         .start-btn {
@@ -168,11 +169,6 @@
             z-index: 50001;
             /* Ensure on top */
             pointer-events: auto;
-        }
-
-        /* Show cursor on overlay even if body hides it */
-        #start-overlay {
-            cursor: default;
         }
 
         /* Gyro Indicator */
@@ -299,14 +295,45 @@
         </section>
     </main>
 
+    <!-- Import Map (JsDelivr) -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <!-- Global Error Handler -->
+    <script>
+        window.addEventListener('error', function (e) {
+            console.error("Global Error Caught:", e.message);
+            const overlay = document.getElementById('start-overlay');
+            if (overlay) {
+                let errDisplay = document.getElementById('err-display');
+                if (!errDisplay) {
+                    errDisplay = document.createElement('div');
+                    errDisplay.id = 'err-display';
+                    errDisplay.style.color = 'red';
+                    errDisplay.style.background = 'rgba(0,0,0,0.8)';
+                    errDisplay.style.padding = '10px';
+                    errDisplay.style.marginTop = '10px';
+                    errDisplay.style.fontSize = '0.8rem';
+                    overlay.appendChild(errDisplay);
+                }
+                errDisplay.innerText = "ОШИБКА: " + e.message;
+            }
+        });
+    </script>
+
     <!-- App Logic -->
     <script type="module">
-        // Using Skypack for better dependency resolution and bundling
-        import * as THREE from 'https://cdn.skypack.dev/three@0.160.0?min';
-        import { DeviceOrientationControls } from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/controls/DeviceOrientationControls.js?min';
-        import { EffectComposer } from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js?min';
-        import { RenderPass } from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/postprocessing/RenderPass.js?min';
-        import { UnrealBloomPass } from 'https://cdn.skypack.dev/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js?min';
+        import * as THREE from 'three';
+        import { DeviceOrientationControls } from 'three/addons/controls/DeviceOrientationControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
         // --- INIT ---
         const startBtn = document.getElementById('start-btn');
