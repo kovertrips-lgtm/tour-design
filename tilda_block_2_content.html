@@ -1538,7 +1538,21 @@
     <script>
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('sticky-cta');
-            if (window.scrollY > 600) {
+            const ctaSection = document.querySelector('.m-cta-section');
+            const scrollY = window.scrollY;
+
+            // Show after scrolling a bit
+            let shouldShow = scrollY > 400;
+
+            // Hide if footer/final CTA is visible so they don't overlap
+            if (ctaSection && shouldShow) {
+                const rect = ctaSection.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    shouldShow = false;
+                }
+            }
+
+            if (shouldShow) {
                 btn.classList.add('visible');
             } else {
                 btn.classList.remove('visible');
