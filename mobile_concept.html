@@ -331,7 +331,6 @@
     <!-- App Logic -->
     <script type="module">
         import * as THREE from 'three';
-        import { DeviceOrientationControls } from 'three/addons/controls/DeviceOrientationControls.js';
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -353,6 +352,8 @@
 
         // --- START BTN ---
         startBtn.addEventListener('click', async () => {
+            console.log("Button clicked!"); // Debug
+
             // 1. Request Fullscreen (try/catch to avoid blocking if failed)
             try {
                 if (document.documentElement.requestFullscreen) {
@@ -362,37 +363,16 @@
                 console.warn("Fullscreen request failed or denied:", err);
             }
 
-            // 2. Request Gyro (iOS 13+)
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                try {
-                    const response = await DeviceOrientationEvent.requestPermission();
-                    if (response === 'granted') {
-                        initControls();
-                        gyroStatus.innerText = "АКТИВЕН";
-                    } else {
-                        gyroStatus.innerText = "ОТКАЗ";
-                        alert("Доступ к гироскопу запрещен. Перезагрузите страницу и нажмите 'Разрешить', чтобы управление наклоном работало.");
-                    }
-                } catch (e) {
-                    console.error(e);
-                    gyroStatus.innerText = "ОШИБКА";
-                }
-            } else {
-                // Non-iOS or older devices
-                initControls();
-                gyroStatus.innerText = "АКТИВЕН";
-            }
-
-            // 3. Hide Overlay
+            // 2. Hide Overlay
             gsap.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => overlay.style.display = 'none' });
 
-            // 4. Init Scene
+            // 3. Init Scene
             init3D();
+
+            gyroStatus.innerText = "АКТИВЕН";
         });
 
-        function initControls() {
-            controls = new DeviceOrientationControls(camera);
-        }
+
 
         function init3D() {
             const canvas = document.querySelector('#webgl-canvas');
