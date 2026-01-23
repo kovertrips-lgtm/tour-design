@@ -108,41 +108,8 @@ export const ProjectCard = ({
         onClick={() => {
           edit("tasks", id, "replace");
         }}
-        extra={
-          <Dropdown
-            trigger={["click"]}
-            menu={{
-              items: dropdownItems,
-              onPointerDown: (e) => {
-                e.stopPropagation();
-              },
-              onClick: (e) => {
-                e.domEvent.stopPropagation();
-              },
-            }}
-            placement="bottom"
-            arrow={{ pointAtCenter: true }}
-          >
-            <Button
-              type="text"
-              shape="circle"
-              icon={
-                <MoreOutlined
-                  style={{
-                    transform: "rotate(90deg)",
-                  }}
-                />
-              }
-              onPointerDown={(e) => {
-                e.stopPropagation();
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            />
-          </Dropdown>
-        }
       >
+
         <div
           style={{
             display: "flex",
@@ -177,6 +144,12 @@ export const ProjectCard = ({
               {dueDateOptions.text}
             </Tag>
           )}
+
+          {/* FAKE PRICE for User Request */}
+          <Tag color="gold">
+            {parseInt(id, 16) % 50 * 1000 + 50000} ₽
+          </Tag>
+
           {!!users?.length && (
             <Space
               size={4}

@@ -98,19 +98,19 @@ export const CompanyListPage = ({ children }: React.PropsWithChildren) => {
             ...tableProps.pagination,
             pageSizeOptions: ["12", "24", "48", "96"],
             showTotal: (total) => (
-              <PaginationTotal total={total} entityName="companies" />
+              <PaginationTotal total={total} entityName="контактов" />
             ),
           }}
           rowKey="id"
         >
           <Table.Column<Company>
             dataIndex="name"
-            title="Company title"
+            title="Клиент"
             defaultFilteredValue={getDefaultFilter("id", filters)}
             filterIcon={<SearchOutlined />}
             filterDropdown={(props) => (
               <FilterDropdown {...props}>
-                <Input placeholder="Search Company" />
+                <Input placeholder="Поиск" />
               </FilterDropdown>
             )}
             render={(_, record) => {
@@ -134,7 +134,7 @@ export const CompanyListPage = ({ children }: React.PropsWithChildren) => {
           />
           <Table.Column<Company>
             dataIndex={"totalRevenue"}
-            title="Open deals amount"
+            title="Сумма сделок"
             render={(_, company) => {
               return (
                 <Text>
@@ -146,7 +146,7 @@ export const CompanyListPage = ({ children }: React.PropsWithChildren) => {
           <Table.Column<Company>
             fixed="right"
             dataIndex="id"
-            title="Actions"
+            title="Действия"
             render={(value) => (
               <Space>
                 <EditButton hideText size="small" recordItemId={value} />

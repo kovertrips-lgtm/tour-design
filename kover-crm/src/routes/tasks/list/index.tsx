@@ -82,9 +82,17 @@ export const TasksListPage = ({ children }: React.PropsWithChildren) => {
 
     const unassignedStage = tasks.data.filter((task) => task.stageId === null);
 
+    const TITLE_MAP: Record<string, string> = {
+      "TODO": "Новая заявка",
+      "IN PROGRESS": "Взяли в работу",
+      "IN REVIEW": "Выбор тура",
+      "DONE": "Оплачено"
+    };
+
     // prepare unassigned stage
     const grouped: TaskStage[] = stages.data.map((stage) => ({
       ...stage,
+      title: TITLE_MAP[stage.title] || stage.title,
       tasks: tasks.data.filter((task) => task.stageId?.toString() === stage.id),
     }));
 
