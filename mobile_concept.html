@@ -164,6 +164,15 @@
             font-weight: bold;
             font-size: 1rem;
             clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+            cursor: pointer;
+            z-index: 50001;
+            /* Ensure on top */
+            pointer-events: auto;
+        }
+
+        /* Show cursor on overlay even if body hides it */
+        #start-overlay {
+            cursor: default;
         }
 
         /* Gyro Indicator */
@@ -315,9 +324,13 @@
 
         // --- START BTN ---
         startBtn.addEventListener('click', async () => {
-            // 1. Request Fullscreen
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
+            // 1. Request Fullscreen (try/catch to avoid blocking if failed)
+            try {
+                if (document.documentElement.requestFullscreen) {
+                    await document.documentElement.requestFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed or denied:", err);
             }
 
             // 2. Request Gyro (iOS 13+)
