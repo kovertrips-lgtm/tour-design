@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRONOS | Путешествия за гранью возможного</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;500;700;900&family=Orbitron:wght@400;700;900&family=Playfair+Display:ital,wght@1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.19/dist/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --c-dark: #030305;
+            --c-void: #000000;
+            --c-accent: #00ffaa;
+            --c-accent-2: #bd00ff;
+            --c-white: #ffffff;
+            --f-main: 'Montserrat', sans-serif;
+            --f-title: 'Orbitron', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--c-dark);
+            color: var(--c-white);
+            font-family: var(--f-main);
+            overflow-x: hidden;
+            cursor: none;
+            /* Custom cursor */
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--c-white);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: transparent;
+        }
+
+        /* Locomotive/Lenis CSS */
+        html.lenis {
+            height: auto;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
+
+        /* Canvas Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* UI Elements */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-family: var(--f-title);
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: white;
+            margin-left: 2rem;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background: var(--c-white);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 4rem;
+        }
+
+        /* Hero */
+        #hero {
+            height: 100vh;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .hero-title {
+            font-family: var(--f-title);
+            font-size: 8vw;
+            line-height: 0.9;
+            font-weight: 700;
+            text-transform: uppercase;
+            mix-blend-mode: exclusion;
+            opacity: 0;
+            transform: translateY(100px);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            max-width: 400px;
+            margin-top: 2rem;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        /* Highlight Text */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--c-accent), var(--c-accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Product Showcase */
+        #showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .product-info h2 {
+            font-family: var(--f-title);
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #fff, #bbb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-list li {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--c-accent);
+            border-radius: 50%;
+            margin-right: 15px;
+            box-shadow: 0 0 10px var(--c-accent);
+        }
+
+        /* Parallax Gallery */
+        #gallery {
+            height: 200vh;
+            /* Extra height for scroll area */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .gallery-wrapper {
+            display: flex;
+            gap: 50px;
+            position: relative;
+        }
+
+        .gallery-item {
+            width: 30vw;
+            height: 50vh;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            border-radius: 8px;
+            filter: grayscale(100%);
+            transition: filter 0.5s;
+        }
+
+        .gallery-item:hover {
+            filter: grayscale(0%);
+        }
+
+        /* CTA Section */
+        #cta {
+            text-align: center;
+            align-items: center;
+        }
+
+        .cta-btn {
+            margin-top: 3rem;
+            padding: 1.5rem 4rem;
+            background: transparent;
+            border: 1px solid var(--c-white);
+            color: var(--c-white);
+            font-family: var(--f-title);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.4s;
+            z-index: 10;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--c-white);
+            z-index: -1;
+            transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .cta-btn:hover {
+            color: var(--c-dark);
+        }
+
+        .cta-btn:hover::before {
+            width: 100%;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-text {
+            font-family: var(--f-title);
+            font-size: 2rem;
+            color: var(--c-white);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Scripts -->
+    <div class="cursor"></div>
+    <div id="loader">
+        <div class="loader-text">0%</div>
+    </div>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <nav>
+        <div class="logo">CHRONOS</div>
+        <div class="links">
+            <a href="#" class="nav-link" data-hover>Миссии</a>
+            <a href="#" class="nav-link" data-hover>Флот</a>
+            <a href="#" class="nav-link" data-hover>Технологии</a>
+            <a href="#" class="nav-link" data-hover>Забронировать</a>
+        </div>
+    </nav>
+
+    <main>
+        <section id="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <div class="line">Покори</div>
+                    <div class="line"><span class="gradient-text">Время</span> и</div>
+                    <div class="line">Пространство</div>
+                </h1>
+                <p class="hero-subtitle">
+                    Эксклюзивные путешествия в будущее для тех, кто уже видел всё в настоящем.
+                    От суборбитальных полетов до колоний на Марсе.
+                </p>
+                <button class="cta-btn" data-hover style="margin-top: 50px;">Начать Экспедицию</button>
+            </div>
+        </section>
+
+        <section id="showcase">
+            <div class="product-info">
+                <h2>NEBULA X-1</h2>
+                <ul class="feature-list">
+                    <li>Квантовый двигатель 5-го поколения</li>
+                    <li>Панорамный обзор 360° из кают</li>
+                    <li>Нулевая гравитация по требованию</li>
+                    <li>Ужин от шеф-повара Мишлен на орбите</li>
+                </ul>
+                <p style="margin-top: 2rem; color: #999; line-height: 1.6;">
+                    Nebula X-1 — это не просто корабль. Это пентхаус, дрейфующий в пустоте.
+                    Совершенство формы и функции, созданное для абсолютного комфорта в самых враждебных условиях.
+                </p>
+            </div>
+            <div class="product-card" id="card-3d">
+                <!-- 3D Element Container -->
+                <div
+                    style="width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; border: 1px dashed rgba(255,255,255,0.2); border-radius: 10px;">
+                    <h3 style="font-family: var(--f-title); color: #555;">[3D MODEL INTERACTIVE]</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery">
+            <div class="gallery-wrapper">
+                <div class="gallery-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');">
+                </div>
+                <div class="gallery-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1446776811953-71b905e04584?q=80&w=1200');">
+                </div>
+                <div class="gallery-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1541185933-717852c42260?q=80&w=1200');">
+                </div>
+            </div>
+            <h2 style="position: absolute; font-size: 15vw; font-family: var(--f-title); color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none;"
+                id="gallery-text">
+                БЕСКОНЕЧНОСТЬ
+            </h2>
+        </section>
+
+        <section id="cta">
+            <h2 style="font-size: 5vw; font-family: var(--f-title); max-width: 800px;">
+                Ваша история начинается <span class="gradient-text">здесь</span>.
+            </h2>
+            <button class="cta-btn" data-hover>Оставить заявку</button>
+        </section>
+    </main>
+
+    <footer>
+        <div>© 2054 CHRONOS INC.</div>
+        <div>
+            DESIGNED BY ANTIGRAVITY
+        </div>
+    </footer>
+
+    <script>
+        // === SETUP ===
+        const cursor = document.querySelector('.cursor');
+        const loader = document.getElementById('loader');
+        const loaderText = document.querySelector('.loader-text');
+
+        // === SMOOTH SCROLL ===
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smooth: true
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // === LOADER ===
+        let loadProgress = 0;
+        const loadInterval = setInterval(() => {
+            loadProgress += Math.random() * 10;
+            if (loadProgress >= 100) {
+                loadProgress = 100;
+                clearInterval(loadInterval);
+
+                gsap.to(loader, {
+                    yPercent: -100,
+                    duration: 1.5,
+                    ease: "power4.inOut",
+                    onComplete: initAnimations
+                });
+            }
+            loaderText.innerText = Math.floor(loadProgress) + '%';
+        }, 100);
+
+        // === CURSOR ===
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.1
+            });
+        });
+
+        document.querySelectorAll('[data-hover]').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // === 3D BACKGROUND (Three.js) ===
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        // Particles
+        const geometry = new THREE.BufferGeometry();
+        const particlesCount = 2000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 15; // Spread
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        // Material
+        const material = new THREE.PointsMaterial({
+            size: 0.005,
+            color: 0x00ffaa,
+            transparent: true,
+            opacity: 0.8,
+        });
+
+        const particlesMesh = new THREE.Points(geometry, material);
+        scene.add(particlesMesh);
+
+        // Lights
+        const pointLight = new THREE.PointLight(0xffffff, 0.1);
+        pointLight.position.x = 2;
+        pointLight.position.y = 3;
+        pointLight.position.z = 4;
+        scene.add(pointLight);
+
+        camera.position.z = 3;
+
+        // Mouse interaction for 3D
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX / window.innerWidth - 0.5;
+            mouseY = event.clientY / window.innerHeight - 0.5;
+        });
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            const elapsedTime = clock.getElapsedTime();
+
+            particlesMesh.rotation.y = elapsedTime * 0.05;
+            particlesMesh.rotation.x = mouseY * 0.5;
+            particlesMesh.rotation.y += mouseX * 0.5;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Check resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // === ANIMATIONS (GSAP) ===
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero Text Reveal
+            const tl = gsap.timeline();
+            tl.to('.hero-title', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+                .to('.hero-subtitle', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, '-=0.5')
+                .fromTo('.cta-btn', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, '-=0.5');
+
+            // Scroll Reveal Text
+            gsap.utils.toArray('.product-info').forEach(section => {
+                gsap.from(section, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none reverse"
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 1
+                });
+            });
+
+            // 3D Card Tilt Effect
+            const card = document.getElementById('card-3d');
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; // x position within the element.
+                const y = e.clientY - rect.top;  // y position within the element.
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg rotation
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                gsap.to(card, {
+                    transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+                    duration: 0.5
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    transform: `perspective(1000px) rotateX(0deg) rotateY(0deg)`,
+                    duration: 0.5
+                });
+            });
+
+            // Gallery Parallax
+            gsap.to('.gallery-wrapper', {
+                xPercent: -20,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#gallery',
+                    scrub: 1,
+                    start: 'top bottom',
+                    end: 'bottom top'
+                }
+            });
+
+            gsap.to('#gallery-text', {
+                xPercent: 20,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#gallery',
+                    scrub: 1,
+                    start: 'top bottom',
+                    end: 'bottom top'
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
