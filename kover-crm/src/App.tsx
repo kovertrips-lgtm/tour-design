@@ -32,7 +32,29 @@ import "@refinedev/antd/dist/reset.css";
 const App = () => {
   return (
     <BrowserRouter>
-      <ConfigProvider theme={RefineThemes.Blue}>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#007AFF",
+            fontFamily:
+              "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif",
+            borderRadius: 8,
+          },
+          components: {
+            Button: {
+              borderRadius: 8,
+              controlHeight: 40,
+            },
+            Input: {
+              borderRadius: 8,
+              controlHeight: 40,
+            },
+            Card: {
+              borderRadiusLG: 12,
+            },
+          },
+        }}
+      >
         <AntdApp>
           <DevtoolsProvider>
             <Refine
