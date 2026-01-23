@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;500;700;900&family=Orbitron:wght@400;700;900&family=Playfair+Display:ital,wght@1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;500;700;900&family=Orbitron:wght@400;700;900&display=swap"
         rel="stylesheet">
 
     <!-- Libraries -->
@@ -21,10 +21,9 @@
 
     <style>
         :root {
-            --c-dark: #030305;
-            --c-void: #000000;
-            --c-accent: #00ffaa;
-            --c-accent-2: #bd00ff;
+            --c-dark: #050505;
+            --c-accent: #00f3ff;
+            --c-accent-2: #ff0055;
             --c-white: #ffffff;
             --f-main: 'Montserrat', sans-serif;
             --f-title: 'Orbitron', sans-serif;
@@ -42,7 +41,6 @@
             font-family: var(--f-main);
             overflow-x: hidden;
             cursor: none;
-            /* Custom cursor */
         }
 
         /* Custom Cursor */
@@ -50,43 +48,55 @@
             position: fixed;
             width: 20px;
             height: 20px;
-            border: 1px solid var(--c-white);
+            border: 2px solid var(--c-accent);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background-color 0.3s;
+            transition: width 0.3s, height 0.3s;
             mix-blend-mode: difference;
         }
 
         .cursor.hovered {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-color: transparent;
+            width: 60px;
+            height: 60px;
+            background-color: rgba(0, 243, 255, 0.1);
+            border-color: var(--c-white);
         }
 
-        /* Locomotive/Lenis CSS */
-        html.lenis {
-            height: auto;
-        }
-
-        .lenis.lenis-smooth {
-            scroll-behavior: auto;
-        }
-
-        /* Canvas Background */
-        #bg-canvas {
+        /* Loader */
+        #loader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1;
-            opacity: 0.6;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* UI Elements */
+        .loader-text {
+            font-family: var(--f-title);
+            font-size: 3rem;
+            color: var(--c-accent);
+            text-shadow: 0 0 20px var(--c-accent);
+        }
+
+        /* Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        /* Nav */
         nav {
             position: fixed;
             top: 0;
@@ -103,233 +113,158 @@
         .logo {
             font-family: var(--f-title);
             font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+            font-size: 1.8rem;
+            letter-spacing: 0.2em;
         }
 
         .nav-link {
             text-decoration: none;
-            color: white;
-            margin-left: 2rem;
+            color: #fff;
+            margin-left: 3rem;
+            font-family: var(--f-title);
             text-transform: uppercase;
             font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            position: relative;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0%;
-            height: 1px;
-            background: var(--c-white);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        /* Sections */
-        section {
-            min-height: 100vh;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 4rem;
         }
 
         /* Hero */
         #hero {
             height: 100vh;
-            align-items: flex-start;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
+            padding: 0 10%;
         }
 
         .hero-title {
             font-family: var(--f-title);
-            font-size: 8vw;
-            line-height: 0.9;
-            font-weight: 700;
+            font-size: 7vw;
+            line-height: 1;
+            font-weight: 800;
             text-transform: uppercase;
-            mix-blend-mode: exclusion;
-            opacity: 0;
-            transform: translateY(100px);
+        }
+
+        .hero-title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-subtitle {
-            font-size: 1.2rem;
-            max-width: 400px;
             margin-top: 2rem;
+            max-width: 500px;
+            font-size: 1.2rem;
             line-height: 1.6;
-            opacity: 0;
-            transform: translateY(50px);
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        /* Highlight Text */
-        .gradient-text {
-            background: linear-gradient(45deg, var(--c-accent), var(--c-accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Product Showcase */
+        /* Showcase */
         #showcase {
+            min-height: 100vh;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
             align-items: center;
+            padding: 0 10%;
+            gap: 5%;
         }
 
-        .product-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+        .card-3d {
+            height: 500px;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 3rem;
-            border-radius: 20px;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        .product-info h2 {
-            font-family: var(--f-title);
-            font-size: 4rem;
-            margin-bottom: 2rem;
-            background: linear-gradient(to right, #fff, #bbb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .feature-list li {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            list-style: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .feature-list li::before {
-            content: '';
-            width: 10px;
-            height: 10px;
-            background: var(--c-accent);
-            border-radius: 50%;
-            margin-right: 15px;
-            box-shadow: 0 0 10px var(--c-accent);
-        }
-
-        /* Parallax Gallery */
-        #gallery {
-            height: 200vh;
-            /* Extra height for scroll area */
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            position: relative;
+            transform-style: preserve-3d;
         }
 
-        .gallery-wrapper {
+        .card-content {
+            text-align: center;
+            transform: translateZ(50px);
+        }
+
+        /* Gallery */
+        #gallery {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .scrolling-text {
+            position: absolute;
+            font-size: 20vw;
+            font-family: var(--f-title);
+            white-space: nowrap;
+            color: rgba(255, 255, 255, 0.05);
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0;
+        }
+
+        .images-container {
             display: flex;
             gap: 50px;
-            position: relative;
+            padding-left: 20%;
         }
 
-        .gallery-item {
-            width: 30vw;
-            height: 50vh;
+        .img-card {
+            width: 400px;
+            height: 600px;
             background-size: cover;
             background-position: center;
-            position: relative;
-            border-radius: 8px;
-            filter: grayscale(100%);
+            border-radius: 4px;
+            filter: grayscale(1);
             transition: filter 0.5s;
         }
 
-        .gallery-item:hover {
-            filter: grayscale(0%);
+        .img-card:hover {
+            filter: grayscale(0);
         }
 
-        /* CTA Section */
+        /* CTA */
         #cta {
-            text-align: center;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
-        .cta-btn {
-            margin-top: 3rem;
-            padding: 1.5rem 4rem;
+        .big-btn {
+            margin-top: 50px;
+            padding: 20px 60px;
             background: transparent;
-            border: 1px solid var(--c-white);
-            color: var(--c-white);
+            border: 2px solid var(--c-accent);
+            color: var(--c-accent);
             font-family: var(--f-title);
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             text-transform: uppercase;
-            cursor: none;
             position: relative;
             overflow: hidden;
-            transition: color 0.4s;
-            z-index: 10;
+            transition: all 0.3s;
+            cursor: none;
         }
 
-        .cta-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 100%;
-            background: var(--c-white);
-            z-index: -1;
-            transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .cta-btn:hover {
-            color: var(--c-dark);
-        }
-
-        .cta-btn:hover::before {
-            width: 100%;
-        }
-
-        /* Footer */
-        footer {
-            padding: 4rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        /* Loading Screen */
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .loader-text {
-            font-family: var(--f-title);
-            font-size: 2rem;
-            color: var(--c-white);
+        .big-btn:hover {
+            background: var(--c-accent);
+            color: #000;
+            box-shadow: 0 0 50px var(--c-accent);
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Scripts -->
     <div class="cursor"></div>
     <div id="loader">
         <div class="loader-text">0%</div>
@@ -339,130 +274,267 @@
 
     <nav>
         <div class="logo">CHRONOS</div>
-        <div class="links">
-            <a href="#" class="nav-link" data-hover>Миссии</a>
+        <div>
+            <a href="#" class="nav-link" data-hover>Места назначения</a>
             <a href="#" class="nav-link" data-hover>Флот</a>
-            <a href="#" class="nav-link" data-hover>Технологии</a>
-            <a href="#" class="nav-link" data-hover>Забронировать</a>
+            <a href="#" class="nav-link" data-hover>Бронь {2055}</a>
         </div>
     </nav>
 
     <main>
         <section id="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <div class="line">Покори</div>
-                    <div class="line"><span class="gradient-text">Время</span> и</div>
-                    <div class="line">Пространство</div>
-                </h1>
-                <p class="hero-subtitle">
-                    Эксклюзивные путешествия в будущее для тех, кто уже видел всё в настоящем.
-                    От суборбитальных полетов до колоний на Марсе.
-                </p>
-                <button class="cta-btn" data-hover style="margin-top: 50px;">Начать Экспедицию</button>
-            </div>
+            <h1 class="hero-title">
+                <div class="line reveal-text">Время</div>
+                <div class="line reveal-text">Не имеет</div>
+                <div class="line reveal-text"><span class="gradient-text">Значения</span></div>
+            </h1>
+            <p class="hero-subtitle reveal-opacity">
+                Первый туроператор, предлагающий экскурсии за пределы вашей временной линии.
+                Увидьте историю. Создайте будущее.
+            </p>
         </section>
 
         <section id="showcase">
-            <div class="product-info">
-                <h2>NEBULA X-1</h2>
-                <ul class="feature-list">
-                    <li>Квантовый двигатель 5-го поколения</li>
-                    <li>Панорамный обзор 360° из кают</li>
-                    <li>Нулевая гравитация по требованию</li>
-                    <li>Ужин от шеф-повара Мишлен на орбите</li>
+            <div style="font-size: 1.2rem; line-height: 1.8;">
+                <h2 style="font-family: var(--f-title); font-size: 3rem; margin-bottom: 30px;">NEBULA X-1</h2>
+                <p>Единственный гражданский крейсер с варп-двигателем класса "Омега".</p>
+                <br>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                        <span
+                            style="width: 8px; height: 8px; background: var(--c-accent); margin-right: 15px; border-radius: 50%; box-shadow: 0 0 10px var(--c-accent);"></span>
+                        Скорость света: x500
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                        <span
+                            style="width: 8px; height: 8px; background: var(--c-accent); margin-right: 15px; border-radius: 50%; box-shadow: 0 0 10px var(--c-accent);"></span>
+                        Автономность: 200 лет
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                        <span
+                            style="width: 8px; height: 8px; background: var(--c-accent); margin-right: 15px; border-radius: 50%; box-shadow: 0 0 10px var(--c-accent);"></span>
+                        ИИ Бортовой Партнер: Athena 9.0
+                    </li>
                 </ul>
-                <p style="margin-top: 2rem; color: #999; line-height: 1.6;">
-                    Nebula X-1 — это не просто корабль. Это пентхаус, дрейфующий в пустоте.
-                    Совершенство формы и функции, созданное для абсолютного комфорта в самых враждебных условиях.
-                </p>
             </div>
-            <div class="product-card" id="card-3d">
-                <!-- 3D Element Container -->
-                <div
-                    style="width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; border: 1px dashed rgba(255,255,255,0.2); border-radius: 10px;">
-                    <h3 style="font-family: var(--f-title); color: #555;">[3D MODEL INTERACTIVE]</h3>
+            <div class="card-3d" id="tilt-card" data-hover>
+                <div class="card-content">
+                    <h3 style="font-family: var(--f-title); font-size: 2rem;">[ КЛЮЧ ДОСТУПА ]</h3>
+                    <p style="opacity: 0.6; margin-top: 10px;">Наведите чтобы активировать</p>
                 </div>
             </div>
         </section>
 
         <section id="gallery">
-            <div class="gallery-wrapper">
-                <div class="gallery-item"
-                    style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200');">
+            <div class="scrolling-text">БЕСКОНЕЧНОСТЬ</div>
+            <div class="images-container">
+                <div class="img-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1534996858221-380b92700493?q=80&w=1000');">
                 </div>
-                <div class="gallery-item"
-                    style="background-image: url('https://images.unsplash.com/photo-1446776811953-71b905e04584?q=80&w=1200');">
+                <div class="img-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1454789548779-d55c4c98aa8e?q=80&w=1000');">
                 </div>
-                <div class="gallery-item"
-                    style="background-image: url('https://images.unsplash.com/photo-1541185933-717852c42260?q=80&w=1200');">
+                <div class="img-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=1000');">
                 </div>
             </div>
-            <h2 style="position: absolute; font-size: 15vw; font-family: var(--f-title); color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none;"
-                id="gallery-text">
-                БЕСКОНЕЧНОСТЬ
-            </h2>
         </section>
 
         <section id="cta">
-            <h2 style="font-size: 5vw; font-family: var(--f-title); max-width: 800px;">
-                Ваша история начинается <span class="gradient-text">здесь</span>.
-            </h2>
-            <button class="cta-btn" data-hover>Оставить заявку</button>
+            <h2 style="font-family: var(--f-title); font-size: 4rem;">ГОТОВЫ К ВЫЛЕТУ?</h2>
+            <button class="big-btn" data-hover>ЗАБРОНИРОВАТЬ МЕСТО</button>
         </section>
     </main>
 
-    <footer>
-        <div>© 2054 CHRONOS INC.</div>
-        <div>
-            DESIGNED BY ANTIGRAVITY
-        </div>
+    <footer style="padding: 50px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #555;">
+        &copy; 2055 CHRONOS / ANTIGRAVITY
     </footer>
 
     <script>
-        // === SETUP ===
-        const cursor = document.querySelector('.cursor');
-        const loader = document.getElementById('loader');
-        const loaderText = document.querySelector('.loader-text');
-
-        // === SMOOTH SCROLL ===
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true
+        // Init logic
+        window.addEventListener('load', () => {
+            initApp();
         });
 
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
+        // Safety timeout in case load hangs
+        setTimeout(() => {
+            if (document.getElementById('loader').style.display !== 'none') {
+                hideLoader();
+            }
+        }, 4000);
+
+        function initApp() {
+            // Setup Smooth Scroll
+            if (typeof Lenis !== 'undefined') {
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    smooth: true
+                });
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+            }
+
+            // Simulate loading process
+            const loaderText = document.querySelector('.loader-text');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 2;
+                if (loaderText) loaderText.innerText = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    hideLoader();
+                }
+            }, 30);
+
+            initThreeJS();
         }
-        requestAnimationFrame(raf);
 
-        // === LOADER ===
-        let loadProgress = 0;
-        const loadInterval = setInterval(() => {
-            loadProgress += Math.random() * 10;
-            if (loadProgress >= 100) {
-                loadProgress = 100;
-                clearInterval(loadInterval);
-
+        function hideLoader() {
+            const loader = document.getElementById('loader');
+            if (typeof gsap !== 'undefined') {
                 gsap.to(loader, {
                     yPercent: -100,
-                    duration: 1.5,
+                    duration: 1,
                     ease: "power4.inOut",
-                    onComplete: initAnimations
+                    onComplete: initGSAP
+                });
+            } else {
+                loader.style.display = 'none';
+                initGSAP(); // Fallback
+            }
+        }
+
+        function initThreeJS() {
+            if (typeof THREE === 'undefined') return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({
+                canvas: document.getElementById('bg-canvas'),
+                alpha: true,
+                antialias: true
+            });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Starfield
+            const particlesGeometry = new THREE.BufferGeometry();
+            const count = 3000;
+            const posArray = new Float32Array(count * 3);
+
+            for (let i = 0; i < count * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 50;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0x00f3ff,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, material);
+            scene.add(particlesMesh);
+
+            camera.position.z = 10;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX / window.innerWidth - 0.5;
+                mouseY = e.clientY / window.innerHeight - 0.5;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                particlesMesh.rotation.y += 0.001;
+                particlesMesh.rotation.x += (mouseY * 0.5 - particlesMesh.rotation.x) * 0.05;
+                particlesMesh.rotation.y += (mouseX * 0.5 - particlesMesh.rotation.y) * 0.05;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        function initGSAP() {
+            if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero Reveals
+            const tl = gsap.timeline();
+            tl.from('.reveal-text', { y: 100, opacity: 0, duration: 1, stagger: 0.2, ease: "power4.out" })
+                .from('.reveal-opacity', { opacity: 0, duration: 1 }, "-=0.5");
+
+            // Horizontal Scroll Text
+            gsap.to('.scrolling-text', {
+                xPercent: 20,
+                scrollTrigger: {
+                    trigger: '#gallery',
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1
+                }
+            });
+
+            // Gallery Parallax
+            gsap.from('.images-container', {
+                x: 100,
+                scrollTrigger: {
+                    trigger: '#gallery',
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1
+                }
+            });
+
+            // Card 3D Tilt
+            const card = document.getElementById('tilt-card');
+            if (card) {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = ((y - centerY) / centerY) * -15;
+                    const rotateY = ((x - centerX) / centerX) * 15;
+
+                    gsap.to(card, {
+                        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`,
+                        duration: 0.3
+                    });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        transform: `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`,
+                        duration: 0.5
+                    });
                 });
             }
-            loaderText.innerText = Math.floor(loadProgress) + '%';
-        }, 100);
+        }
 
-        // === CURSOR ===
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
         document.addEventListener('mousemove', (e) => {
-            gsap.to(cursor, {
-                x: e.clientX,
-                y: e.clientY,
-                duration: 0.1
-            });
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
 
         document.querySelectorAll('[data-hover]').forEach(el => {
@@ -470,150 +542,6 @@
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
 
-        // === 3D BACKGROUND (Three.js) ===
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
-
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-
-        // Particles
-        const geometry = new THREE.BufferGeometry();
-        const particlesCount = 2000;
-        const posArray = new Float32Array(particlesCount * 3);
-
-        for (let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 15; // Spread
-        }
-
-        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-        // Material
-        const material = new THREE.PointsMaterial({
-            size: 0.005,
-            color: 0x00ffaa,
-            transparent: true,
-            opacity: 0.8,
-        });
-
-        const particlesMesh = new THREE.Points(geometry, material);
-        scene.add(particlesMesh);
-
-        // Lights
-        const pointLight = new THREE.PointLight(0xffffff, 0.1);
-        pointLight.position.x = 2;
-        pointLight.position.y = 3;
-        pointLight.position.z = 4;
-        scene.add(pointLight);
-
-        camera.position.z = 3;
-
-        // Mouse interaction for 3D
-        let mouseX = 0;
-        let mouseY = 0;
-
-        document.addEventListener('mousemove', (event) => {
-            mouseX = event.clientX / window.innerWidth - 0.5;
-            mouseY = event.clientY / window.innerHeight - 0.5;
-        });
-
-        // Animation Loop
-        const clock = new THREE.Clock();
-
-        function animate() {
-            const elapsedTime = clock.getElapsedTime();
-
-            particlesMesh.rotation.y = elapsedTime * 0.05;
-            particlesMesh.rotation.x = mouseY * 0.5;
-            particlesMesh.rotation.y += mouseX * 0.5;
-
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Check resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // === ANIMATIONS (GSAP) ===
-        function initAnimations() {
-            gsap.registerPlugin(ScrollTrigger);
-
-            // Hero Text Reveal
-            const tl = gsap.timeline();
-            tl.to('.hero-title', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
-                .to('.hero-subtitle', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, '-=0.5')
-                .fromTo('.cta-btn', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, '-=0.5');
-
-            // Scroll Reveal Text
-            gsap.utils.toArray('.product-info').forEach(section => {
-                gsap.from(section, {
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top 80%",
-                        end: "bottom 20%",
-                        toggleActions: "play none none reverse"
-                    },
-                    y: 50,
-                    opacity: 0,
-                    duration: 1
-                });
-            });
-
-            // 3D Card Tilt Effect
-            const card = document.getElementById('card-3d');
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; // x position within the element.
-                const y = e.clientY - rect.top;  // y position within the element.
-
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-
-                const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg rotation
-                const rotateY = ((x - centerX) / centerX) * 10;
-
-                gsap.to(card, {
-                    transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-                    duration: 0.5
-                });
-            });
-
-            card.addEventListener('mouseleave', () => {
-                gsap.to(card, {
-                    transform: `perspective(1000px) rotateX(0deg) rotateY(0deg)`,
-                    duration: 0.5
-                });
-            });
-
-            // Gallery Parallax
-            gsap.to('.gallery-wrapper', {
-                xPercent: -20,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: '#gallery',
-                    scrub: 1,
-                    start: 'top bottom',
-                    end: 'bottom top'
-                }
-            });
-
-            gsap.to('#gallery-text', {
-                xPercent: 20,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: '#gallery',
-                    scrub: 1,
-                    start: 'top bottom',
-                    end: 'bottom top'
-                }
-            });
-        }
     </script>
 </body>
 
