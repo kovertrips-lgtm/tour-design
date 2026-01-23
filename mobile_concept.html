@@ -6,7 +6,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>CHRONOS | Mobile Singularity</title>
+    <title>CHRONOS | Мобильная Сингулярность</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -228,11 +228,11 @@
         <div class="gyro-icon">
             <div class="gyro-dot"></div>
         </div>
-        <h2 style="font-family: var(--f-head); margin-bottom: 10px;">IMMERSIVE MODE</h2>
+        <h2 style="font-family: var(--f-head); margin-bottom: 10px;">ИММЕРСИВНЫЙ<br>РЕЖИМ</h2>
         <p style="color: #888; font-size: 0.9rem; max-width: 300px;">
-            Allow access to device motion sensors for full 3D control.
+            Разрешите доступ к датчикам устройства для полного 3D управления.
         </p>
-        <button class="start-btn" id="start-btn">ENTER SIMULATION</button>
+        <button class="start-btn" id="start-btn">ВОЙТИ В СИМУЛЯЦИЮ</button>
     </div>
 
     <!-- Canvas -->
@@ -240,7 +240,7 @@
 
     <!-- HUD -->
     <div class="hud-top">
-        <span>GYRO: <span id="gyro-status">OFFLINE</span></span>
+        <span>ГИРО: <span id="gyro-status">ОЖИДАНИЕ</span></span>
         <span>REC: <span style="color:red">●</span></span>
     </div>
 
@@ -255,38 +255,36 @@
 
     <main>
         <section id="hero">
-            <h1 class="scramble-text">POCKET<br>REALITY</h1>
+            <h1 class="scramble-text">КАРМАННАЯ<br>РЕАЛЬНОСТЬ</h1>
             <p class="hero-subtitle">
-                Tilt your device to explore the singularity. A full universe in the palm of your hand.
+                Наклоняйте устройство, чтобы исследовать сингулярность. Целая вселенная на вашей ладони.
             </p>
             <!-- Haptic Button -->
             <button
                 style="margin-top: 30px; background: transparent; border: 1px solid white; color: white; padding: 15px 30px; font-family: var(--f-head);"
                 onclick="triggerHaptic()">
-                HOLD TO CHARGE
+                УДЕРЖИВАТЬ
             </button>
         </section>
 
         <section id="features">
-            <h2 style="font-family: var(--f-head); font-size: 2rem; margin-bottom: 2rem;">MOBILE TECH</h2>
+            <h2 style="font-family: var(--f-head); font-size: 2rem; margin-bottom: 2rem;">МОБИЛЬНЫЕ ТЕХ.</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">◉</div>
-                    <h3>GYROSCOPE</h3>
-                    <p style="margin-top: 10px; opacity: 0.7;">Physical device movement controls the 3D camera in
-                        real-time.</p>
+                    <h3>ГИРОСКОП</h3>
+                    <p style="margin-top: 10px; opacity: 0.7;">Физическое движение телефона управляет 3D-камерой.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
-                    <h3>HAPTICS</h3>
-                    <p style="margin-top: 10px; opacity: 0.7;">Tactile feedback engine synchronized with UI
-                        interactions.</p>
+                    <h3>ТАКТИЛЬНОСТЬ</h3>
+                    <p style="margin-top: 10px; opacity: 0.7;">Виброотклик Haptic Engine синхронизирован с интерфейсом.
+                    </p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚛</div>
                     <h3>WEBGL 2.0</h3>
-                    <p style="margin-top: 10px; opacity: 0.7;">Optimized GPGPU shaders running smoothly on mobile
-                        silicon.</p>
+                    <p style="margin-top: 10px; opacity: 0.7;">Оптимизированные шейдеры для мобильных процессоров.</p>
                 </div>
             </div>
         </section>
@@ -328,18 +326,18 @@
                     const response = await DeviceOrientationEvent.requestPermission();
                     if (response === 'granted') {
                         initControls();
-                        gyroStatus.innerText = "ACTIVE";
+                        gyroStatus.innerText = "АКТИВЕН";
                     } else {
-                        gyroStatus.innerText = "DENIED";
+                        gyroStatus.innerText = "ОТКАЗ";
                     }
                 } catch (e) {
                     console.error(e);
-                    gyroStatus.innerText = "ERROR";
+                    gyroStatus.innerText = "ОШИБКА";
                 }
             } else {
                 // Non-iOS or older devices
                 initControls();
-                gyroStatus.innerText = "ACTIVE";
+                gyroStatus.innerText = "АКТИВЕН";
             }
 
             // 3. Hide Overlay
