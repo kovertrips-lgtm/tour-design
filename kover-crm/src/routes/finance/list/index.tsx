@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-    Card, Table, Tag, Typography, Button, Row, Col, Statistic, DatePicker, Segmented, Modal, Form, Input, Select, InputNumber, Divider
+    Card, Table, Tag, Typography, Button, Row, Col, DatePicker, Segmented, Modal, Form, Input, Select, InputNumber, Tabs
 } from "antd";
 import {
     PlusOutlined,
@@ -11,12 +11,15 @@ import {
     WalletOutlined,
     BankOutlined,
     CalendarOutlined,
-    CheckCircleFilled,
-    ClockCircleOutlined
+    PieChartOutlined,
+    BarsOutlined,
+    AppstoreOutlined
 } from "@ant-design/icons";
 import { Area } from "@ant-design/plots";
 import { Text } from "@/components";
 import dayjs from "dayjs";
+import { PnLReport } from "../reports/pnl";
+import { CashflowReport } from "../reports/cashflow";
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -35,7 +38,7 @@ const MOCK_ACCOUNTS = [
     { name: "Касса", balance: 180000, type: "cash" },
 ];
 
-const MOCK_TRANSACTIONS = [
+const INITIAL_TRANSACTIONS = [
     { id: 1, date: "23.01.2026", category: "Продажа тура", description: "Оплата за Альпы (Ivanov)", amount: 52000, type: "income", account: "Сбербанк", project: "Альпы 2026" },
     { id: 2, date: "23.01.2026", category: "Маркетинг", description: "Facebook Ads", amount: -15000, type: "expense", account: "Тинькофф", project: "Общее" },
     { id: 3, date: "22.01.2026", category: "Аренда", description: "Офис Январь", amount: -45000, type: "expense", account: "Сбербанк", project: "Офис" },
@@ -57,12 +60,36 @@ const CHART_DATA = (() => {
 })();
 
 export const FinanceListPage = () => {
+    const [activeTab, setActiveTab] = useState("dashboard");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [opType, setOpType] = useState<"income" | "expense" | "transfer">("income");
+    const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
+
+    // Form State
+    const [form] = Form.useForm();
 
     const openModal = (type: "income" | "expense" | "transfer") => {
         setOpType(type);
         setIsModalOpen(true);
+        form.resetFields();
+    };
+
+    const handleCreate = () => {
+        form.validateFields().then(values => {
+            const newTx = {
+                id: transactions.length + 1,
+                date: values.date.format("DD.MM.YYYY"),
+                // Map category depending on opType (simplified)
+                category: values.category || (opType === 'transfer' ? 'Перевод' : opType === 'income' ? 'Прочее поступление' : 'Прочий расход'),
+                description: values.description || "Без описания",
+                amount: opType === 'expense' ? -values.amount : values.amount,
+                type: opType,
+                account: values.account,
+                project: values.project || "",
+            };
+            setTransactions([newTx, ...transactions]);
+            setIsModalOpen(false);
+        });
     };
 
     const chartConfig = {
@@ -86,20 +113,8 @@ export const FinanceListPage = () => {
         autoFit: true,
     };
 
-    return (
-        <div className="page-container" style={{ maxWidth: 1600, margin: "0 auto" }}>
-            {/* HEADER */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-                <div>
-                    <Title level={2} style={{ margin: 0, fontWeight: 700 }}>Финансы</Title>
-                    <Text type="secondary">Обзор денежных потоков компании</Text>
-                </div>
-                <div style={{ display: 'flex', gap: 12 }}>
-                    <RangePicker style={{ borderRadius: 8 }} />
-                    <Button icon={<CalendarOutlined />}>Этот месяц</Button>
-                </div>
-            </div>
-
+    const DashboardView = () => (
+        <>
             {/* KPI CARDS */}
             <Row gutter={[24, 24]} style={{ marginBottom: 32 }}>
                 {MOCK_STATS.map((stat, idx) => (
@@ -127,7 +142,7 @@ export const FinanceListPage = () => {
             </Row>
 
             {/* CHART & ACCOUNTS */}
-            <Row gutter={[24, 24]} style={{ marginBottom: 32 }}>
+            <Row gutter={[24, 24]}>
                 <Col xs={24} xl={16}>
                     <Card
                         title={<span style={{ fontSize: 18, fontWeight: 700 }}>Динамика остатков</span>}
@@ -169,104 +184,150 @@ export const FinanceListPage = () => {
                     </Card>
                 </Col>
             </Row>
+        </>
+    );
 
-            {/* OPERATIONS SECTION */}
-            <Card
-                bordered={false}
-                style={{ borderRadius: 16, boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}
-                bodyStyle={{ padding: "0" }}
-            >
-                <div style={{ padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #f0f0f0" }}>
-                    <Title level={4} style={{ margin: 0 }}>Операции</Title>
-                    <div style={{ display: 'flex', gap: 12 }}>
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            style={{ backgroundColor: "#52c41a", borderColor: "#52c41a", height: 40, borderRadius: 8, padding: "0 24px", fontWeight: 600 }}
-                            onClick={() => openModal("income")}
-                        >
-                            Поступление
-                        </Button>
-                        <Button
-                            type="primary"
-                            icon={<MinusOutlined />}
-                            danger
-                            style={{ height: 40, borderRadius: 8, padding: "0 24px", fontWeight: 600 }}
-                            onClick={() => openModal("expense")}
-                        >
-                            Расход
-                        </Button>
-                        <Button
-                            icon={<SwapOutlined />}
-                            style={{ height: 40, borderRadius: 8, padding: "0 24px", fontWeight: 600 }}
-                            onClick={() => openModal("transfer")}
-                        >
-                            Перевод
-                        </Button>
-                    </div>
+    const OperationsView = () => (
+        <Card
+            bordered={false}
+            style={{ borderRadius: 16, boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}
+            bodyStyle={{ padding: "0" }}
+        >
+            <div style={{ padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #f0f0f0" }}>
+                <Title level={4} style={{ margin: 0 }}>Операции</Title>
+                <div style={{ display: 'flex', gap: 12 }}>
+                    <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        style={{ backgroundColor: "#52c41a", borderColor: "#52c41a", height: 40, borderRadius: 8, padding: "0 24px", fontWeight: 600 }}
+                        onClick={() => openModal("income")}
+                    >
+                        Поступление
+                    </Button>
+                    <Button
+                        type="primary"
+                        icon={<MinusOutlined />}
+                        danger
+                        style={{ height: 40, borderRadius: 8, padding: "0 24px", fontWeight: 600 }}
+                        onClick={() => openModal("expense")}
+                    >
+                        Расход
+                    </Button>
+                    <Button
+                        icon={<SwapOutlined />}
+                        style={{ height: 40, borderRadius: 8, padding: "0 24px", fontWeight: 600 }}
+                        onClick={() => openModal("transfer")}
+                    >
+                        Перевод
+                    </Button>
                 </div>
+            </div>
 
-                <Table
-                    dataSource={MOCK_TRANSACTIONS}
-                    rowKey="id"
-                    pagination={{ pageSize: 10 }}
-                    rowClassName="finance-row"
-                >
-                    <Table.Column
-                        title="Дата"
-                        dataIndex="date"
-                        width={120}
-                        render={(text) => <div style={{ color: "#8c8c8c", fontWeight: 500 }}>{text}</div>}
-                    />
-                    <Table.Column
-                        title="Тип / Категория"
-                        dataIndex="category"
-                        render={(text, record: any) => (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <div style={{
-                                    width: 8, height: 8, borderRadius: "50%",
-                                    backgroundColor: record.type === 'income' ? '#52c41a' : '#f5222d'
-                                }} />
-                                <span style={{ fontWeight: 500 }}>{text}</span>
+            <Table
+                dataSource={transactions}
+                rowKey="id"
+                pagination={{ pageSize: 15 }}
+                rowClassName="finance-row"
+            >
+                <Table.Column
+                    title="Дата"
+                    dataIndex="date"
+                    width={120}
+                    render={(text) => <div style={{ color: "#8c8c8c", fontWeight: 500 }}>{text}</div>}
+                />
+                <Table.Column
+                    title="Тип / Категория"
+                    dataIndex="category"
+                    render={(text, record: any) => (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{
+                                width: 8, height: 8, borderRadius: "50%",
+                                backgroundColor: record.type === 'income' ? '#52c41a' : '#f5222d'
+                            }} />
+                            <span style={{ fontWeight: 500 }}>{text}</span>
+                        </div>
+                    )}
+                />
+                <Table.Column
+                    title="Описание"
+                    dataIndex="description"
+                    render={(text) => <span style={{ color: "#595959" }}>{text}</span>}
+                />
+                <Table.Column
+                    title="Проект"
+                    dataIndex="project"
+                    render={(text) => (
+                        text ? <Tag>{text}</Tag> : <span style={{ color: '#ccc' }}>-</span>
+                    )}
+                />
+                <Table.Column
+                    title="Счет"
+                    dataIndex="account"
+                    render={(text) => <Tag color="blue">{text}</Tag>}
+                />
+                <Table.Column
+                    title="Сумма"
+                    dataIndex="amount"
+                    align="right"
+                    render={(amount, record: any) => (
+                        <Text
+                            strong
+                            style={{
+                                color: record.type === 'income' ? '#52c41a' : '#f5222d',
+                                fontSize: 16,
+                                fontVariantNumeric: "tabular-nums"
+                            }}
+                        >
+                            {amount > 0 ? '+' : ''}{amount.toLocaleString()} ₽
+                        </Text>
+                    )}
+                />
+            </Table>
+        </Card>
+    );
+
+    return (
+        <div className="page-container" style={{ maxWidth: 1600, margin: "0 auto" }}>
+            {/* HEADER */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+                <div>
+                    <Title level={2} style={{ margin: 0, fontWeight: 700 }}>Финансы</Title>
+                </div>
+                <div style={{ display: 'flex', gap: 12 }}>
+                    <RangePicker style={{ borderRadius: 8 }} />
+                    <Button icon={<CalendarOutlined />}>Этот месяц</Button>
+                </div>
+            </div>
+
+            <Tabs
+                activeKey={activeTab}
+                onChange={setActiveTab}
+                type="card"
+                size="large"
+                style={{ marginBottom: 32 }}
+                items={[
+                    {
+                        key: 'dashboard',
+                        label: <span><AppstoreOutlined /> Рабочий стол</span>,
+                        children: <DashboardView />
+                    },
+                    {
+                        key: 'operations',
+                        label: <span><BarsOutlined /> Операции</span>,
+                        children: <OperationsView />
+                    },
+                    {
+                        key: 'reports',
+                        label: <span><PieChartOutlined /> Отчеты</span>,
+                        children: (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                                <PnLReport />
+                                <CashflowReport />
                             </div>
-                        )}
-                    />
-                    <Table.Column
-                        title="Описание"
-                        dataIndex="description"
-                        render={(text) => <span style={{ color: "#595959" }}>{text}</span>}
-                    />
-                    <Table.Column
-                        title="Проект"
-                        dataIndex="project"
-                        render={(text) => (
-                            <Tag>{text}</Tag>
-                        )}
-                    />
-                    <Table.Column
-                        title="Счет"
-                        dataIndex="account"
-                        render={(text) => <Tag color="blue">{text}</Tag>}
-                    />
-                    <Table.Column
-                        title="Сумма"
-                        dataIndex="amount"
-                        align="right"
-                        render={(amount, record: any) => (
-                            <Text
-                                strong
-                                style={{
-                                    color: record.type === 'income' ? '#52c41a' : '#f5222d',
-                                    fontSize: 16,
-                                    fontVariantNumeric: "tabular-nums"
-                                }}
-                            >
-                                {amount > 0 ? '+' : ''}{amount.toLocaleString()} ₽
-                            </Text>
-                        )}
-                    />
-                </Table>
-            </Card>
+                        )
+                    }
+                ]}
+            />
 
             {/* ADD OPERATION MODAL */}
             <Modal
@@ -294,15 +355,15 @@ export const FinanceListPage = () => {
                     </Title>
                 </div>
 
-                <Form layout="vertical" size="large">
+                <Form form={form} layout="vertical" size="large" initialValues={{ date: dayjs() }}>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="Дата">
+                            <Form.Item name="date" label="Дата" rules={[{ required: true }]}>
                                 <DatePicker style={{ width: '100%' }} format="DD.MM.YYYY" />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Сумма">
+                            <Form.Item name="amount" label="Сумма" rules={[{ required: true }]}>
                                 <InputNumber
                                     style={{ width: '100%' }}
                                     formatter={value => `₽ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -313,7 +374,7 @@ export const FinanceListPage = () => {
                         </Col>
                     </Row>
 
-                    <Form.Item label={opType === 'transfer' ? "Списать со счета" : "Счет"}>
+                    <Form.Item name="account" label={opType === 'transfer' ? "Списать со счета" : "Счет"} rules={[{ required: true }]}>
                         <Select
                             placeholder="Выберите счет"
                             options={[
@@ -325,7 +386,7 @@ export const FinanceListPage = () => {
                     </Form.Item>
 
                     {opType === 'transfer' && (
-                        <Form.Item label="Зачислить на счет">
+                        <Form.Item name="toAccount" label="Зачислить на счет">
                             <Select
                                 placeholder="Выберите счет"
                                 options={[
@@ -338,35 +399,36 @@ export const FinanceListPage = () => {
                     )}
 
                     {opType !== 'transfer' && (
-                        <Form.Item label="Статья (Категория)">
+                        <Form.Item name="category" label="Статья (Категория)">
                             <Select
                                 placeholder="Выберите категорию"
                                 options={[
-                                    { label: "Продажа тура", value: "sales" },
-                                    { label: "Маркетинг", value: "marketing" },
-                                    { label: "Зарплата", value: "salary" },
-                                    { label: "Офис", value: "office" },
+                                    { label: "Продажа тура", value: "Продажа тура" },
+                                    { label: "Маркетинг", value: "Маркетинг" },
+                                    { label: "Зарплата", value: "Зарплата" },
+                                    { label: "Офис", value: "Офис" },
                                 ]}
                             />
                         </Form.Item>
                     )}
 
-                    <Form.Item label="Проект (Сделка)">
+                    <Form.Item name="project" label="Проект (Сделка)">
                         <Select
                             placeholder="Привязать к сделке (необязательно)"
                             showSearch
+                            allowClear
                             options={[
-                                { label: "Альпы 2026", value: "alps" },
-                                { label: "Париж Весна", value: "paris" },
+                                { label: "Альпы 2026", value: "Альпы 2026" },
+                                { label: "Париж Весна", value: "Париж Весна" },
                             ]}
                         />
                     </Form.Item>
 
-                    <Form.Item label="Комментарий">
+                    <Form.Item name="description" label="Комментарий">
                         <Input.TextArea rows={2} placeholder="Детали операции..." />
                     </Form.Item>
 
-                    <Button type="primary" block size="large" onClick={() => setIsModalOpen(false)}>
+                    <Button type="primary" block size="large" onClick={handleCreate}>
                         Сохранить
                     </Button>
                 </Form>
