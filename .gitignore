@@ -1,2 +1,9 @@
-
 .DS_Store
+.vercel
+.env*.local
+node_modules/
+**/node_modules/
+__pycache__/
+*.pyc
+optimized_images_auto/
+optimized_images/
