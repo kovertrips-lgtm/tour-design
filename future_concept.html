@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRONOS | Путешествия за гранью возможного</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;500;700;900&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.19/dist/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --c-dark: #050505;
+            --c-accent: #00f3ff;
+            --c-accent-2: #ff0055;
+            --c-white: #ffffff;
+            --f-main: 'Montserrat', sans-serif;
+            --f-title: 'Orbitron', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--c-dark);
+            color: var(--c-white);
+            font-family: var(--f-main);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--c-accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hovered {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(0, 243, 255, 0.1);
+            border-color: var(--c-white);
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-text {
+            font-family: var(--f-title);
+            font-size: 3rem;
+            color: var(--c-accent);
+            text-shadow: 0 0 20px var(--c-accent);
+        }
+
+        /* Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-family: var(--f-title);
+            font-weight: 900;
+            font-size: 1.8rem;
+            letter-spacing: 0.2em;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #fff;
+            margin-left: 3rem;
+            font-family: var(--f-title);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        /* Hero */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+        }
+
+        .hero-title {
+            font-family: var(--f-title);
+            font-size: 7vw;
+            line-height: 1;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .hero-title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--c-accent), var(--c-accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            margin-top: 2rem;
+            max-width: 500px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Showcase */
+        #showcase {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 0 10%;
+            gap: 5%;
+        }
+
+        .card-3d {
+            height: 500px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .card-content {
+            text-align: center;
+            transform: translateZ(50px);
+        }
+
+        /* Gallery */
+        #gallery {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .scrolling-text {
+            position: absolute;
+            font-size: 20vw;
+            font-family: var(--f-title);
+            white-space: nowrap;
+            color: rgba(255, 255, 255, 0.05);
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0;
+        }
+
+        .images-container {
+            display: flex;
+            gap: 50px;
+            padding-left: 20%;
+        }
+
+        .img-card {
+            width: 400px;
+            height: 600px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            filter: grayscale(1);
+            transition: filter 0.5s;
+        }
+
+        .img-card:hover {
+            filter: grayscale(0);
+        }
+
+        /* CTA */
+        #cta {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .big-btn {
+            margin-top: 50px;
+            padding: 20px 60px;
+            background: transparent;
+            border: 2px solid var(--c-accent);
+            color: var(--c-accent);
+            font-family: var(--f-title);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: none;
+        }
+
+        .big-btn:hover {
+            background: var(--c-accent);
+            color: #000;
+            box-shadow: 0 0 50px var(--c-accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+    <div id="loader">
+        <div class="loader-text">0%</div>
+    </div>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <nav>
+        <div class="logo">CHRONOS</div>
+        <div>
+            <a href="#" class="nav-link" data-hover>Места назначения</a>
+            <a href="#" class="nav-link" data-hover>Флот</a>
+            <a href="#" class="nav-link" data-hover>Бронь {2055}</a>
+        </div>
+    </nav>
+
+    <main>
+        <section id="hero">
+            <h1 class="hero-title">
+                <div class="line reveal-text">Время</div>
+                <div class="line reveal-text">Не имеет</div>
+                <div class="line reveal-text"><span class="gradient-text">Значения</span></div>
+            </h1>
+            <p class="hero-subtitle reveal-opacity">
+                Первый туроператор, предлагающий экскурсии за пределы вашей временной линии.
+                Увидьте историю. Создайте будущее.
+            </p>
+        </section>
+
+        <section id="showcase">
+            <div style="font-size: 1.2rem; line-height: 1.8;">
+                <h2 style="font-family: var(--f-title); font-size: 3rem; margin-bottom: 30px;">NEBULA X-1</h2>
+                <p>Единственный гражданский крейсер с варп-двигателем класса "Омега".</p>
+                <br>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                        <span
+                            style="width: 8px; height: 8px; background: var(--c-accent); margin-right: 15px; border-radius: 50%; box-shadow: 0 0 10px var(--c-accent);"></span>
+                        Скорость света: x500
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                        <span
+                            style="width: 8px; height: 8px; background: var(--c-accent); margin-right: 15px; border-radius: 50%; box-shadow: 0 0 10px var(--c-accent);"></span>
+                        Автономность: 200 лет
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                        <span
+                            style="width: 8px; height: 8px; background: var(--c-accent); margin-right: 15px; border-radius: 50%; box-shadow: 0 0 10px var(--c-accent);"></span>
+                        ИИ Бортовой Партнер: Athena 9.0
+                    </li>
+                </ul>
+            </div>
+            <div class="card-3d" id="tilt-card" data-hover>
+                <div class="card-content">
+                    <h3 style="font-family: var(--f-title); font-size: 2rem;">[ КЛЮЧ ДОСТУПА ]</h3>
+                    <p style="opacity: 0.6; margin-top: 10px;">Наведите чтобы активировать</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery">
+            <div class="scrolling-text">БЕСКОНЕЧНОСТЬ</div>
+            <div class="images-container">
+                <div class="img-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1534996858221-380b92700493?q=80&w=1000');">
+                </div>
+                <div class="img-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1454789548779-d55c4c98aa8e?q=80&w=1000');">
+                </div>
+                <div class="img-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=1000');">
+                </div>
+            </div>
+        </section>
+
+        <section id="cta">
+            <h2 style="font-family: var(--f-title); font-size: 4rem;">ГОТОВЫ К ВЫЛЕТУ?</h2>
+            <button class="big-btn" data-hover>ЗАБРОНИРОВАТЬ МЕСТО</button>
+        </section>
+    </main>
+
+    <footer style="padding: 50px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #555;">
+        &copy; 2055 CHRONOS / ANTIGRAVITY
+    </footer>
+
+    <script>
+        // Init logic
+        window.addEventListener('load', () => {
+            initApp();
+        });
+
+        // Safety timeout in case load hangs
+        setTimeout(() => {
+            if (document.getElementById('loader').style.display !== 'none') {
+                hideLoader();
+            }
+        }, 4000);
+
+        function initApp() {
+            // Setup Smooth Scroll
+            if (typeof Lenis !== 'undefined') {
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    smooth: true
+                });
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+            }
+
+            // Simulate loading process
+            const loaderText = document.querySelector('.loader-text');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 2;
+                if (loaderText) loaderText.innerText = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    hideLoader();
+                }
+            }, 30);
+
+            initThreeJS();
+        }
+
+        function hideLoader() {
+            const loader = document.getElementById('loader');
+            if (typeof gsap !== 'undefined') {
+                gsap.to(loader, {
+                    yPercent: -100,
+                    duration: 1,
+                    ease: "power4.inOut",
+                    onComplete: initGSAP
+                });
+            } else {
+                loader.style.display = 'none';
+                initGSAP(); // Fallback
+            }
+        }
+
+        function initThreeJS() {
+            if (typeof THREE === 'undefined') return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({
+                canvas: document.getElementById('bg-canvas'),
+                alpha: true,
+                antialias: true
+            });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Starfield
+            const particlesGeometry = new THREE.BufferGeometry();
+            const count = 3000;
+            const posArray = new Float32Array(count * 3);
+
+            for (let i = 0; i < count * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 50;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0x00f3ff,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, material);
+            scene.add(particlesMesh);
+
+            camera.position.z = 10;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX / window.innerWidth - 0.5;
+                mouseY = e.clientY / window.innerHeight - 0.5;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                particlesMesh.rotation.y += 0.001;
+                particlesMesh.rotation.x += (mouseY * 0.5 - particlesMesh.rotation.x) * 0.05;
+                particlesMesh.rotation.y += (mouseX * 0.5 - particlesMesh.rotation.y) * 0.05;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        function initGSAP() {
+            if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero Reveals
+            const tl = gsap.timeline();
+            tl.from('.reveal-text', { y: 100, opacity: 0, duration: 1, stagger: 0.2, ease: "power4.out" })
+                .from('.reveal-opacity', { opacity: 0, duration: 1 }, "-=0.5");
+
+            // Horizontal Scroll Text
+            gsap.to('.scrolling-text', {
+                xPercent: 20,
+                scrollTrigger: {
+                    trigger: '#gallery',
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1
+                }
+            });
+
+            // Gallery Parallax
+            gsap.from('.images-container', {
+                x: 100,
+                scrollTrigger: {
+                    trigger: '#gallery',
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1
+                }
+            });
+
+            // Card 3D Tilt
+            const card = document.getElementById('tilt-card');
+            if (card) {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = ((y - centerY) / centerY) * -15;
+                    const rotateY = ((x - centerX) / centerX) * 15;
+
+                    gsap.to(card, {
+                        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`,
+                        duration: 0.3
+                    });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        transform: `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`,
+                        duration: 0.5
+                    });
+                });
+            }
+        }
+
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('[data-hover]').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+    </script>
+</body>
+
+</html>

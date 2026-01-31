@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Protocol: Polina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #111111;
+            --surface-hover: #1a1a1a;
+            --border: #333;
+            --primary: #d4d4d8;
+            /* Zinc 300 */
+            --secondary: #71717a;
+            /* Zinc 500 */
+            --accent: #3b82f6;
+            /* Blue 500 */
+            --accent-glow: rgba(59, 130, 246, 0.2);
+            --success: #10b981;
+
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        /* Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: var(--font-main);
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* Layout */
+        .wrapper {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Header / Meta Data */
+        .header {
+            margin-bottom: 60px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .title-block h1 {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        .title-block .headline {
+            font-size: 32px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .meta-tags {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .pulse {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        /* Roadmap Container */
+        .roadmap {
+            position: relative;
+            padding-left: 20px;
+            border-left: 1px solid var(--border);
+        }
+
+        /* Timeline Items */
+        .step {
+            position: relative;
+            padding-left: 40px;
+            padding-bottom: 60px;
+        }
+
+        .step:last-child {
+            padding-bottom: 0;
+        }
+
+        /* Timeline Dot */
+        .step::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            /* Adjust based on padding/border */
+            top: 0;
+            width: 9px;
+            height: 9px;
+            background: var(--bg);
+            border: 1px solid var(--secondary);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .step.current::before {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .step-time {
+            font-family: var(--font-mono);
+            color: var(--accent);
+            font-size: 12px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        /* Content Blocks (Bento-ish) */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            border-color: #444;
+            background: var(--surface-hover);
+        }
+
+        .card h4 {
+            font-size: 13px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        /* Lists inside cards */
+        .check-list {
+            list-style: none;
+        }
+
+        .check-list li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .check-list li:last-child {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .check-list li span {
+            color: #e4e4e7;
+        }
+
+        .check-list li small {
+            color: var(--secondary);
+            margin-left: 10px;
+            text-align: right;
+        }
+
+        /* Tools Row */
+        .tools-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .tool-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Status Indicators */
+        .status-badge {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--secondary);
+        }
+
+        .status-badge.pending {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            font-family: var(--font-mono);
+            color: var(--secondary);
+            font-size: 11px;
+            text-align: right;
+        }
+
+        /* Glitch/Tech Decoration */
+        .deco-line {
+            position: absolute;
+            left: -21px;
+            /* Overlap border */
+            top: 50%;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--accent) 0%, transparent 100%);
+            opacity: 0;
+        }
+
+        .step.current .deco-line {
+            opacity: 1;
+            height: 100px;
+            top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="title-block">
+                <h1>ПЛАН ОБУЧЕНИЯ // v.1.0</h1>
+                <div class="headline">Polina_Onboarding</div>
+            </div>
+            <div class="meta-tags">
+                <div class="tag active"><span class="pulse"></span> СТАТУС: ЗАПУЩЕНО</div>
+                <div class="tag">РОЛЬ: SMM CREATOR</div>
+                <div class="tag">ЮНИТ: МАРКЕТИНГ</div>
+            </div>
+        </header>
+
+        <!-- Timeline / Process -->
+        <div class="roadmap">
+
+
+
+            <!-- Phase 1 -->
+            <div class="step current">
+                <div class="deco-line"></div>
+                <div class="step-header">
+                    <span class="step-time">ЭТАП 01 // ЭТА НЕДЕЛЯ</span>
+                    <h2 class="step-title">Подготовка</h2>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h4>Чек-лист Действий</h4>
+                        <ul class="check-list">
+                            <li><span>1. Изучить Курс</span> <small>"Высокоохватные Reels" (TG)</small></li>
+                            <li><span>2. Встреча с Дарьей</span> <small>Понять Стилистику / Брендбук</small></li>
+                            <li><span>3. Анализ Аккаунтов</span> <small>@kover_travel, @discovery.trip</small></li>
+                            <li><span>4. Подготовить Идеи</span> <small>Черновик контента на неделю</small></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="step">
+                <div class="step-header">
+                    <span class="step-time">ЭТАП 02 // ПОНЕДЕЛЬНИК</span>
+                    <h2 class="step-title">Брифинг</h2>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h4>Повестка Встречи</h4>
+                        <ul class="check-list">
+                            <li><span>Генерация Идей (Твоих)</span> <small>Обсуждение</small></li>
+                            <li><span>Составление ТЗ</span> <small>Совместно</small></li>
+                            <li><span>Доступы и Сервисы</span> <small>Обучение</small></li>
+                            <li><span>Воронки Продаж</span> <small>Ознакомление</small></li>
+                            <li><span>Условия и Оплата</span> <small>Финализация</small></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Системные Доступы</h4>
+                        <div class="tools-row">
+                            <div class="tool-chip">&#128247; Instagram</div>
+                            <div class="tool-chip">&#128640; Telegram</div>
+                            <div class="tool-chip">&#128235; SendPulse</div>
+                            <div class="tool-chip">&#128221; Notion</div>
+                            <div class="tool-chip">&#128202; ZoomSphere</div>
+                            <div class="tool-chip">&#127912; Figma</div>
+                            <div class="tool-chip">&#128193; Google Drive</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="step">
+                <div class="step-header">
+                    <span class="step-time">ЭТАП 03 // 2 НЕДЕЛИ</span>
+                    <h2 class="step-title">План по Контенту на Стажировку</h2>
+                </div>
+                <div class="content-grid">
+                    <!-- Reels -->
+                    <div class="card">
+                        <h4>Reels (3)</h4>
+                        <ul class="check-list">
+                            <li><span>Виральный Охват</span> <span class="status-badge pending">Ожидание</span></li>
+                            <li><span>Лояльность / Доверие</span> <span class="status-badge pending">Ожидание</span>
+                            </li>
+                            <li><span>Продажи: Париж</span> <span class="status-badge pending">Ожидание</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Posts -->
+                    <div class="card">
+                        <h4>Posts (3)</h4>
+                        <ul class="check-list">
+                            <li><span>Пост: Охват</span> <span class="status-badge pending">Ожидание</span></li>
+                            <li><span>Пост: Лояльность</span> <span class="status-badge pending">Ожидание</span>
+                            </li>
+                            <li><span>Пост: Продажа</span> <span class="status-badge pending">Ожидание</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Telegram -->
+                    <div class="card">
+                        <h4>Telegram (2)</h4>
+                        <ul class="check-list">
+                            <li><span>Пост 1 (Текст + Визуал)</span> <span class="status-badge pending">Ожидание</span>
+                            </li>
+                            <li><span>Пост 2 (Текст + Визуал)</span> <span class="status-badge pending">Ожидание</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Stories -->
+                    <div class="card">
+                        <h4>Stories (2)</h4>
+                        <ul class="check-list">
+                            <li><span>Лояльность</span> <small>Стори 1</small></li>
+                            <li><span>Продажа / Прогрев</span> <small>Стори 2</small></li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--secondary);">
+                    Обязательное присутствие в кадре (минимум 1 единица контента).
+                </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="step">
+                <div class="step-header">
+                    <span class="step-time">ЭТАП 04 // РЕПОРТАЖКА</span>
+                    <h2 class="step-title">Съемки в Поездке</h2>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h4>Первый Выезд в Тур</h4>
+                        <div style="color: #888; font-size: 13px;">
+                            Полная интеграция в логистику тура. Написание сценариев, живая съемка и оперативный
+                            продакшн на месте.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            KOVER_ANTIGRAVITY // SYS_ID: 994-22 // AUTH: ADMIN
+        </div>
+
+    </div>
+
+</body>
+
+</html>
