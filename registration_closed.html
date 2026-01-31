@@ -66,12 +66,14 @@
 
         /* 1. Base Image - Darkened */
         .bg-image {
-            background-image: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hall5.jpg');
+            /* Unsplash: Dark Atmospheric Mountains */
+            background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2600&auto=format&fit=crop');
             background-size: cover;
-            background-position: center;
-            filter: brightness(0.3) blur(2px) grayscale(0.4);
-            transform: scale(1.1);
-            /* Slight zoom to hide blur edges */
+            background-position: center bottom;
+            /* Anchor to bottom for mountains */
+            filter: brightness(0.4) blur(0px) grayscale(0.2);
+            /* Reduced blur for better visibility */
+            transform: scale(1.05);
         }
 
         /* 2. Liquid Gradient Mesh Animation */
