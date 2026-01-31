@@ -1,161 +1,175 @@
-<meta charset="UTF-8">
 <style>
-.emoji-svg { width: 1.25em; height: 1.25em; vertical-align: -0.25em; fill: currentColor; display: inline-block; }
-
-    .time-section {
-        background-color: #F5F5F7;
-        padding: 80px 20px;
+    /* Desktop Timeline Styles */
+    .d-time-section {
+        background-color: #F8F9FA;
+        padding: 100px 20px;
         font-family: 'Montserrat', sans-serif;
     }
 
-    .time-header {
+    .d-time-header {
         text-align: center;
-        margin-bottom: 50px;
+        margin-bottom: 60px;
     }
 
-    .time-title {
-        font-size: 36px;
+    .d-time-title {
+        font-size: 42px;
         font-weight: 800;
         margin: 0;
+        color: #111;
+        text-transform: uppercase;
     }
 
-    .days-grid {
-        max-width: 1000px;
+    .d-days-grid {
+        max-width: 1100px;
         margin: 0 auto;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 60px;
+        gap: 80px;
+        position: relative;
     }
 
-    .day-col {}
+    /* Vertical Divider */
+    .d-days-grid::after {
+        content: '';
+        position: absolute;
+        top: 50px;
+        bottom: 0;
+        left: 50%;
+        width: 1px;
+        background: #E0E0E0;
+        transform: translateX(-50%);
+    }
 
-    .day-header {
+    .d-day-col {
+        position: relative;
+        z-index: 2;
+    }
+
+    .d-day-header {
         font-size: 24px;
         font-weight: 800;
-        /* Extra bold */
         color: #29B6F6;
-        margin-bottom: 30px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #E0E0E0;
-    }
-
-    .t-item {
+        margin-bottom: 40px;
         display: flex;
-        gap: 15px;
-        margin-bottom: 25px;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .d-t-item {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
         align-items: flex-start;
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s;
     }
 
-    .t-time {
-        font-weight: 700;
-        font-size: 15px;
-        color: #111;
+    .d-t-item:hover {
+        transform: translateX(5px);
+    }
+
+    .d-t-time {
+        font-weight: 800;
+        font-size: 16px;
+        color: #29B6F6;
         min-width: 50px;
-        padding-top: 3px;
+        padding-top: 2px;
     }
 
-    .t-desc {
+    .d-t-desc {
         font-size: 15px;
         color: #555;
         line-height: 1.5;
     }
 
-    .t-desc strong {
+    .d-t-desc strong {
         color: #000;
         display: block;
-        margin-bottom: 3px;
+        margin-bottom: 4px;
+        font-size: 16px;
     }
 
-    @media (max-width: 768px) {
-        .days-grid {
+    @media (max-width: 900px) {
+        .d-days-grid {
             grid-template-columns: 1fr;
             gap: 40px;
+        }
+
+        .d-days-grid::after {
+            display: none;
         }
     }
 </style>
 
-<div class="time-section">
-    <div class="time-header">
-        <h2 class="time-title">Тайминг путешествия</h2>
+<div class="d-time-section">
+    <div class="d-time-header">
+        <h2 class="d-time-title">Тайминг путешествия</h2>
     </div>
 
-    <div class="days-grid">
+    <div class="d-days-grid">
         <!-- DAY 1 -->
-        <div class="day-col">
-            <div class="day-header"><svg class="emoji-svg" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> Суббота, 28.02</div>
+        <div class="d-day-col">
+            <div class="d-day-header">📅 Суббота, 28.02</div>
 
-            <div class="t-item">
-                <div class="t-time">02:45</div>
-                <div class="t-desc"><strong>Сбор</strong> Hlavní Nádraží, выезд</div>
+            <div class="d-t-item">
+                <div class="d-t-time">02:45</div>
+                <div class="d-t-desc"><strong>Встреча и старт</strong> Hlavní Nádraží, посадка в комфортный автобус.
+                </div>
             </div>
-            <div class="t-item">
-                <div class="t-time">09:00</div>
-                <div class="t-desc"><strong>Гальштат</strong> Прибытие и экскурсия</div>
+            <div class="d-t-item">
+                <div class="d-t-time">09:00</div>
+                <div class="d-t-desc"><strong>Гальштат</strong> Прибытие на рассвете. Экскурсия без толп.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">11:00</div>
-                <div class="t-desc">Свободное время в Гальштате</div>
+            <div class="d-t-item">
+                <div class="d-t-time">12:00</div>
+                <div class="d-t-desc"><strong>Выезд в горы</strong> Переезд живописной дорогой к Wildkogel Arena.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">12:00</div>
-                <div class="t-desc">Выезд в Wildkogel Arena</div>
+            <div class="d-t-item">
+                <div class="d-t-time">15:00</div>
+                <div class="d-t-desc"><strong>САНИ (14 км)</strong> Подъем на 2200м и легендарный спуск (почти час
+                    драйва).</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">15:00</div>
-                <div class="t-desc"><strong>Сани!</strong> Аренда и начало катания</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">18:00</div>
-                <div class="t-desc">Сбор и выезд в отель</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">19:00</div>
-                <div class="t-desc">Заселение и ужин</div>
+            <div class="d-t-item">
+                <div class="d-t-time">19:00</div>
+                <div class="d-t-desc"><strong>Отель & Ужин</strong> Заселение в 4* отель, ужин и SPA.</div>
             </div>
         </div>
 
         <!-- DAY 2 -->
-        <div class="day-col">
-            <div class="day-header"><svg class="emoji-svg" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> Воскресенье, 01.03</div>
+        <div class="d-day-col">
+            <div class="d-day-header">📅 Воскресенье, 01.03</div>
 
-            <div class="t-item">
-                <div class="t-time">07:30</div>
-                <div class="t-desc">Завтрак</div>
+            <div class="d-t-item">
+                <div class="d-t-time">07:30</div>
+                <div class="d-t-desc"><strong>Завтрак</strong> Фермерский шведский стол в отеле.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">08:45</div>
-                <div class="t-desc">Выселение, выезд в Hangar-7</div>
+            <div class="d-t-item">
+                <div class="d-t-time">11:00</div>
+                <div class="d-t-desc"><strong>Hangar-7</strong> Посещение музея Red Bull: болиды F1 и самолеты.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">11:00</div>
-                <div class="t-desc"><strong>Музей Red Bull</strong> Экскурсия</div>
+            <div class="d-t-item">
+                <div class="d-t-time">13:30</div>
+                <div class="d-t-desc"><strong>Зальцбург</strong> Прибытие, прогулка по старому городу, свободное время.
+                </div>
             </div>
-            <div class="t-item">
-                <div class="t-time">13:00</div>
-                <div class="t-desc">Выезд в Зальцбург</div>
+            <div class="d-t-item">
+                <div class="d-t-time">18:00</div>
+                <div class="d-t-desc"><strong>Выезд домой</strong> Отправление в Прагу.</div>
             </div>
-            <div class="t-item">
-                <div class="t-time">13:30</div>
-                <div class="t-desc"><strong>Зальцбург</strong> Прибытие и прогулка</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">15:00</div>
-                <div class="t-desc">Свободное время</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">18:00</div>
-                <div class="t-desc">Выезд в Прагу</div>
-            </div>
-            <div class="t-item">
-                <div class="t-time">23:00</div>
-                <div class="t-desc">Возвращение в Прагу</div>
+            <div class="d-t-item">
+                <div class="d-t-time">23:00</div>
+                <div class="d-t-desc"><strong>Прибытие</strong> Мы дома (ориентировочно).</div>
             </div>
         </div>
     </div>
 
-    <div style="text-align:center; margin-top:40px;">
-        <button onclick="openWidget()"
-            style="background:#29B6F6; color:#fff; border:none; padding:15px 30px; border-radius:100px; font-size:16px; font-weight:700; cursor:pointer;">ЗАБРОНИРОВАТЬ
-            ТУР</button>
+    <div style="text-align:center; margin-top:60px;">
+        <button onclick="openWidget()" class="kover-btn"
+            style="background:#29B6F6; color:#fff !important; border:none; padding:24px 60px; border-radius:20px; font-size:20px; font-weight:800; cursor:pointer; text-transform:uppercase; box-shadow: 0 10px 40px rgba(41, 182, 246, 0.4); transition: transform 0.2s; min-width: 280px; display: inline-block;">
+            ЗАБРОНИРОВАТЬ ТУР
+        </button>
     </div>
 </div>

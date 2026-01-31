@@ -1,0 +1,308 @@
+<style>
+    /* DESKTOP REVIEWS STYLES */
+    .d-reviews-section {
+        --kover-accent: #18B7EA;
+        --kover-dark: #1A1A1A;
+        --kover-gray: #F4F5F7;
+        --kover-white: #FFFFFF;
+
+        background-color: #fff;
+        padding: 100px 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    }
+
+    .d-reviews-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+    }
+
+    .d-reviews-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .d-reviews-title {
+        font-size: 42px;
+        font-weight: 800;
+        color: var(--kover-dark);
+        margin: 0 0 16px 0;
+    }
+
+    .d-reviews-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #FFF4E5;
+        color: #B34010;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    /* GRID LAYOUT */
+    .d-reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    /* CARDS */
+    .d-review-card {
+        height: 500px;
+        /* Taller for desktop */
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        background: var(--kover-white);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .d-review-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Video Card */
+    .d-card-video {
+        background: black;
+        cursor: pointer;
+    }
+
+    .d-rv-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .d-rv-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        pointer-events: none;
+    }
+
+    .d-rv-play-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 70px;
+        height: 70px;
+        background: var(--kover-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(24, 183, 234, 0.5);
+        transition: 0.3s;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    .d-card-video.is-playing .d-rv-play-btn,
+    .d-card-video.is-playing .d-rv-overlay,
+    .d-card-video.is-playing .d-badg-bottom {
+        opacity: 0;
+    }
+
+    .d-play-icon {
+        width: 24px;
+        height: 24px;
+        fill: white;
+        margin-left: 4px;
+    }
+
+    .d-badg-bottom {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        z-index: 5;
+    }
+
+    /* Hybrid Card */
+    .d-card-hybrid {
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+        box-shadow: none;
+        gap: 20px;
+    }
+
+    .d-hybrid-video {
+        flex: 1;
+        border-radius: 24px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .d-hybrid-video video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .d-hybrid-stat {
+        height: 140px;
+        background: white;
+        border-radius: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .d-stat-num {
+        font-size: 48px;
+        font-weight: 900;
+        background: linear-gradient(90deg, #29B6F6 0%, #A08C85 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+        margin-bottom: 5px;
+    }
+
+    .d-stat-text {
+        font-size: 14px;
+        color: #666;
+        font-weight: 500;
+    }
+
+    .d-cta-wrap {
+        text-align: center;
+        margin-top: 60px;
+    }
+
+    .d-btn-primary {
+        background: #29B6F6;
+        color: white !important;
+        padding: 24px 60px;
+        border-radius: 20px;
+        font-size: 20px;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 10px 40px rgba(41, 182, 246, 0.4);
+        transition: 0.2s;
+        display: inline-block;
+    }
+
+    .d-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(24, 183, 234, 0.4);
+    }
+</style>
+
+<div class="d-reviews-section">
+    <div class="d-reviews-container">
+        <header class="d-reviews-header">
+            <h2 class="d-reviews-title">Что говорят наши путешественники</h2>
+            <div class="d-reviews-badge">
+                <span>⭐ Оценка 9.5 из 10 (250+ туров)</span>
+            </div>
+        </header>
+
+        <div class="d-reviews-grid" id="dReviewsGrid">
+            <!-- Items injected by JS -->
+        </div>
+
+        <div class="d-cta-wrap">
+            <a href="javascript:openWidget()" class="d-btn-primary kover-btn">Хочу поехать с вами</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const dReviews = [
+            {
+                type: 'video',
+                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/play_720p.mp4',
+                posterUrl: 'https://581522.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/thumbnail.jpg',
+                tourName: 'Тур: Гальштат и Сани'
+            },
+            {
+                type: 'hybrid',
+                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/e3e6f8c6-04d5-4068-b0d1-6bfa2e163c37/play_720p.mp4',
+                statNumber: '85%',
+                statDesc: 'участников едут с нами снова',
+                tourName: 'Эмоции бесценны'
+            },
+            {
+                type: 'video',
+                videoUrl: 'https://vz-244f7910-31a.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/play_720p.mp4',
+                posterUrl: 'https://581522.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/thumbnail.jpg',
+                tourName: 'Тур: Гальштат и Сани'
+            }
+        ];
+
+        const container = document.getElementById('dReviewsGrid');
+        const playIcon = '<svg class="d-play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+
+        dReviews.forEach(item => {
+            let html = '';
+            if (item.type === 'video') {
+                html = `
+                <div class="d-review-card d-card-video" onclick="dToggleVideo(this)">
+                    <video class="d-rv-video" src="${item.videoUrl}#t=0.1" playsinline loop muted preload="metadata"></video>
+                    <div class="d-rv-overlay"></div>
+                    <div class="d-badg-bottom">${item.tourName}</div>
+                    <div class="d-rv-play-btn">${playIcon}</div>
+                </div>`;
+            } else if (item.type === 'hybrid') {
+                html = `
+                <div class="d-review-card d-card-hybrid">
+                    <div class="d-hybrid-video" onclick="dToggleVideo(this)">
+                        <video style="width:100%; height:100%; object-fit:cover;" src="${item.videoUrl}#t=0.1" playsinline loop muted preload="metadata"></video>
+                         <div class="d-rv-play-btn" style="width:50px; height:50px;">${playIcon}</div>
+                    </div>
+                    <div class="d-hybrid-stat">
+                        <div class="d-stat-num">${item.statNumber}</div>
+                        <div class="d-stat-text">${item.statDesc}</div>
+                    </div>
+                </div>`;
+            }
+            container.insertAdjacentHTML('beforeend', html);
+        });
+
+        window.dToggleVideo = function (el) {
+            const vid = el.querySelector('video');
+            if (!vid) return;
+
+            // Pause all others
+            document.querySelectorAll('.d-review-card video').forEach(v => {
+                if (v !== vid) {
+                    v.pause();
+                    v.closest('.d-review-card')?.classList.remove('is-playing');
+                    v.closest('.d-hybrid-video')?.classList.remove('is-playing');
+                }
+            });
+
+            if (vid.paused) {
+                vid.muted = false;
+                vid.play();
+                el.classList.add('is-playing');
+            } else {
+                vid.pause();
+                el.classList.remove('is-playing');
+            }
+        }
+
+    })();
+</script>

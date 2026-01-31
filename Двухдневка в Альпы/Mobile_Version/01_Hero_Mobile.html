@@ -37,7 +37,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            background: url('https://kovertrip.b-cdn.net/%D0%94%D0%B2%D1%83%D1%85%D0%B4%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0%20%D0%B2%20%D0%90%D0%BB%D1%8C%D0%BF%D1%8B/hero_bg.png') no-repeat center center/cover;
+            background: url('https://kovertrip.b-cdn.net/images/hero_bg.webp') no-repeat center center/cover;
             padding-bottom: env(safe-area-inset-bottom, 20px);
             overflow: hidden;
             /* Cut off any potential overflow */
@@ -139,16 +139,20 @@
         /* Sticky-feeling CTA */
         .m-cta-btn {
             background: var(--brand-cyan);
-            color: white;
+            color: white !important;
             border: none;
-            width: 100%;
-            padding: 18px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 700;
+            width: auto;
+            max-width: 92%;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            padding: 16px 24px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 800;
             text-transform: uppercase;
             margin-top: 16px;
-            box-shadow: 0 8px 24px rgba(41, 182, 246, 0.35);
+            box-shadow: 0 10px 30px rgba(41, 182, 246, 0.4);
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             transition: transform 0.2s;
@@ -159,16 +163,7 @@
         }
     </style>
 
-<style>
-/* GLOBAL SVG EMOJI STYLE */
-.emoji-svg {
-    width: 1.25em;
-    height: 1.25em;
-    vertical-align: -0.25em;
-    fill: currentColor;
-    display: inline-block;
-}
-</style>
+
 
 </head>
 
@@ -184,8 +179,8 @@
 
         <div class="m-hero-content">
             <div class="m-badges">
-                <div class="m-badge"><svg class="emoji-svg" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> 28 фев - 01 мар</div>
-                <div class="m-badge accent"><svg class="emoji-svg" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg> 4990 KC</div>
+                <div class="m-badge">📅 28 фев - 01 мар</div>
+                <div class="m-badge accent">💸 4990 KC</div>
             </div>
 
             <h1 class="m-title">Альпы: <span>Перезагрузка</span> за 48 часов</h1>
@@ -195,7 +190,7 @@
                 только собрать чемодан.
             </p>
 
-            <button onclick="openWidget()" class="m-cta-btn">Занять место</button>
+            <button onclick="openWidget()" class="m-cta-btn kover-btn">Занять место</button>
         </div>
     </div>
 

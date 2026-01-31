@@ -1,0 +1,299 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+<style>
+    :root {
+        --bg: #050505;
+        --surface: #111111;
+        --surface-hover: #1a1a1a;
+        --border: #333;
+        --primary: #d4d4d8;
+        /* Zinc 300 */
+        --secondary: #71717a;
+        /* Zinc 500 */
+        --accent: #3b82f6;
+        /* Blue 500 */
+        --accent-glow: rgba(59, 130, 246, 0.2);
+        --success: #10b981;
+
+        --font-main: 'Inter', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    /* Reset */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        outline: none;
+    }
+
+    /* 
+       NOTE FOR TILDA: 
+       If this block is inserted into a standard Tilda page, 
+       the 'body' tag style might affect the whole page.
+       If you want this specific black background, ensure this is okay.
+       Otherwise, replace 'body' with '.t-records' or a specific wrapper class.
+    */
+    body {
+        background-color: var(--bg);
+        color: var(--primary);
+        font-family: var(--font-main);
+        font-size: 14px;
+        line-height: 1.5;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    /* Layout */
+    .wrapper {
+        width: 100%;
+        max-width: 900px;
+    }
+
+    /* Header / Meta Data */
+    .header {
+        margin-bottom: 60px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .title-block h1 {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--secondary);
+        margin-bottom: 12px;
+    }
+
+    .title-block .headline {
+        font-size: 32px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+        color: #fff;
+    }
+
+    .meta-tags {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .tag.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(59, 130, 246, 0.05);
+    }
+
+    .pulse {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: currentColor;
+        border-radius: 50%;
+        box-shadow: 0 0 8px currentColor;
+    }
+
+    /* Roadmap Container */
+    .roadmap {
+        position: relative;
+        padding-left: 20px;
+        border-left: 1px solid var(--border);
+    }
+
+    /* Timeline Items */
+    .step {
+        position: relative;
+        padding-left: 40px;
+        padding-bottom: 60px;
+    }
+
+    .step:last-child {
+        padding-bottom: 0;
+    }
+
+    /* Timeline Dot */
+    .step::before {
+        content: '';
+        position: absolute;
+        left: -25px;
+        /* Adjust based on padding/border */
+        top: 0;
+        width: 9px;
+        height: 9px;
+        background: var(--bg);
+        border: 1px solid var(--secondary);
+        border-radius: 50%;
+        z-index: 2;
+    }
+
+    .step.current::before {
+        background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 0 15px var(--accent);
+    }
+
+    .step-header {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .step-time {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 12px;
+    }
+
+    .step-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: #fff;
+    }
+
+    /* Content Blocks (Bento-ish) */
+    .content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+    }
+
+    .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        transition: 0.2s;
+    }
+
+    .card:hover {
+        border-color: #444;
+        background: var(--surface-hover);
+    }
+
+    .card h4 {
+        font-size: 13px;
+        color: var(--secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        font-weight: 600;
+    }
+
+    /* Lists inside cards */
+    .check-list {
+        list-style: none;
+    }
+
+    .check-list li {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .check-list li:last-child {
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .check-list li span {
+        color: #e4e4e7;
+    }
+
+    .check-list li small {
+        color: var(--secondary);
+        margin-left: 10px;
+        text-align: right;
+    }
+
+    /* Tools Row */
+    .tools-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .tool-chip {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        color: #ccc;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Status Indicators */
+    .status-badge {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--secondary);
+    }
+
+    .status-badge.pending {
+        color: #fbbf24;
+        background: rgba(251, 191, 36, 0.1);
+    }
+
+    /* Footer */
+    .footer {
+        margin-top: 80px;
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+        font-family: var(--font-mono);
+        color: var(--secondary);
+        font-size: 11px;
+        text-align: right;
+    }
+
+    /* Glitch/Tech Decoration */
+    .deco-line {
+        position: absolute;
+        left: -21px;
+        /* Overlap border */
+        top: 50%;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(to bottom, var(--accent) 0%, transparent 100%);
+        opacity: 0;
+    }
+
+    .step.current .deco-line {
+        opacity: 1;
+        height: 100px;
+        top: 10px;
+    }
+</style>

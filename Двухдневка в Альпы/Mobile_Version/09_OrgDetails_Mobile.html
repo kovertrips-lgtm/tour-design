@@ -157,8 +157,8 @@
             right: 20px;
             background: #29B6F6;
             color: white;
-            padding: 18px;
-            border-radius: 16px;
+            padding: 16px;
+            border-radius: 20px;
             border: none;
             font-weight: 800;
             text-transform: uppercase;
@@ -187,16 +187,7 @@
         }
     </style>
 
-    <style>
-        /* GLOBAL SVG EMOJI STYLE */
-        .emoji-svg {
-            width: 1.25em;
-            height: 1.25em;
-            vertical-align: -0.25em;
-            fill: currentColor;
-            display: inline-block;
-        }
-    </style>
+
 
 </head>
 
@@ -204,7 +195,7 @@
 
     <div class="m-org-section">
         <div class="m-org-header">
-            <h2 class="m-org-title">Всё продумано до мелочей</h2>
+            <h2 class="m-org-title">Стоимость:</h2>
         </div>
 
         <!-- Included -->
@@ -230,11 +221,11 @@
         <!-- Extra -->
         <div class="m-info-card">
             <div class="m-info-h">
-                <span>На карманные расходы</span>
+                <span>Не включено</span>
             </div>
             <ul class="m-list">
-                <li>Вечерний ски-пасс: 23€</li>
-                <li>Прокат спортивных саней: 10€</li>
+                <li>Подъемник: 23€</li>
+                <li>Аренда саней: 11€</li>
                 <li>Обеды и ужины</li>
             </ul>
         </div>
@@ -245,7 +236,7 @@
                 <span>Что надеть?</span>
             </div>
             <p class="m-info-text">
-                Одевайся удобно и тепло! Идеально — лыжный костюм или непромокаемые штаны + куртка.
+                Одевайся удобно и тепло! Идеально — непромокаемые штаны + куртка.
                 <br><br>
                 Обязательно: перчатки, шапка, шарф и удобная зимняя обувь.
             </p>
@@ -254,14 +245,28 @@
         <div class="m-float-spacer"></div>
     </div>
 
-    <button onclick="openWidget()" class="m-float-cta" id="sticky-cta">
+    <button onclick="openWidget()" class="m-float-cta kover-btn" id="sticky-cta">
         Занять место
     </button>
 
     <script>
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('sticky-cta');
-            if (window.scrollY > 600) {
+            const ctaSection = document.querySelector('.m-cta-section');
+            const scrollY = window.scrollY;
+
+            // Show after scrolling a bit
+            let shouldShow = scrollY > 400;
+
+            // Hide if footer/final CTA is visible so they don't overlap
+            if (ctaSection && shouldShow) {
+                const rect = ctaSection.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    shouldShow = false;
+                }
+            }
+
+            if (shouldShow) {
                 btn.classList.add('visible');
             } else {
                 btn.classList.remove('visible');

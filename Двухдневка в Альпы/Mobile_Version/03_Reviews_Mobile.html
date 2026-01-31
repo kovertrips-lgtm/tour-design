@@ -582,13 +582,15 @@
 
         .reviews-section-v3 .btn-primary {
             display: inline-block;
-            background-color: var(--kover-accent);
+            background-color: #29B6F6;
             color: white !important;
-            font-weight: 600;
+            font-weight: 800;
             padding: 16px 32px;
-            border-radius: 50px;
+            border-radius: 20px;
+            font-size: 16px;
             text-decoration: none;
-            box-shadow: 0 8px 20px rgba(24, 183, 234, 0.4);
+            box-shadow: 0 10px 40px rgba(41, 182, 246, 0.4);
+            text-transform: uppercase;
         }
 
         @media (max-width: 480px) {
@@ -627,45 +629,33 @@
 
     <script>
         (function () {
-            const videoGirls = 'https://vz-244f7910-31a.b-cdn.net/65d3dc36-a6b1-4fd1-b59b-bc595c64d3f2/play_720p.mp4';
-            const videoTimur = 'https://vz-244f7910-31a.b-cdn.net/1f30615c-3b0a-449f-93cb-f9a64dbe4abc/play_720p.mp4';
-
             const reviewsData = [
                 {
                     type: 'video',
-                    videoUrl: videoTimur,
-                    posterUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80',
-                    author: 'Тимур',
+                    videoUrl: 'https://vz-244f7910-31a.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/play_720p.mp4',
+                    posterUrl: 'https://581522.b-cdn.net/b852d126-3944-4fc9-860a-75009851d9bb/thumbnail.jpg',
+                    author: 'Путешественник',
                     tourName: 'Тур: Гальштат и Сани',
-                    instagram: 'alena_liza',
+                    instagram: '',
                     instagramLink: '#'
                 },
                 {
                     type: 'hybrid_split',
-                    videoUrl: videoGirls,
-                    author: 'Алена',
+                    videoUrl: 'https://vz-244f7910-31a.b-cdn.net/e3e6f8c6-04d5-4068-b0d1-6bfa2e163c37/play_720p.mp4',
+                    author: 'Путешественник',
                     tourName: 'Тур: Гальштат и Сани',
                     statNumber: '85%',
-                    statDesc: 'участников едут с&nbsp;нами во&nbsp;второй раз'
-                }
-                /*,
-                {
-                    type: 'apple_audio',
-                    photoUrl: 'https://static.tildacdn.com/tild6135-3531-4266-b535-333562386530/kover_amster_949.jpg',
-                    audioUrl: 'https://res.cloudinary.com/djrdtujtj/video/upload/v1766626439/otzyv_tenerife_sjiuun.ogg',
-                    author: 'Дима и Даша',
-                    tourName: 'Тур: Тенерифе',
-                    time: '0:00'
+                    statDesc: 'участников едут с нами снова'
                 },
                 {
-                    type: 'scrollable_text',
-                    items: [
-                        { author: 'Екатерина', instagram: 'dlougY_', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80', text: 'Живу в Праге 3 года, KOVER — это спасение! Села в автобус, расслабилась и кайфуешь.', tourName: 'Тур: Австрия' },
-                        { author: 'Дмитрий', instagram: 'dimon_prg', rating: '9/10', avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80', text: 'Кресла удобные, остановок много. Компания собралась отличная!', tourName: 'Тур: Саксония' },
-                        { author: 'Ольга', instagram: 'helga_travels', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&q=80', text: 'Первый раз поехала одна, но сразу нашла друзей. Атмосфера просто супер!', tourName: 'Тур: Италия' },
-                        { author: 'Иван', instagram: 'ivan_skier', rating: '10/10', avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&q=80', text: 'Организация на высоте. Никаких забот, только отдых и горы.', tourName: 'Тур: Франция' }
-                    ]
-                }*/
+                    type: 'video',
+                    videoUrl: 'https://vz-244f7910-31a.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/play_720p.mp4',
+                    posterUrl: 'https://581522.b-cdn.net/f446d1cd-7fad-4cc8-afb2-8a5e73a9e475/thumbnail.jpg',
+                    author: 'Путешественник',
+                    tourName: 'Тур: Гальштат и Сани',
+                    instagram: '',
+                    instagramLink: '#'
+                }
             ];
 
             const container = document.getElementById('reviewsContainerV3');
