@@ -149,22 +149,23 @@
 
         h1.title {
             font-family: var(--font-head);
-            font-size: 42px;
-            font-weight: 900;
-            /* Black weight */
-            line-height: 1.0;
+            font-size: 56px;
+            /* Uniform large size */
+            font-weight: 800;
+            line-height: 1.1;
             margin: 0 0 24px 0;
             text-transform: uppercase;
             letter-spacing: -0.02em;
             color: white;
+            /* Single color */
             text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
+        /* Remove special span styling so it looks uniform */
         h1.title span {
-            display: block;
-            font-size: 64px;
-            color: var(--kover-blue);
-            /* Kover Blue Highlight */
+            display: inline;
+            font-size: inherit;
+            color: inherit;
         }
 
         p.description {
@@ -214,11 +215,7 @@
         /* Responsive */
         @media (min-width: 768px) {
             h1.title {
-                font-size: 54px;
-            }
-
-            h1.title span {
-                font-size: 82px;
+                font-size: 64px;
             }
 
             .btn-kover {
@@ -242,11 +239,11 @@
             </div>
 
             <h1 class="title">
-                SOLD<br><span>OUT</span>
+                МЕСТ НЕТ
             </h1>
 
             <p class="description">
-                Все места на этот тур уже забронированы. <br>Но скоро будут новые анонсы!
+                К сожалению, регистрация на этот выезд уже закрыта. <br>Но у нас ещё много планов на сезон.
             </p>
 
             <a href="https://www.kovertrips.com/calendar" class="btn-kover">
