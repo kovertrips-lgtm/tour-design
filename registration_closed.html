@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <title>Регистрация закрыта | Kover Trips</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Fonts -->
@@ -62,11 +63,73 @@
 
         /* Затемнение для читаемости */
         .hero-overlay {
+=======
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>KoverTrips - Мест Нет</title>
+
+    <!-- Google Fonts: Inter & Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Space+Grotesk:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Add Montserrat Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --bg: #000000;
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --kover-blue: #29B6F6;
+            /* KOVER CYAN/BLUE */
+            --kover-lime: #BDFF00;
+            /* KOVER LIME */
+            --font-head: 'Montserrat', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+            /* Kover uses Montserrat mostly */
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: var(--font-head);
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* --- BACKGROUND LAYERS --- */
+        .bg-layer {
+>>>>>>> 717a06f4bfb42ac0dae2e6c8c5a065f1ce012cec
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+<<<<<<< HEAD
             background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.8) 100%);
             z-index: 2;
             pointer-events: none;
@@ -290,12 +353,169 @@
             .hero-btn {
                 width: 100%;
                 padding: 20px;
+=======
+            z-index: 0;
+        }
+
+        /* 1. Base Image */
+        .bg-image {
+            /* Unsplash: Dark Atmospheric Mountains */
+            background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center bottom;
+            filter: brightness(0.6) grayscale(0.2);
+            /* Clearer, less blur */
+            transform: scale(1.05);
+        }
+
+        /* 2. Gradient Overlay (Kover Style - Dark & Blue tint) */
+        .bg-overlay {
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 50%, #000000 100%),
+                radial-gradient(circle at 50% 50%, rgba(41, 182, 246, 0.1) 0%, transparent 60%);
+        }
+
+        /* 3. Noise Overlay for texture */
+        .bg-noise {
+            z-index: 2;
+            opacity: 0.07;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        /* --- CONTENT --- */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 24px;
+            max-width: 600px;
+            /* Slightly wider */
+            width: 100%;
+        }
+
+        /* Glass Card - Kover Style */
+        .glass-card {
+            background: rgba(22, 22, 24, 0.65);
+            /* Darker Kover glass */
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 48px 32px;
+            border-radius: 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 100px;
+            color: #fff;
+            /* Neutral white for 'closed'/info */
+            font-size: 12px;
+            font-weight: 800;
+            /* Bold like Kover tags */
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+
+        /* Optional: Make it Red if strongly closed, but user said 'our colors' */
+        /* usually red is fine for errors, but let's try a muted look or Kover Blue/Lime */
+        /* Let's stick to a clean ALERT style */
+
+        h1.title {
+            font-family: var(--font-head);
+            font-size: 56px;
+            /* Uniform large size */
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 0 0 24px 0;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            color: white;
+            /* Single color */
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Remove special span styling so it looks uniform */
+        h1.title span {
+            display: inline;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        p.description {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-weight: 500;
+            max-width: 400px;
+        }
+
+        /* --- BUTTON: Kover Blue Style --- */
+        .btn-kover {
+            background-color: var(--kover-blue);
+            color: #fff !important;
+            /* Force White */
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 16px;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 24px 50px;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(41, 182, 246, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 0.05em;
+            width: 100%;
+        }
+
+        .btn-kover:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(41, 182, 246, 0.6);
+            background-color: #4fc3f7;
+            /* Lighter blue on hover */
+        }
+
+        .btn-kover:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            h1.title {
+                font-size: 64px;
+            }
+
+            .btn-kover {
+                width: auto;
+                min-width: 320px;
+>>>>>>> 717a06f4bfb42ac0dae2e6c8c5a065f1ce012cec
             }
         }
     </style>
 </head>
 
 <body>
+<<<<<<< HEAD
     <div class="hero-wrapper">
         <div class="hero-overlay"></div>
 
@@ -342,6 +562,40 @@
             </div>
         </div>
     </div>
+=======
+
+    <div class="bg-layer bg-image"></div>
+    <div class="bg-layer bg-overlay"></div>
+    <div class="bg-layer bg-noise"></div>
+
+    <div class="content-wrapper">
+        <div class="glass-card">
+            <div class="status-chip">
+                Registration Closed
+            </div>
+
+            <h1 class="title">
+                МЕСТ НЕТ
+            </h1>
+
+            <p class="description">
+                К сожалению, регистрация на этот выезд уже закрыта. <br>Но у нас ещё много планов на сезон.
+            </p>
+
+            <a href="https://www.kovertrips.com/calendar" class="btn-kover">
+                Смотреть расписание
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+
+
+>>>>>>> 717a06f4bfb42ac0dae2e6c8c5a065f1ce012cec
 </body>
 
 </html>
