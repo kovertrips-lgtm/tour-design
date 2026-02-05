@@ -1,0 +1,843 @@
+<style>
+    /* --- ОБЩИЕ СТИЛИ --- */
+    :root {
+        --tr-bg-dark: #121212;
+        --tr-bg-card: #1E1E1E;
+        --tr-accent-neon: #BDFF00;
+        --tr-text-main: #FFFFFF;
+        --tr-text-sec: #B0B0B0;
+    }
+
+    .custom-transport-section {
+        font-family: 'Montserrat', sans-serif;
+        background: linear-gradient(180deg, var(--tr-bg-dark) 0%, #1a1a1a 100%);
+        color: var(--tr-text-main);
+        padding: 60px 20px;
+        /* Уменьшил отступы для мобилок */
+        box-sizing: border-box;
+    }
+
+    .tr-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        /* На мобилках всё в столбик */
+        gap: 40px;
+    }
+
+    /* --- ТЕКСТОВАЯ ЧАСТЬ --- */
+    .tr-content {
+        width: 100%;
+    }
+
+    .tr-title {
+        font-size: 32px;
+        /* Чуть меньше на мобилках */
+        font-weight: 700;
+        margin-bottom: 20px;
+        line-height: 1.2;
+        color: white;
+    }
+
+    .tr-highlight {
+        color: var(--tr-accent-neon);
+        text-shadow: 0 0 15px rgba(189, 255, 0, 0.3);
+    }
+
+    .tr-desc {
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--tr-text-sec);
+        margin-bottom: 30px;
+    }
+
+    .tr-benefits {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .tr-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px;
+        background-color: var(--tr-bg-card);
+        border-radius: 16px;
+        border: 1px solid transparent;
+    }
+
+    .tr-icon-box {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        /* Чуть меньше иконки на мобилках */
+        background: rgba(189, 255, 0, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--tr-accent-neon);
+    }
+
+    .tr-icon-box svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    @keyframes trPulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .tr-pulse {
+        animation: trPulse 3s infinite ease-in-out;
+    }
+
+    .tr-card h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 5px 0;
+        color: white;
+    }
+
+    .tr-card p {
+        font-size: 14px;
+        line-height: 1.4;
+        color: var(--tr-text-sec);
+        margin: 0;
+    }
+
+    .tr-footer-note {
+        font-size: 13px;
+        color: var(--tr-text-sec);
+        font-style: italic;
+        opacity: 0.8;
+    }
+
+    /* --- МОБИЛЬНАЯ ФОТО-КАРУСЕЛЬ (По умолчанию) --- */
+    .tr-mobile-gallery {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        /* Разрешаем горизонтальный скролл */
+        scroll-snap-type: x mandatory;
+        /* Добавляем "прилипание" при скролле */
+        padding-bottom: 10px;
+        /* Скрываем скроллбар для красоты */
+        scrollbar-width: none;
+        /* Firefox */
+        -ms-overflow-style: none;
+        /* IE 10+ */
+    }
+
+    .tr-mobile-gallery::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+
+    .tr-gallery-item {
+        flex: 0 0 85%;
+        /* Карточка занимает 85% ширины экрана, чтобы следующая "выглядывала" */
+        height: 250px;
+        /* Фиксированная высота на мобилках */
+        scroll-snap-align: center;
+        /* Карточка центрируется при остановке скролла */
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(189, 255, 0, 0.1);
+    }
+
+    .tr-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.9);
+    }
+
+    /* Скрываем десктопную сетку на мобилках */
+    .tr-desktop-grid {
+        display: none;
+    }
+
+
+    /* --- ДЕСКТОПНАЯ ВЕРСИЯ (Применяется только если экран шире 960px) --- */
+    @media (min-width: 961px) {
+        .custom-transport-section {
+            padding: 100px 20px;
+        }
+
+        .tr-container {
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 60px;
+        }
+
+        .tr-content {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .tr-title {
+            font-size: 42px;
+            margin-bottom: 24px;
+        }
+
+        .tr-desc {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .tr-benefits {
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .tr-card {
+            gap: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .tr-card:hover {
+            background-color: #252525;
+            border-color: rgba(189, 255, 0, 0.2);
+            transform: translateX(10px);
+        }
+
+        .tr-icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .tr-icon-box svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .tr-card:hover .tr-icon-box {
+            background: var(--tr-accent-neon);
+            color: var(--tr-bg-dark);
+            box-shadow: 0 0 20px rgba(189, 255, 0, 0.4);
+        }
+
+        .tr-card h3 {
+            font-size: 20px;
+            margin: 0 0 8px 0;
+        }
+
+        .tr-card p {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .tr-footer-note {
+            font-size: 14px;
+        }
+
+        /* Скрываем мобильную галерею, показываем десктопную сетку */
+        .tr-mobile-gallery {
+            display: none;
+        }
+
+        .tr-desktop-grid {
+            display: flex;
+            flex: 1.2;
+            gap: 20px;
+            height: 750px;
+        }
+
+        /* Стили Masonry сетки */
+        .tr-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tr-col.right {
+            margin-top: 60px;
+        }
+
+        /* Асимметрия */
+
+        .tr-img-wrap {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid transparent;
+            height: 100%;
+        }
+
+        /* Размеры фото в сетке */
+        .tr-col.left .tr-img-wrap:nth-child(1) {
+            flex: 1.2;
+        }
+
+        .tr-col.left .tr-img-wrap:nth-child(2) {
+            flex: 0.8;
+        }
+
+        .tr-col.right .tr-img-wrap:nth-child(1) {
+            flex: 0.8;
+        }
+
+        .tr-col.right .tr-img-wrap:nth-child(2) {
+            flex: 1.2;
+        }
+
+        /* Ховер эффекты на десктопе */
+        .tr-img-wrap:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(189, 255, 0, 0.2);
+            border-color: var(--tr-accent-neon);
+            z-index: 5;
+        }
+
+        .tr-img-wrap:hover .tr-img {
+            transform: scale(1.05);
+            filter: brightness(1);
+            transition: transform 0.6s ease;
+        }
+    }
+
+    /* --- СТИЛИ БЛОКА ОТЕЛЯ (Копия стиля Транспорта) --- */
+    :root {
+        --ht-bg-dark: #121212;
+        --ht-bg-card: #1E1E1E;
+        --ht-accent-neon: #BDFF00;
+        --ht-text-main: #FFFFFF;
+        --ht-text-sec: #B0B0B0;
+    }
+
+    .custom-hotel-section {
+        font-family: 'Montserrat', sans-serif;
+        background: linear-gradient(180deg, #1a1a1a 0%, var(--ht-bg-dark) 100%);
+        color: var(--ht-text-main);
+        padding: 60px 20px;
+        box-sizing: border-box;
+    }
+
+    .ht-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    /* --- ТЕКСТОВАЯ ЧАСТЬ --- */
+    .ht-content {
+        width: 100%;
+    }
+
+    .ht-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        line-height: 1.2;
+        color: white;
+    }
+
+    .ht-highlight {
+        color: var(--ht-accent-neon);
+        text-shadow: 0 0 15px rgba(189, 255, 0, 0.3);
+    }
+
+    .ht-desc {
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--ht-text-sec);
+        margin-bottom: 30px;
+    }
+
+    .ht-benefits {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .ht-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px;
+        background-color: var(--ht-bg-card);
+        border-radius: 16px;
+        border: 1px solid transparent;
+    }
+
+    .ht-icon-box {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        background: rgba(189, 255, 0, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ht-accent-neon);
+    }
+
+    .ht-icon-box svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    @keyframes htPulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .ht-pulse {
+        animation: htPulse 3s infinite ease-in-out;
+    }
+
+    .ht-card h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 5px 0;
+        color: white;
+    }
+
+    .ht-card p {
+        font-size: 14px;
+        line-height: 1.4;
+        color: var(--ht-text-sec);
+        margin: 0;
+    }
+
+    .ht-footer-note {
+        font-size: 13px;
+        color: var(--ht-text-sec);
+        font-style: italic;
+        opacity: 0.8;
+    }
+
+    /* --- МОБИЛЬНАЯ ГАЛЕРЕЯ --- */
+    .ht-mobile-gallery {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 10px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .ht-mobile-gallery::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ht-gallery-item {
+        flex: 0 0 85%;
+        height: 250px;
+        scroll-snap-align: center;
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(189, 255, 0, 0.1);
+    }
+
+    .ht-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.9);
+    }
+
+    /* Скрываем десктопную сетку на мобилках */
+    .ht-desktop-grid {
+        display: none;
+    }
+
+
+    /* --- ДЕСКТОПНАЯ ВЕРСИЯ --- */
+    @media (min-width: 961px) {
+        .custom-hotel-section {
+            padding: 100px 20px;
+        }
+
+        .ht-container {
+            flex-direction: row-reverse;
+            /* Реверс: текст справа, фото слева */
+            align-items: flex-start;
+            gap: 60px;
+        }
+
+        .ht-content {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .ht-title {
+            font-size: 42px;
+            margin-bottom: 24px;
+        }
+
+        .ht-desc {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .ht-benefits {
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .ht-card {
+            gap: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .ht-card:hover {
+            background-color: #252525;
+            border-color: rgba(189, 255, 0, 0.2);
+            transform: translateX(10px);
+        }
+
+        .ht-icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .ht-icon-box svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .ht-card:hover .ht-icon-box {
+            background: var(--ht-accent-neon);
+            color: var(--ht-bg-dark);
+            box-shadow: 0 0 20px rgba(189, 255, 0, 0.4);
+        }
+
+        .ht-card h3 {
+            font-size: 20px;
+            margin: 0 0 8px 0;
+        }
+
+        .ht-card p {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .ht-footer-note {
+            font-size: 14px;
+        }
+
+        /* Галерея */
+        .ht-mobile-gallery {
+            display: none;
+        }
+
+        .ht-desktop-grid {
+            display: flex;
+            flex: 1.2;
+            gap: 20px;
+            height: 700px;
+        }
+
+        /* Сетка */
+        .ht-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .ht-col.down {
+            margin-top: 60px;
+        }
+
+        .ht-img-wrap {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid transparent;
+            height: 100%;
+        }
+
+        .ht-col.up .ht-img-wrap:nth-child(1) {
+            flex: 1.3;
+        }
+
+        .ht-col.up .ht-img-wrap:nth-child(2) {
+            flex: 0.7;
+        }
+
+        .ht-col.down .ht-img-wrap:nth-child(1) {
+            flex: 0.7;
+        }
+
+        .ht-col.down .ht-img-wrap:nth-child(2) {
+            flex: 1.3;
+        }
+
+        .ht-img-wrap:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(189, 255, 0, 0.2);
+            border-color: var(--ht-accent-neon);
+            z-index: 5;
+        }
+
+        .ht-img-wrap:hover .ht-img {
+            transform: scale(1.05);
+            filter: brightness(1);
+            transition: transform 0.6s ease;
+        }
+    }
+</style>
+
+<!-- HOTEL SECTION -->
+<div class="custom-hotel-section">
+    <div class="ht-container">
+
+        <div class="ht-content">
+            <h2 class="ht-title">Стильное <span class="ht-highlight">проживание</span></h2>
+            <p class="ht-desc">
+                После насыщенного дня тебя ждёт комфортный отель <strong>Residhome Paris Issy Les Moulineaux</strong> с
+                современными номерами.
+            </p>
+
+            <div class="ht-benefits">
+                <div class="ht-card">
+                    <div class="ht-icon-box ht-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3" />
+                            <path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v5H7v-5a2 2 0 0 0-4 0v5Z" />
+                            <path d="M5 18v2" />
+                            <path d="M19 18v2" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Современный комфорт</h3>
+                        <p>Стильные студии с мини-кухней. Идеально, чтобы почувствовать себя настоящим парижанином.</p>
+                    </div>
+                </div>
+                <div class="ht-card">
+                    <div class="ht-icon-box ht-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                            <line x1="6" y1="1" x2="6" y2="4"></line>
+                            <line x1="10" y1="1" x2="10" y2="4"></line>
+                            <line x1="14" y1="1" x2="14" y2="4"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Завтрак включен</h3>
+                        <p>Вкусный завтрак поможет начать следующий день с лёгкостью и энергией.</p>
+                    </div>
+                </div>
+                <div class="ht-card">
+                    <div class="ht-icon-box ht-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Удобная локация</h3>
+                        <p>Быстрый доступ ко всем интересным местам Парижа — и даже до Диснейленда, если захочешь
+                            продлить приключение!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ht-footer-note">
+                + Wi-Fi на всей территории, чтобы сразу запостить фото в Instagram.
+            </div>
+        </div>
+
+        <div class="ht-mobile-gallery">
+            <div class="ht-gallery-item"><img
+                    src="https://assets.hotelaparis.com/uploads/pictures/000/029/251/33401733.jpg" class="ht-img"
+                    alt="Номер студия с кухней"></div>
+            <div class="ht-gallery-item"><img
+                    src="https://xx.bstatic.com/xdata/images/hotel/max1024/33401745.jpg?k=5d481c8b5728558ad8050b31fa4423bb14e3e3ef838a9b7e438aacedb16cc145&o="
+                    class="ht-img" alt="Зона завтрака"></div>
+            <div class="ht-gallery-item"><img
+                    src="https://xx.bstatic.com/xdata/images/hotel/max1024/33401735.jpg?k=688145ae1b322d1ba99e2529e951bf06e715ca7011488cabde94e3d69dbc6ff2&o="
+                    class="ht-img" alt="Интерьер номера"></div>
+            <div class="ht-gallery-item"><img
+                    src="https://www.myresidhome.com/images/residence/240/chambres/240-T2_4PX.jpg" class="ht-img"
+                    alt="Интерьер номера 1"></div>
+        </div>
+
+        <div class="ht-desktop-grid">
+            <div class="ht-col up">
+                <div class="ht-img-wrap"><img
+                        src="https://assets.hotelaparis.com/uploads/pictures/000/029/251/33401733.jpg" class="ht-img"
+                        alt="Номер студия"></div>
+                <div class="ht-img-wrap"><img
+                        src="https://xx.bstatic.com/xdata/images/hotel/max1024/33401735.jpg?k=688145ae1b322d1ba99e2529e951bf06e715ca7011488cabde94e3d69dbc6ff2&o="
+                        class="ht-img" alt="Лобби отеля"></div>
+            </div>
+            <div class="ht-col down">
+                <div class="ht-img-wrap"><img
+                        src="https://www.myresidhome.com/images/residence/240/chambres/240-T2_4PX.jpg" class="ht-img"
+                        alt="Апартаменты"></div>
+                <div class="ht-img-wrap"><img
+                        src="https://xx.bstatic.com/xdata/images/hotel/max1024/33401745.jpg?k=5d481c8b5728558ad8050b31fa4423bb14e3e3ef838a9b7e438aacedb16cc145&o="
+                        class="ht-img" alt="Ресторан отеля"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- TRANSPORT SECTION -->
+<div class="custom-transport-section">
+    <div class="tr-container">
+
+        <div class="tr-content">
+            <h2 class="tr-title">Комфортный <span class="tr-highlight">трансфер</span></h2>
+            <p class="tr-desc">
+                Хороший автобус, отличная компания и правильный настрой. Отпуск начинается сразу после посадки.
+            </p>
+
+            <div class="tr-benefits">
+                <div class="tr-card">
+                    <div class="tr-icon-box tr-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Профи за рулем</h3>
+                        <p>Водители со стажем 15+ лет. Надежно и уверенно доставят в горы.</p>
+                    </div>
+                </div>
+                <!-- WAIFI removed from here -->
+
+                <div class="tr-card">
+                    <div class="tr-icon-box tr-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Удобства</h3>
+                        <p>Туалет и розетки для зарядок.</p>
+                    </div>
+                </div>
+
+                <div class="tr-card">
+                    <div class="tr-icon-box tr-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Любимое место</h3>
+                        <p>Хотите сидеть в первом ряду или у окна? Можно забронировать место заранее.</p>
+                    </div>
+                </div>
+                <div class="tr-card">
+                    <div class="tr-icon-box tr-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                            <line x1="6" y1="1" x2="6" y2="4"></line>
+                            <line x1="10" y1="1" x2="10" y2="4"></line>
+                            <line x1="14" y1="1" x2="14" y2="4"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Пирожки и Бар</h3>
+                        <p>Угощаем домашними пирожками. В пути предложим прохладительные и горячительные напитки.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tr-footer-note">
+                + Конечно, делаем пит-стопы на заправках: можно размяться и взять хот-доги.
+            </div>
+        </div>
+
+        <div class="tr-mobile-gallery">
+            <div class="tr-gallery-item"><img
+                    src="https://static.tildacdn.com/tild3763-3962-4765-b663-396338613034/8094-2.jpg" class="tr-img"
+                    alt="Пирожки"></div>
+            <div class="tr-gallery-item"><img
+                    src="https://static.tildacdn.com/tild3665-3137-4632-b630-373633636338/DSCF7362.jpg" class="tr-img"
+                    alt="Автобус"></div>
+            <div class="tr-gallery-item"><img
+                    src="https://static.tildacdn.com/tild3763-6538-4533-a538-653262613137/2I1A5272-2.jpg" class="tr-img"
+                    alt="Веселье в автобусе"></div>
+            <div class="tr-gallery-item"><img
+                    src="https://static.tildacdn.com/tild3435-6131-4536-a639-646661316539/unnamed-3.jpg" class="tr-img"
+                    alt="Салон"></div>
+        </div>
+
+        <div class="tr-desktop-grid">
+            <div class="tr-col left">
+                <div class="tr-img-wrap"><img
+                        src="https://static.tildacdn.com/tild3665-3137-4632-b630-373633636338/DSCF7362.jpg"
+                        class="tr-img" alt="Наш автобус на закате"></div>
+                <div class="tr-img-wrap"><img
+                        src="https://static.tildacdn.com/tild3763-6538-4533-a538-653262613137/2I1A5272-2.jpg"
+                        class="tr-img" alt="Вкусные пирожки в дороге"></div>
+            </div>
+            <div class="tr-col right">
+                <div class="tr-img-wrap"><img
+                        src="https://static.tildacdn.com/tild3435-6131-4536-a639-646661316539/unnamed-3.jpg"
+                        class="tr-img" alt="Веселая компания в автобусе"></div>
+                <div class="tr-img-wrap"><img
+                        src="https://static.tildacdn.com/tild3763-3962-4765-b663-396338613034/8094-2.jpg" class="tr-img"
+                        alt="Комфортный салон автобуса"></div>
+            </div>
+        </div>
+
+    </div>
+</div>

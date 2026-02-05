@@ -1,0 +1,351 @@
+<style>
+    /* --- НАСТРОЙКИ --- */
+    :root {
+        --pr-bg: #FFFFFF;
+        --pr-text: #111111;
+        --pr-gray: #666666;
+        --pr-neon: #BDFF00;
+        --pr-blue: #29B6F6;
+    }
+
+    .prog-section {
+        font-family: 'Montserrat', sans-serif;
+        background-color: var(--pr-bg);
+        color: var(--pr-text);
+        padding: 60px 20px;
+        box-sizing: border-box;
+    }
+
+    .prog-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    /* --- ЗАГОЛОВОК --- */
+    .prog-header {
+        margin-bottom: 30px;
+    }
+
+    .prog-title {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.1;
+        margin: 0 0 15px 0;
+    }
+
+    .prog-desc {
+        font-size: 16px;
+        color: var(--pr-gray);
+        max-width: 600px;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* --- КОМПАКТНАЯ ЦЕНА --- */
+    .price-compact-row {
+        display: flex;
+        align-items: baseline;
+        gap: 15px;
+        margin-top: 25px;
+        padding: 15px 25px;
+        background: #FAFAFA;
+        border-left: 4px solid var(--pr-neon);
+        border-radius: 8px;
+        width: fit-content;
+    }
+
+    .price-main {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--pr-text);
+    }
+
+    .price-note {
+        font-size: 14px;
+        color: var(--pr-gray);
+    }
+
+    /* --- СЕТКА КОНТЕНТА --- */
+    .prog-grid {
+        display: flex;
+        gap: 60px;
+        margin-top: 40px;
+    }
+
+    /* --- ТАЙМЛАЙН --- */
+    .prog-timeline-col {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    /* Стили для ДЕСКТОПА (с линией) */
+    .timeline-item {
+        position: relative;
+        padding-left: 150px;
+        padding-bottom: 35px;
+        border-left: 2px solid #F0F0F0;
+    }
+
+    .timeline-item:last-child {
+        border-left: 2px solid transparent;
+        padding-bottom: 0;
+    }
+
+    .time-dot {
+        position: absolute;
+        left: -9px;
+        top: 0;
+        width: 16px;
+        height: 16px;
+        background: var(--pr-bg);
+        border: 3px solid var(--pr-neon);
+        border-radius: 50%;
+        z-index: 2;
+    }
+
+    .time-val {
+        position: absolute;
+        left: 15px;
+        top: -2px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--pr-blue);
+        width: 130px;
+        line-height: 1.4;
+    }
+
+    .time-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0 0 6px 0;
+    }
+
+    .time-desc {
+        font-size: 14px;
+        color: var(--pr-gray);
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* Блок с фактом */
+    .highlight-bg {
+        background: #F9F9F9;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 13px;
+        color: #444;
+        border-left: 3px solid var(--pr-neon);
+        line-height: 1.4;
+    }
+
+    /* --- ФОТО (ДЕСКТОП) - ИЗМЕНЕНА ВЫСОТА --- */
+    .prog-visual-col {
+        flex: 1;
+        display: block;
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+    }
+
+    .vis-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    /* Увеличена высота нижних фото с 180px до 280px */
+    .vis-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    /* Увеличена высота первого фото с 220px до 350px */
+    .vis-img:first-child {
+        grid-column: 1 / -1;
+        height: 350px;
+    }
+
+    /* --- КНОПКА --- */
+    .prog-cta-wrap {
+        margin-top: 40px;
+        text-align: left;
+    }
+
+    .prog-btn {
+        display: inline-block;
+        background-color: var(--pr-blue);
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 16px;
+        padding: 18px 45px;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 10px 20px rgba(41, 182, 246, 0.2);
+    }
+
+    .prog-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(41, 182, 246, 0.3);
+        color: #ffffff !important;
+    }
+
+    /* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+    @media (max-width: 900px) {
+        .prog-section {
+            padding: 40px 20px;
+        }
+
+        .prog-title {
+            font-size: 28px;
+        }
+
+        .price-compact-row {
+            width: 100%;
+            box-sizing: border-box;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .price-main {
+            font-size: 26px;
+        }
+
+        .timeline-item {
+            padding-left: 0;
+            padding-bottom: 30px;
+            border-left: none;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .time-dot {
+            display: none;
+        }
+
+        .time-val {
+            position: static;
+            width: auto;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .time-content {
+            flex: 1;
+        }
+
+        .prog-visual-col {
+            display: none;
+        }
+
+        .prog-cta-wrap {
+            display: none;
+        }
+    }
+</style>
+
+<div class="prog-section">
+    <div class="prog-container">
+
+        <div class="prog-header">
+            <h2 class="prog-title">Диснейленд</h2>
+            <p class="prog-desc">Уикенд мечты: целый день в парке аттракционов и свободный день в самом романтичном
+                городе мира.</p>
+
+            <div class="price-compact-row">
+                <div class="price-main">3 990 Kč</div>
+                <div class="price-note">Бронь места — всего 2 000 Kč</div>
+            </div>
+        </div>
+
+        <div class="prog-grid">
+            <div class="prog-timeline-col">
+
+                <div class="timeline-item">
+                    <div class="time-dot"></div>
+                    <span class="time-val">13 ФЕВРАЛЯ, ПТ, 18:30</span>
+                    <div class="time-content">
+                        <h3 class="time-title">Старт из Праги</h3>
+                        <p class="time-desc">Сбор группы в 18:30-18:45 у входа в метро Hlavní Nádraží. Выезжаем
+                            навстречу сказке!</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time-dot"></div>
+                    <span class="time-val">14 ФЕВРАЛЯ, СБ, 08:00</span>
+                    <div class="time-content">
+                        <h3 class="time-title">Весь день в Диснейленде</h3>
+                        <p class="time-desc">Приезжаем к открытию. Вас ждут захватывающие аттракционы, парады героев,
+                            волшебные замки и море эмоций.</p>
+                        <div class="highlight-bg">
+                            ❗️ Билет в Диснейленд оплачивается отдельно - 114€
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time-dot"></div>
+                    <span class="time-val">ВЕЧЕРОМ</span>
+                    <div class="time-content">
+                        <h3 class="time-title">Салют и Отель</h3>
+                        <p class="time-desc">Вечером смотрим грандиозный салют, а сразу после — едем в уютный отель в
+                            Париже.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time-dot"></div>
+                    <span class="time-val">15 ФЕВРАЛЯ, ВС, 08:00</span>
+                    <div class="time-content">
+                        <h3 class="time-title">Свободный день</h3>
+                        <p class="time-desc">Завтракаем в отеле и выселяемся. Дальше — полностью ваше время: Лувр,
+                            Монмартр, шопинг или прогулка на кораблике по Сене.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time-dot"></div>
+                    <span class="time-val">19:00</span>
+                    <div class="time-content">
+                        <h3 class="time-title">Возвращение</h3>
+                        <p class="time-desc">Встречаемся на площади Конкорд и отправляемся домой.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time-dot"></div>
+                    <span class="time-val">16 ФЕВРАЛЯ, ПН, 09:00</span>
+                    <div class="time-content">
+                        <h3 class="time-title">Снова в Праге</h3>
+                        <p class="time-desc">Прибытие утром. Разбираем чемоданы и делимся впечатлениями.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="prog-visual-col">
+                <div class="vis-grid">
+                    <img src="https://static.tildacdn.com/tild6536-6366-4366-a262-656132383662/characters-disney-pa.jpg"
+                        class="vis-img" alt="Диснейленд">
+                    <img src="https://static.tildacdn.com/tild3236-3239-4134-b437-306631333636/pexels-diana-titenko.jpg"
+                        class="vis-img" alt="Париж">
+                    <img src="https://static.tildacdn.com/tild6264-3662-4638-a662-663535376336/patricia-ferreira-hX.jpg"
+                        class="vis-img" alt="Атмосфера">
+                </div>
+            </div>
+        </div>
+
+        <div class="prog-cta-wrap">
+            <a href="#book-now" class="prog-btn">ХОЧУ В ДИСНЕЙЛЕНД!</a>
+        </div>
+
+    </div>
+</div>

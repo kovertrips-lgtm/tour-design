@@ -1,0 +1,304 @@
+<style>
+    /* --- ШРИФТЫ И ПЕРЕМЕННЫЕ --- */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap');
+
+    :root {
+        --hero-blue: #29B6F6;
+        --hero-blue-hover: #0288D1;
+        --hero-neon: #BDFF00;
+        --hero-white: #FFFFFF;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* --- ГЛАВНЫЙ КОНТЕЙНЕР --- */
+    .hero-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        min-height: 600px;
+        background-image: url('https://news.disneylandparis.com//app/uploads/2022/04/N037009-scaled.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: 'Montserrat', sans-serif;
+        color: var(--hero-white);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+
+        /* ВАЖНО: Ставим низкий приоритет слою, чтобы кнопки Тильды были выше */
+        z-index: 1;
+    }
+
+    /* Затемнение фона */
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.0) 30%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0.9) 100%);
+        z-index: 2;
+        /* Чуть выше фона, но ниже контента */
+    }
+
+    /* --- ХЕДЕР --- */
+    .hero-header {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 40px;
+    }
+
+    .hero-logo img {
+        height: 40px;
+        width: auto;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .hero-socials {
+        display: flex;
+        gap: 15px;
+    }
+
+    .social-icon {
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-decoration: none;
+    }
+
+    .social-icon:hover {
+        background: var(--hero-white);
+        transform: scale(1.1);
+    }
+
+    .social-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .social-icon svg path {
+        fill: #fff;
+        transition: 0.3s;
+    }
+
+    .social-icon:hover svg path {
+        fill: #000;
+    }
+
+    /* --- КОНТЕНТ --- */
+    .hero-content {
+        position: relative;
+        z-index: 5;
+        padding: 0 40px 60px 40px;
+        max-width: 800px;
+    }
+
+    .hero-date-badge {
+        display: inline-block;
+        background-color: var(--hero-neon);
+        color: #000;
+        font-weight: 800;
+        font-size: 14px;
+        text-transform: uppercase;
+        padding: 8px 16px;
+        border-radius: 100px;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        box-shadow: 0 0 20px rgba(189, 255, 0, 0.4);
+        animation: fadeInDown 1s ease;
+    }
+
+    .hero-title {
+        font-size: 56px;
+        font-weight: 800;
+        line-height: 1.05;
+        margin: 0 0 20px 0;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        animation: fadeInUp 1s ease 0.2s backwards;
+        color: white;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.5;
+        margin-bottom: 40px;
+        max-width: 600px;
+        opacity: 0.95;
+        animation: fadeInUp 1s ease 0.4s backwards;
+        color: white;
+    }
+
+    .hero-btn {
+        display: inline-block;
+        background-color: var(--hero-blue);
+        color: #ffffff !important;
+        font-size: 16px;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 20px 40px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(41, 182, 246, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        animation: fadeInUp 1s ease 0.6s backwards;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .hero-btn:hover {
+        background-color: var(--hero-white);
+        color: var(--hero-blue) !important;
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* --- МОБИЛЬНАЯ АДАПТАЦИЯ (ИЗМЕНЕНО) --- */
+    @media (max-width: 768px) {
+        .hero-wrapper {
+            height: 70svh;
+            /* Высота блока теперь 70% от высоты экрана */
+            min-height: auto;
+        }
+
+        .hero-header {
+            padding: 20px;
+        }
+
+        .hero-content {
+            padding: 0 20px 30px 20px;
+            /* Немного уменьшил отступ снизу для компактности */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+
+        /* Чуть меньше шрифт заголовка */
+        .hero-subtitle {
+            font-size: 15px;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        /* Меньше отступ под текстом */
+        .hero-btn {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 18px;
+            font-size: 16px;
+        }
+
+        .hero-logo img {
+            height: 32px;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .social-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    /* --- ВАЖНО: СПАСЕНИЕ КНОПКИ ТИЛЬДЫ --- */
+    /* Этот блок гарантирует, что плавающие кнопки (Mobile Sticky) будут поверх всего */
+    .t-btn-floating,
+    .t-m-sticky,
+    .t706__carticon {
+        z-index: 999999 !important;
+    }
+</style>
+
+<div class="hero-wrapper">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-header">
+        <a href="/" class="hero-logo">
+            <img src="https://static.tildacdn.com/tild6534-3663-4838-b563-336463663732/Kover_travel_logo.svg"
+                alt="Kover Travel">
+        </a>
+
+        <div class="hero-socials">
+            <a href="https://www.instagram.com/kover_travel?igsh=MW0ycjllaHU5ZjBqaQ==" target="_blank"
+                class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+                        fill="white" />
+                </svg>
+            </a>
+            <a href="https://t.me/koverevents" target="_blank" class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l-.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"
+                        fill="white" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-date-badge">14-15 Февраля</div>
+        <h1 class="hero-title">Дисенейленд</h1>
+        <p class="hero-subtitle">
+            Трансфер, проживание, невероятная атмосфера. Мы всё организовали — тебе осталось только занять место в
+            автобусе и кайфовать.
+        </p>
+
+        <a href="tour" class="hero-btn">Забронировать место</a>
+    </div>
+</div>
