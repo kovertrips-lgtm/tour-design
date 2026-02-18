@@ -400,15 +400,10 @@
         /* HORIZONTAL SCROLL LAYOUT */
         .d-program-grid {
             display: flex;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 24px;
-            overflow-x: auto;
-            padding: 10px 10px 30px 10px;
-            /* Bottom padding for scrollbar/shadows */
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            scroll-behavior: smooth;
+            padding: 10px;
         }
 
         .d-program-grid::-webkit-scrollbar {
@@ -431,9 +426,7 @@
 
         .d-card {
             flex: 0 0 340px;
-            /* Fixed width for scroll items */
             width: 340px;
-            min-width: 340px;
             height: 500px;
             /* Taller card */
             border-radius: 24px;
